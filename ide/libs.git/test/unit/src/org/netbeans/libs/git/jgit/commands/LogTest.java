@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
@@ -46,10 +45,11 @@ import org.netbeans.libs.git.jgit.AbstractGitTestCase;
  * @author ondra
  */
 public class LogTest extends AbstractGitTestCase {
+
     private Repository repository;
     private File workDir;
 
-    public LogTest (String testName) throws IOException {
+    public LogTest(String testName) throws IOException {
         super(testName);
     }
 
@@ -69,10 +69,10 @@ public class LogTest extends AbstractGitTestCase {
         assertEquals(LogCommand.MAX_REVWALK_FLAGS, available); // if this fails, adjust the value
     }
 
-    public void testLogRevision () throws Exception {
+    public void testLogRevision() throws Exception {
         File f = new File(workDir, "testcat1");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
 
         GitClient client = getClient(workDir);
@@ -90,10 +90,10 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision2, revision);
     }
 
-    public void testLogRevisionTo () throws Exception {
+    public void testLogRevisionTo() throws Exception {
         File f = new File(workDir, "testcat1");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         GitClient client = getClient(workDir);
         GitRevisionInfo revision0 = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -102,11 +102,11 @@ public class LogTest extends AbstractGitTestCase {
         add(files);
 
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification3");
         add(files);
         GitRevisionInfo revision3 = client.commit(files, "modification3", null, null, NULL_PROGRESS_MONITOR);
@@ -124,11 +124,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision1, revisions[3]);
         assertRevisions(revision0, revisions[4]);
     }
-    
-    public void testLogRevisionRange () throws Exception {
+
+    public void testLogRevisionRange() throws Exception {
         File f = new File(workDir, "testcat1");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
@@ -138,11 +138,10 @@ public class LogTest extends AbstractGitTestCase {
         GitClient client = getClient(workDir);
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
 
-        
         write(f, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification3");
         add(files);
         GitRevisionInfo revision3 = client.commit(files, "modification3", null, null, NULL_PROGRESS_MONITOR);
@@ -166,11 +165,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision3, revisions[1]);
         assertRevisions(revision2, revisions[2]);
     }
-    
-    public void testLogSingleBranch () throws Exception {
+
+    public void testLogSingleBranch() throws Exception {
         File f = new File(workDir, "file");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         GitClient client = getClient(workDir);
         GitRevisionInfo revision0 = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
@@ -179,7 +178,7 @@ public class LogTest extends AbstractGitTestCase {
         add(files);
 
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(new File(workDir, ".git/refs/heads/A"), revision1.getRevision());
         write(new File(workDir, ".git/refs/heads/B"), revision1.getRevision());
         write(new File(workDir, ".git/HEAD"), "ref: refs/heads/A");
@@ -194,7 +193,7 @@ public class LogTest extends AbstractGitTestCase {
         write(f, "modificationOnB-1");
         add(files);
         GitRevisionInfo revisionB1 = client.commit(files, "modificationOnB-1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         // to A
         write(new File(workDir, ".git/HEAD"), "ref: refs/heads/A");
         client.reset(revisionA1.getRevision(), GitClient.ResetType.SOFT, NULL_PROGRESS_MONITOR);
@@ -218,7 +217,7 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revisionA1, revisions[1]);
         assertRevisions(revision1, revisions[2]);
         assertRevisions(revision0, revisions[3]);
-        
+
         crit = new SearchCriteria();
         crit.setRevisionTo("B");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
@@ -227,7 +226,7 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revisionB1, revisions[1]);
         assertRevisions(revision1, revisions[2]);
         assertRevisions(revision0, revisions[3]);
-        
+
         // try both branches, how are the revisions sorted?
         revisions = client.log(new SearchCriteria(), true, NULL_PROGRESS_MONITOR);
         assertEquals(6, revisions.length);
@@ -238,11 +237,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision1, revisions[4]);
         assertRevisions(revision0, revisions[5]);
     }
-    
-    public void testLogLimit () throws Exception {
+
+    public void testLogLimit() throws Exception {
         File f = new File(workDir, "testcat1");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
@@ -251,11 +250,11 @@ public class LogTest extends AbstractGitTestCase {
 
         GitClient client = getClient(workDir);
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification3");
         add(files);
         GitRevisionInfo revision3 = client.commit(files, "modification3", null, null, NULL_PROGRESS_MONITOR);
@@ -271,7 +270,7 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision4, revisions[0]);
         assertRevisions(revision3, revisions[1]);
         assertRevisions(revision2, revisions[2]);
-        
+
         crit = new SearchCriteria();
         crit.setRevisionFrom(revision2.getRevision());
         crit.setRevisionTo(revision4.getRevision());
@@ -281,14 +280,14 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision4, revisions[0]);
         assertRevisions(revision3, revisions[1]);
     }
-    
-    public void testLogFiles () throws Exception {
+
+    public void testLogFiles() throws Exception {
         File f1 = new File(workDir, "file1");
         write(f1, "initial content");
         File f2 = new File(workDir, "file2");
         write(f2, "initial content");
         File f3 = new File(workDir, "file3");
-        File[] files = new File[] { f1, f2 };
+        File[] files = new File[]{f1, f2};
         add(files);
         GitClient client = getClient(workDir);
         commit(files);
@@ -297,36 +296,36 @@ public class LogTest extends AbstractGitTestCase {
         add(files);
 
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f2, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
-        
+
         write(f1, "modification3");
         write(f2, "modification3");
         add(files);
         GitRevisionInfo revision3 = client.commit(files, "modification3", null, null, NULL_PROGRESS_MONITOR);
 
         write(f3, "modification4");
-        add(new File[] { f3 });
-        GitRevisionInfo revision4 = client.commit(new File[] { f3 }, "modification4", null, null, NULL_PROGRESS_MONITOR);
-        
+        add(new File[]{f3});
+        GitRevisionInfo revision4 = client.commit(new File[]{f3}, "modification4", null, null, NULL_PROGRESS_MONITOR);
+
         SearchCriteria crit = new SearchCriteria();
-        crit.setFiles(new File[] { f1 });
+        crit.setFiles(new File[]{f1});
         crit.setRevisionFrom(revision1.getRevision());
         GitRevisionInfo[] revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision3, revisions[0]);
         assertRevisions(revision1, revisions[1]);
-        
+
         crit = new SearchCriteria();
-        crit.setFiles(new File[] { f2 });
+        crit.setFiles(new File[]{f2});
         crit.setRevisionFrom(revision1.getRevision());
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision3, revisions[0]);
         assertRevisions(revision2, revisions[1]);
-        
+
         crit = new SearchCriteria();
         crit.setFiles(files);
         crit.setRevisionFrom(revision1.getRevision());
@@ -335,9 +334,9 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision3, revisions[0]);
         assertRevisions(revision2, revisions[1]);
         assertRevisions(revision1, revisions[2]);
-        
+
         crit = new SearchCriteria();
-        crit.setFiles(new File[] { f1, f2, f3 });
+        crit.setFiles(new File[]{f1, f2, f3});
         crit.setRevisionFrom(revision1.getRevision());
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(4, revisions.length);
@@ -345,9 +344,9 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision3, revisions[1]);
         assertRevisions(revision2, revisions[2]);
         assertRevisions(revision1, revisions[3]);
-        
+
         crit = new SearchCriteria();
-        crit.setFiles(new File[] { workDir });
+        crit.setFiles(new File[]{workDir});
         crit.setRevisionFrom(revision1.getRevision());
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(4, revisions.length);
@@ -356,11 +355,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision2, revisions[2]);
         assertRevisions(revision1, revisions[3]);
     }
-    
-    public void testLogUsername () throws Exception {
+
+    public void testLogUsername() throws Exception {
         File f = new File(workDir, "f");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
@@ -374,37 +373,37 @@ public class LogTest extends AbstractGitTestCase {
         write(f, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, user1, NULL_PROGRESS_MONITOR);
-        
+
         SearchCriteria crit = new SearchCriteria();
         GitRevisionInfo[] revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(3, revisions.length);
-        
+
         crit = new SearchCriteria();
         crit.setUsername("git-test-user");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision2, revisions[0]);
         assertRevisions(revision1, revisions[1]);
-        
+
         crit = new SearchCriteria();
         crit.setUsername("git-test-user@domain.com");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision2, revisions[0]);
         assertRevisions(revision1, revisions[1]);
-        
+
         crit = new SearchCriteria();
         crit.setUsername("test-user");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision2, revisions[0]);
         assertRevisions(revision1, revisions[1]);
-        
+
         crit = new SearchCriteria();
         crit.setUsername("git-test-user222@domain.com");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(0, revisions.length);
-        
+
         crit = new SearchCriteria();
         crit.setUsername("git-test-user <git-test-user@domain.com>");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
@@ -412,11 +411,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision2, revisions[0]);
         assertRevisions(revision1, revisions[1]);
     }
-    
-    public void testLogMessage () throws Exception {
+
+    public void testLogMessage() throws Exception {
         File f = new File(workDir, "f");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
@@ -425,28 +424,28 @@ public class LogTest extends AbstractGitTestCase {
 
         GitClient client = getClient(workDir);
         GitRevisionInfo revision1 = client.commit(files, "modification1\non master", null, null, NULL_PROGRESS_MONITOR);
-        
+
         SearchCriteria crit = new SearchCriteria();
         GitRevisionInfo[] revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
-        
+
         crit = new SearchCriteria();
         crit.setMessage("blablabla");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(0, revisions.length);
-        
+
         crit = new SearchCriteria();
         crit.setMessage("modification");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(1, revisions.length);
         assertRevisions(revision1, revisions[0]);
-        
+
         crit = new SearchCriteria();
         crit.setMessage("modification1\non master");
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(1, revisions.length);
         assertRevisions(revision1, revisions[0]);
-        
+
         // see bug #228905
         crit = new SearchCriteria();
         crit.setMessage("on master");
@@ -454,8 +453,8 @@ public class LogTest extends AbstractGitTestCase {
         assertEquals(1, revisions.length);
         assertRevisions(revision1, revisions[0]);
     }
-    
-    public void testSubstringFilter () throws Exception {
+
+    public void testSubstringFilter() throws Exception {
         Git git = new Git(repository);
         RevCommit c = git.commit().setMessage("abcd").call();
 
@@ -510,43 +509,43 @@ public class LogTest extends AbstractGitTestCase {
             assertEquals(1, log.length);
         }
     }
-    
-    public void testLogShowMerges () throws Exception {
+
+    public void testLogShowMerges() throws Exception {
         File f = new File(workDir, "f");
         write(f, "a\nb\nc");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
         GitClient client = getClient(workDir);
-        client.createBranch("b", "master", NULL_PROGRESS_MONITOR);
+        client.createBranch("b", getDefaultBranch(), NULL_PROGRESS_MONITOR);
         client.checkoutRevision("b", true, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification on branch\nb\nc");
         add(files);
         GitRevisionInfo revisionBranch = client.commit(files, "modification on branch", null, null, NULL_PROGRESS_MONITOR);
-        
+
         Thread.sleep(1100);
-        
-        client.checkoutRevision("master", true, NULL_PROGRESS_MONITOR);
+
+        client.checkoutRevision(getDefaultBranch(), true, NULL_PROGRESS_MONITOR);
         write(f, "a\nb\nmodification on master");
         add(files);
         GitRevisionInfo revisionMaster = client.commit(files, "modification on master", null, null, NULL_PROGRESS_MONITOR);
-        
+
         GitRevisionInfo revisionMerge = client.log(client.merge("b", NULL_PROGRESS_MONITOR).getNewHead(), NULL_PROGRESS_MONITOR);
-        
+
         SearchCriteria crit = new SearchCriteria();
-        crit.setRevisionTo("master");
+        crit.setRevisionTo(getDefaultBranch());
         GitRevisionInfo[] revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(4, revisions.length);
         assertRevisions(revisionMerge, revisions[0]);
-        
+
         crit = new SearchCriteria();
         crit.setIncludeMerges(true);
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(4, revisions.length);
         assertRevisions(revisionMerge, revisions[0]);
-        
+
         crit = new SearchCriteria();
         crit.setIncludeMerges(false);
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
@@ -554,11 +553,11 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revisionMaster, revisions[0]);
         assertRevisions(revisionBranch, revisions[1]);
     }
-    
-    public void testLogDateCriteria () throws Exception {
+
+    public void testLogDateCriteria() throws Exception {
         File f = new File(workDir, "f");
         write(f, "initial content");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         commit(files);
 
@@ -569,7 +568,7 @@ public class LogTest extends AbstractGitTestCase {
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
 
         Thread.sleep(1100);
-        
+
         write(f, "modification2");
         add(files);
         GitRevisionInfo revision2 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
@@ -599,7 +598,7 @@ public class LogTest extends AbstractGitTestCase {
         assertEquals(2, revisions.length);
         assertRevisions(revision3, revisions[0]);
         assertRevisions(revision2, revisions[1]);
-        
+
         crit = new SearchCriteria();
         crit.setFrom(new Date(revision2.getCommitTime()));
         crit.setTo(new Date(revision4.getCommitTime()));
@@ -608,7 +607,7 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision4, revisions[0]);
         assertRevisions(revision3, revisions[1]);
         assertRevisions(revision2, revisions[2]);
-        
+
         crit = new SearchCriteria();
         crit.setFrom(new Date(revision2.getCommitTime()));
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
@@ -617,12 +616,12 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision3, revisions[1]);
         assertRevisions(revision2, revisions[2]);
     }
-    
-    public void testLogFollowRename () throws Exception {
+
+    public void testLogFollowRename() throws Exception {
         File f = new File(workDir, "f");
         File to = new File(workDir, "renamed");
         write(f, "initial content");
-        File[] files = new File[] { f, to };
+        File[] files = new File[]{f, to};
         add(files);
         commit(files);
 
@@ -631,16 +630,16 @@ public class LogTest extends AbstractGitTestCase {
 
         GitClient client = getClient(workDir);
         GitRevisionInfo revision1 = client.commit(files, "modification1", null, null, NULL_PROGRESS_MONITOR);
-        
+
         client.rename(f, to, false, NULL_PROGRESS_MONITOR);
         GitRevisionInfo revision2 = client.commit(files, "rename", null, null, NULL_PROGRESS_MONITOR);
 
         write(to, "modification2");
         add(files);
         GitRevisionInfo revision3 = client.commit(files, "modification2", null, null, NULL_PROGRESS_MONITOR);
-        
+
         SearchCriteria crit = new SearchCriteria();
-        crit.setFiles(new File[] { to });
+        crit.setFiles(new File[]{to});
         GitRevisionInfo[] revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(2, revisions.length);
         assertRevisions(revision3, revisions[0]);
@@ -649,9 +648,9 @@ public class LogTest extends AbstractGitTestCase {
         assertEquals(2, modifiedFiles.size());
         assertEquals(GitFileInfo.Status.RENAMED, modifiedFiles.get(to).getStatus());
         assertEquals(GitFileInfo.Status.REMOVED, modifiedFiles.get(f).getStatus());
-        
+
         crit = new SearchCriteria();
-        crit.setFiles(new File[] { to });
+        crit.setFiles(new File[]{to});
         crit.setFollowRenames(true);
         revisions = client.log(crit, true, NULL_PROGRESS_MONITOR);
         assertEquals(4, revisions.length);
@@ -660,117 +659,117 @@ public class LogTest extends AbstractGitTestCase {
         assertRevisions(revision1, revisions[2]);
     }
 
-    public void testLogMergeFilesFromAllParents () throws Exception {
+    public void testLogMergeFilesFromAllParents() throws Exception {
         File f = new File(workDir, "f");
         File f2 = new File(workDir, "f2");
         write(f, "init");
         write(f2, "init");
-        File[] files = new File[] { f, f2 };
+        File[] files = new File[]{f, f2};
         add(files);
         commit(files);
 
         GitClient client = getClient(workDir);
-        client.createBranch("b", "master", NULL_PROGRESS_MONITOR);
+        client.createBranch("b", getDefaultBranch(), NULL_PROGRESS_MONITOR);
         client.checkoutRevision("b", true, NULL_PROGRESS_MONITOR);
-        
+
         write(f, "modification on branch");
         add(files);
         client.commit(files, "modification on branch", null, null, NULL_PROGRESS_MONITOR);
-        
-        client.checkoutRevision("master", true, NULL_PROGRESS_MONITOR);
+
+        client.checkoutRevision(getDefaultBranch(), true, NULL_PROGRESS_MONITOR);
         write(f2, "modification");
         add(files);
         client.commit(files, "modification on master", null, null, NULL_PROGRESS_MONITOR);
-        
+
         GitRevisionInfo revisionMerge = client.log(client.merge("b", NULL_PROGRESS_MONITOR).getNewHead(), NULL_PROGRESS_MONITOR);
         Map<File, GitFileInfo> modifiedFiles = revisionMerge.getModifiedFiles();
         assertEquals(2, modifiedFiles.size());
         assertEquals(GitFileInfo.Status.MODIFIED, modifiedFiles.get(f).getStatus());
         assertEquals(GitFileInfo.Status.MODIFIED, modifiedFiles.get(f2).getStatus());
     }
-    
-    public void testLogWithBranchInfo () throws Exception {
+
+    public void testLogWithBranchInfo() throws Exception {
         File f = new File(workDir, "f");
         File f2 = new File(workDir, "f2");
         write(f, "init");
         write(f2, "init");
-        File[] files = new File[] { f, f2 };
+        File[] files = new File[]{f, f2};
         add(files);
         commit(files);
-        
+
         write(f, "modification");
         add(files);
         commit(files);
-        
+
         GitClient client = getClient(workDir);
-        client.createBranch("BRANCH", "master", NULL_PROGRESS_MONITOR);
+        client.createBranch("BRANCH", getDefaultBranch(), NULL_PROGRESS_MONITOR);
         SearchCriteria crit = new SearchCriteria();
-        crit.setRevisionTo("master");
+        crit.setRevisionTo(getDefaultBranch());
         GitRevisionInfo[] log = client.log(crit, NULL_PROGRESS_MONITOR);
         for (GitRevisionInfo info : log) {
             // no branch info fetched by this version of the command
             assertEquals(0, info.getBranches().size());
         }
-        
+
         log = client.log(crit, true, NULL_PROGRESS_MONITOR);
         for (GitRevisionInfo info : log) {
             // all commits are from master
             assertEquals(2, info.getBranches().size());
-            assertNotNull(info.getBranches().get("master"));
+            assertNotNull(info.getBranches().get(getDefaultBranch()));
             assertNotNull(info.getBranches().get("BRANCH"));
         }
     }
-    
+
     // commit in the middle of a named branch
-    public void testLogWithBranchInfoMiddleCommit () throws Exception {
+    public void testLogWithBranchInfoMiddleCommit() throws Exception {
         File f = new File(workDir, "f");
         File f2 = new File(workDir, "f2");
         write(f, "init");
         write(f2, "init");
-        File[] files = new File[] { f, f2 };
+        File[] files = new File[]{f, f2};
         add(files);
         GitClient client = getClient(workDir);
         GitRevisionInfo firstCommit = client.commit(files, "initial commit", null, null, NULL_PROGRESS_MONITOR);
-        
-        client.createBranch("newbranch", "master", NULL_PROGRESS_MONITOR);
-        
+
+        client.createBranch("newbranch", getDefaultBranch(), NULL_PROGRESS_MONITOR);
+
         write(f, "modification");
         add(files);
         commit(files);
-        
+
         write(f2, "modification");
         add(files);
         commit(files);
-        
+
         SearchCriteria crit = new SearchCriteria();
         crit.setRevisionFrom(firstCommit.getRevision());
         crit.setRevisionTo(firstCommit.getRevision());
-        crit.setFiles(new File[] { f });
+        crit.setFiles(new File[]{f});
         GitRevisionInfo info = client.log(crit, true, NULL_PROGRESS_MONITOR)[0];
         // the initial commit is from master and head of newbranch
         assertNotNull(info.getBranches().get("newbranch"));
         assertEquals(2, info.getBranches().size());
     }
-    
-    public void testLogWithBranchInfoMoreBranches () throws Exception {
+
+    public void testLogWithBranchInfoMoreBranches() throws Exception {
         File f = new File(workDir, "f");
         File f2 = new File(workDir, "f2");
         write(f, "init");
         write(f2, "init");
-        File[] files = new File[] { f, f2 };
+        File[] files = new File[]{f, f2};
         add(files);
         commit(files);
-        
+
         write(f, "modification");
         add(files);
         commit(files);
-                
+
         GitClient client = getClient(workDir);
-        client.createBranch("newbranch", "master", NULL_PROGRESS_MONITOR);
+        client.createBranch("newbranch", getDefaultBranch(), NULL_PROGRESS_MONITOR);
         write(f, "modification on trunk");
         add(files);
         commit(files);
-        
+
         client.checkoutRevision("newbranch", true, NULL_PROGRESS_MONITOR);
         write(f, "modification on branch");
         // git commit timestamp resolution is one second.
@@ -780,7 +779,7 @@ public class LogTest extends AbstractGitTestCase {
         Thread.sleep(1100);
         add(files);
         commit(files);
-        
+
         SearchCriteria crit = new SearchCriteria();
         // log across all branches
         GitRevisionInfo[] log = client.log(crit, true, NULL_PROGRESS_MONITOR);
@@ -789,65 +788,65 @@ public class LogTest extends AbstractGitTestCase {
         assertNotNull(log[0].getBranches().get("newbranch"));
         // master commit
         assertEquals(1, log[1].getBranches().size());
-        assertNotNull(log[1].getBranches().get("master"));
+        assertNotNull(log[1].getBranches().get(getDefaultBranch()));
         // common commit
         assertEquals(2, log[2].getBranches().size());
-        assertNotNull(log[2].getBranches().get("master"));
+        assertNotNull(log[2].getBranches().get(getDefaultBranch()));
         assertNotNull(log[2].getBranches().get("newbranch"));
         // initial commit
         assertEquals(2, log[3].getBranches().size());
-        assertNotNull(log[3].getBranches().get("master"));
+        assertNotNull(log[3].getBranches().get(getDefaultBranch()));
         assertNotNull(log[3].getBranches().get("newbranch"));
     }
-    
-    public void testShortMessages () throws Exception {
+
+    public void testShortMessages() throws Exception {
         File f = new File(workDir, "f");
         write(f, "init");
-        File[] files = new File[] { f };
+        File[] files = new File[]{f};
         add(files);
         GitClient client = getClient(workDir);
         client.commit(files, "short message", null, null, NULL_PROGRESS_MONITOR);
         assertEquals("short message", client.log("HEAD", NULL_PROGRESS_MONITOR).getShortMessage());
-        
+
         write(f, "m1");
         add(f);
         client.commit(files, "short message\n\n\n", null, null, NULL_PROGRESS_MONITOR);
         assertEquals("short message", client.log("HEAD", NULL_PROGRESS_MONITOR).getShortMessage());
-        
+
         write(f, "m1");
         add(f);
         client.commit(files, "short message\nbla\nbla\nbla", null, null, NULL_PROGRESS_MONITOR);
         assertEquals("short message", client.log("HEAD", NULL_PROGRESS_MONITOR).getShortMessage());
     }
-    
-    public void testLimit () throws Exception {
+
+    public void testLimit() throws Exception {
         File f1 = new File(workDir, "f1");
         write(f1, "init");
         File f2 = new File(workDir, "f2");
         write(f2, "init");
-        
-        File[] files = new File[] { f1, f2 };
+
+        File[] files = new File[]{f1, f2};
         add(files);
         commit(files);
-        
+
         write(f1, "modif1");
         add(f1);
-        
+
         GitClient client = getClient(workDir);
         GitRevisionInfo c1 = client.commit(files, "m1", new GitUser("another", "netbeans.org"), new GitUser("another", "netbeans.org"), NULL_PROGRESS_MONITOR);
-        
+
         write(f2, "modif2");
         add(f2);
         GitRevisionInfo c2 = client.commit(files, "m2", new GitUser("user", "netbeans.org"), new GitUser("user", "netbeans.org"), NULL_PROGRESS_MONITOR);
-        
+
         SearchCriteria crit = new SearchCriteria();
         crit.setLimit(1);
         crit.setUsername("another");
         GitRevisionInfo[] log = client.log(crit, NULL_PROGRESS_MONITOR);
-        assertEquals(c1.getRevision(), log[0].getRevision());        
+        assertEquals(c1.getRevision(), log[0].getRevision());
     }
 
-    private void assertRevisions (GitRevisionInfo expected, GitRevisionInfo info) throws GitException {
+    private void assertRevisions(GitRevisionInfo expected, GitRevisionInfo info) throws GitException {
         assertEquals(expected.getRevision(), info.getRevision());
         assertEquals(expected.getAuthor().toString(), info.getAuthor().toString());
         assertEquals(expected.getCommitTime(), info.getCommitTime());

@@ -63,6 +63,12 @@ Project, ProjectInformation, LogicalViewProvider, RecommendedTemplates {
         this.icon = icon;
     }
 
+    static LazyProject forUrl(URL url) {
+        var slash = url.toString().lastIndexOf('/');
+        var dn = url.toString().substring(slash + 1);
+        return new LazyProject(url, dn, new ExtIcon());
+    }
+
     @Override
     public FileObject getProjectDirectory() {
         if (fo != null) {

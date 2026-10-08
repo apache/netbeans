@@ -180,15 +180,10 @@ public final class OpenProjectList {
     public static OpenProjectList getDefault() {
         return MUTEX.readAccess(new Mutex.Action<OpenProjectList>() {
             public @Override OpenProjectList run() {
-                boolean newlyCreated = false;
                 synchronized (OpenProjectList.class) { // must be read access, but must not run concurrently
                     if (INSTANCE == null) {
-                        newlyCreated = true;
                         INSTANCE = new OpenProjectList();
                     }
-                }
-                if (newlyCreated) {
-                    WindowManager.getDefault().invokeWhenUIReady(INSTANCE.LOAD);
                 }
                 return INSTANCE;
             }
@@ -603,22 +598,22 @@ public final class OpenProjectList {
     }
     }
 
-    final void replaceProjects(List<LazyProject> projects, URL mainProject) {
+    public final void replaceProjects(Collection<URL> urls, URL mainProject) {
+        close(openProjects.toArray(Project[]::new), false);
+        List<LazyProject> projects = urls.stream().map(LazyProject::forUrl).toList();
         MUTEX.writeAccess(() -> {
             replaceProjectsImpl(projects, mainProject);
         });
     }
 
     private final void replaceProjectsImpl(List<LazyProject> projects, URL mainProject) {
-        if (openProjects != null) {
-            close(openProjects.toArray(Project[]::new), false);
-        }
         openProjects = new ArrayList<>(projects);
         pchSupport.firePropertyChange(PROPERTY_WILL_OPEN_PROJECTS, null, openProjects.toArray(Project[]::new));
         Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
         var urls = projects.stream().map(p -> p.url).toList();
         var load = new OpenProjectsLoading(new LoadingCallback(), selectedFiles, urls, mainProject);
         LOAD = load;
+        WindowManager.getDefault().invokeWhenUIReady(load);
     }
 
     public void close( Project someProjects[], boolean notifyUI) {

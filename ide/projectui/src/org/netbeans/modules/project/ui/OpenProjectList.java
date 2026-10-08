@@ -100,8 +100,18 @@ import org.openide.windows.WindowManager;
 import static org.netbeans.modules.project.ui.Bundle.*;
 
 /**
- * List of projects open in the GUI.
- * @author Petr Hrebejk
+ * List of projects open in the GUI. The idea behind this class is to operated
+ * as a proxy to various {@link OpenProjectOperation} implementation. Each
+ * client API method of this class creates an operation and schedules it for
+ * execution. This class also holds the latest finished and latest pending
+ * operation:
+ * <ul>
+ *   <li><b>latest finished</b> returns current state of projects
+ *   <li><b>latest pending</b> can be awaited for via a {@link Future}
+ * </ul>
+ * Operations are processed one by one in a dedicated single throughput
+ * request processor. Once a pending operation is finished, it replaces the
+ * previous finished, notifies changes, and so on, so on.
  */
 public final class OpenProjectList {
     /**
@@ -110,7 +120,7 @@ public final class OpenProjectList {
      * otherwise we get a deadlock fairly fast
      */
     static final Mutex MUTEX = new Mutex();
-    
+
     public static Comparator<? super Project> projectByPath() {
         return new ProjectByPathComparator();
     }

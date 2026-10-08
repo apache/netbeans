@@ -27,7 +27,7 @@
         list.
     -->
     <target name="jar" depends="-define-FileCRC32Calculator">
-        <property name="org.eclipse.jgit.jar" value="external/org.eclipse.jgit-7.7.1.202607240634-r.jar" />
+        <property name="org.eclipse.jgit.jar" value="external/org.eclipse.jgit-7.8.1.202611041320-r.jar" />
         <delete dir="build/jar-extract" />
         <mkdir dir="build/jar-extract" />
         <unzip src="${org.eclipse.jgit.jar}" dest="build/jar-extract">

@@ -1,6 +1,6 @@
-Name: JGit Library
+Name: JGit SSH Apache Agent
 Origin: Eclipse
-Version: 7.7.1.202607240634-r
+Version: 7.8.1.202611041320-r
 Description: Integration library for Git client
 License: EDL-1.0-jgit
 URL: http://www.eclipse.org/jgit/download/

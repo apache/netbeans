@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -42,6 +43,7 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.actions.Openable;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.project.ui.groups.Group;
@@ -69,25 +71,41 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import static org.netbeans.modules.project.ui.Bundle.*;
+import org.openide.util.Lookup;
 
 /** The util methods for projectui module.
  *
  * @author  Jiri Rechtacek
  */
 public class ProjectUtilities {
-    
+
     private static final Logger LOG = Logger.getLogger(ProjectUtilities.class.getName());
-    
+
     static final String OPEN_FILES_NS = "http://www.netbeans.org/ns/projectui-open-files/1"; // NOI18N
     static final String OPEN_FILES_NS2 = "http://www.netbeans.org/ns/projectui-open-files/2"; // NOI18N
     static final String OPEN_FILES_ELEMENT = "open-files"; // NOI18N
     static final String FILE_ELEMENT = "file"; // NOI18N
     static final String GROUP_ELEMENT = "group"; // NOI18N
     static final String NAME_ATTR = "name";
-    
-    
-    // support class for xtesting in OpenProjectListTest
-    static OpenCloseProjectDocument OPEN_CLOSE_PROJECT_DOCUMENT_IMPL = new OpenCloseProjectDocument () {
+
+
+    /** Support for unit testing. Making {@link OpenCloseProjectDocument} an
+     * injectable singleton with default value.
+     *
+     * @return the implementation to call
+     */
+    @NonNull
+    private static OpenCloseProjectDocument openCloseProjectDocument() {
+        Collection<? extends OpenCloseProjectDocument> all = Lookup.getDefault().lookupAll(OpenCloseProjectDocument.class);
+        if (all.isEmpty()) {
+            return OPEN_CLOSE_PROJECT_DOCUMENT_DEFAULT;
+        } else {
+            assert all.size() == 1;
+            return all.iterator().next();
+        }
+    }
+
+    private static final OpenCloseProjectDocument OPEN_CLOSE_PROJECT_DOCUMENT_DEFAULT = new OpenCloseProjectDocument () {
         @Override
         public boolean open (FileObject fo) {
             DataObject dobj;
@@ -112,7 +130,7 @@ public class ProjectUtilities {
             }
             return true;
         }
-         
+
         @Override
         public Map<Project, Set<String>> close(Project[] projects, boolean notifyUI) {
             Map<Project, Set<String>> project2FilesMap = new LinkedHashMap<>();
@@ -125,7 +143,7 @@ public class ProjectUtilities {
 
             LOG.finer("Closing TCs");
             List<TopComponent> openedTC = getOpenedTCs();
-            
+
             for (TopComponent tc : openedTC) {
                 DataObject dobj = tc.getLookup().lookup(DataObject.class);
 
@@ -213,13 +231,17 @@ public class ProjectUtilities {
         }
     };
 
+    static void open(FileObject fo) {
+        openCloseProjectDocument().open(fo);
+    }
+
     private ProjectUtilities() {}
-    
+
     public static void selectAndExpandProject( final Project p ) {
-        
+
         // invoke later to select the being opened project if the focus is outside ProjectTab
         SwingUtilities.invokeLater (new Runnable () {
-            
+
             @Override
             public void run () {
                 final ProjectTab ptLogial = ProjectTab.findDefault(ProjectTab.ID_LOGICAL);
@@ -238,9 +260,9 @@ public class ProjectUtilities {
                     // fallback..
                     projNode = root.getChildren ().findChild( ProjectUtils.getInformation( p ).getName() );
                 }
-                
+
                 if ( projNode != null ) {
-                    try {                            
+                    try {
                         ptLogial.getExplorerManager ().setSelectedNodes( new Node[] { projNode } );
                         ptLogial.expandNode( projNode );
                         // ptLogial.open ();
@@ -251,9 +273,9 @@ public class ProjectUtilities {
                 }
             }
         });
-        
+
     }
-    
+
     /** Invokes the preferred action on given object and tries to select it in
      * corresponding view, e.g. in logical view if possible otherwise
      * in physical project's view.
@@ -261,7 +283,7 @@ public class ProjectUtilities {
      * is called in EQ.
      *
      * @param newDo new data object
-     */   
+     */
     public static void openAndSelectNewObject (final DataObject newDo) {
         // call the preferred action on main class
         Mutex.EVENT.writeAccess (new Runnable () {
@@ -295,7 +317,7 @@ public class ProjectUtilities {
             }
         });
     }
-    
+
     /** Makes the project tab visible
      * @param requestFocus if set to true the project tab will not only become visible but also
      *        will gain focus
@@ -308,7 +330,7 @@ public class ProjectUtilities {
         ptLogical.open();
         ptLogical.requestActive();
     }
-    
+
     /** Checks if the given file name can be created in the target folder.
      *
      * @param targetFolder target folder (e.g. source group)
@@ -318,7 +340,7 @@ public class ProjectUtilities {
      * @param allowFileSeparator if '/' (and possibly other file separator, see {@link FileUtil#createFolder FileUtil#createFolder})
      *                           is allowed in the newObjectName
      * @return localized error message (HTML-safe) or null if all right
-     */    
+     */
     @Messages({
         "# {0} - name of the file", "# {1} - an integer representing the invalid characters:", "#       0: both '/' and '\\' are invalid", "#       1: '\\' is invalid", "MSG_not_valid_filename=The filename {0} is not permitted as it contains {1,choice,0#a slash (/) or a backslash (\\)|1#a backslash (\\)}.",
         "# {0} - name of the file", "# {1} - an integer representing the invalid characters:", "#       0: both '/' and '\\' are invalid", "#       1: '\\' is invalid", "MSG_not_valid_folder=The folder name {0} is not permitted as it contains {1,choice,0#a slash (/) or a backslash (\\)|1#a backslash (\\)}.",
@@ -333,7 +355,7 @@ public class ProjectUtilities {
         boolean allowSlash = false;
         boolean allowBackslash = false;
         int errorVariant = 0;
-        
+
         if (allowFileSeparator) {
             if (File.separatorChar == '\\') {
                 errorVariant = 3;
@@ -343,23 +365,23 @@ public class ProjectUtilities {
                 allowSlash = true;
             }
         }
-        
+
         if ((!allowSlash && newObjectName.indexOf('/') != -1) || (!allowBackslash && newObjectName.indexOf('\\') != -1)) {
             //if errorVariant == 3, the test above should never be true:
             assert errorVariant == 0 || errorVariant == 1 : "Invalid error variant: " + errorVariant;
-            
+
             return MSG_not_valid_filename(safeEncode(newObjectName), errorVariant);
         }
-        
+
         // test whether the selected folder on selected filesystem already exists
         if (targetFolder == null) {
             return MSG_fs_or_folder_does_not_exist();
         }
-        
+
         // target directory should be writable
         // We should not check this via java.io.File - this breaks not only non-file-based file systems,
         // but can break versioning as well. See issue #251857 (In Remote Favorites tab user can't create new file)
-        FileObject targetDir = (folderName != null) ? targetFolder.getFileObject(folderName) : targetFolder;        
+        FileObject targetDir = (folderName != null) ? targetFolder.getFileObject(folderName) : targetFolder;
         if (targetDir != null) {
             if (targetDir.isValid()&& ! targetDir.canWrite ()) {
                 return MSG_fs_is_readonly();
@@ -386,7 +408,7 @@ public class ProjectUtilities {
         if (targetFolder.getFileObject(relFileName.toString()) != null) {
             return MSG_file_already_exist(safeEncode(newObjectName + ext));
         }
-        
+
         // all ok
         return null;
     }
@@ -400,24 +422,24 @@ public class ProjectUtilities {
             return text;
         }
     }
-    
-    
+
+
     public static class WaitCursor implements Runnable {
-        
+
         private boolean show;
-        
+
         private WaitCursor( boolean show ) {
             this.show = show;
         }
-       
-        public static void show() {            
+
+        public static void show() {
             invoke( new WaitCursor( true ) );
         }
-        
+
         public static void hide() {
-            invoke( new WaitCursor( false ) );            
+            invoke( new WaitCursor( false ) );
         }
-        
+
         private static void invoke( WaitCursor wc ) {
             if (GraphicsEnvironment.isHeadless()) {
                 return;
@@ -429,21 +451,21 @@ public class ProjectUtilities {
                 SwingUtilities.invokeLater( wc );
             }
         }
-        
+
         @Override
         public void run() {
-            try {            
+            try {
                 JFrame f = (JFrame)WindowManager.getDefault ().getMainWindow ();
                 Component c = f.getGlassPane ();
                 c.setVisible ( show );
                 c.setCursor (show ? Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR) : null);
-            } 
+            }
             catch (NullPointerException npe) {
                 Exceptions.printStackTrace(npe);
             }
         }
     }
-    
+
     /** Closes all documents in editor area which are owned by one of given projects.
      * If some documents are modified then an user is notified by Save/Discard/Cancel dialog.
      * Dialog is showed only once for all project's documents together.
@@ -451,18 +473,18 @@ public class ProjectUtilities {
      *
      * @param p project to close
      * @return false if the user cancelled the Save/Discard/Cancel dialog, true otherwise
-     */    
+     */
     public static boolean closeAllDocuments(Project[] projects, boolean notifyUI, String groupName) {
         if (projects == null) {
             throw new IllegalArgumentException ("No projects are specified."); // NOI18N
         }
-        
+
         if (projects.length == 0) {
             // no projects to close, no documents will be closed
             return true;
         }
-        
-        Map<Project,Set<String>> urls4project = OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.close(projects, notifyUI);
+
+        Map<Project,Set<String>> urls4project = openCloseProjectDocument().close(projects, notifyUI);
 
         if (urls4project != null) {
             // store project's documents
@@ -471,10 +493,10 @@ public class ProjectUtilities {
                 storeProjectOpenFiles(entry.getKey(), new ArrayList<>(entry.getValue()), groupName);
             }
         }
-        
+
         return urls4project != null;
     }
-    
+
     public static void storeProjectOpenFiles(Project p, List<String> urls, String groupName) {
 
         List<String> openFileUrls = getOpenFilesUrls(p, groupName);
@@ -516,20 +538,20 @@ public class ProjectUtilities {
 
         aux.putConfigurationFragment (openFiles, false);
     }
-    
+
     /** Opens the project's files read from the private <code>project.xml</code> file
-     * 
+     *
      * @param p project
      */
     public static Set<FileObject> openProjectFiles (Project p) {
         Group grp = Group.getActiveGroup();
         return openProjectFiles(p, grp);
     }
-    
+
     public static Set<FileObject> openProjectFiles (Project p, Group grp) {
         String groupName = grp == null ? null : grp.getName();
         LOG.log(Level.FINE, "Trying to open files from {0}...", p);
-        
+
         List<String> urls = getOpenFilesUrls(p, groupName);
         Set<FileObject> toRet = new LinkedHashSet<>();
         for (String url : urls) {
@@ -545,21 +567,21 @@ public class ProjectUtilities {
                 LOG.log(Level.FINE, "Could not find {0}", url);
                 continue;
             }
-            
+
             //#109676
             if (ProjectConvertors.getNonConvertorOwner(fo) != p) {
                 LOG.log(Level.FINE, "File {0} doesn''t belong to project at {1}", new Object[] {url, p.getProjectDirectory().getPath()});
                 continue;
             }
-            
-            OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (fo);
+
+            openCloseProjectDocument().open (fo);
             toRet.add(fo);
         }
-        
+
         // clean-up stored files -
         // mkleint: I've commented this out as it makes debugging what went wrong when switching groups or exiting the IDE very difficult
         // and now that we have per-group settings stored, removing a single group's values does not pose any real advantage.
-        
+
         //aux.removeConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS, false);
 //        openFiles.removeChild(groupEl);
 //        if (openFiles.getElementsByTagNameNS(OPEN_FILES_NS2, GROUP_ELEMENT).getLength() > 0) {
@@ -569,18 +591,18 @@ public class ProjectUtilities {
 //        }
         return toRet;
     }
-    
+
     // Returns an deduplicated list of opened file URLs in encounter order for this project and group.
     private static List<String> getOpenFilesUrls(Project p, String groupName) {
         AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
-        
+
         Element openFiles = aux.getConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS2, false);
         if (openFiles == null) {
             return Collections.emptyList();
         }
 
         Element groupEl = null;
-        
+
         NodeList groups = openFiles.getElementsByTagNameNS(OPEN_FILES_NS2, GROUP_ELEMENT);
         for (int i = 0; i < groups.getLength(); i++) {
             Element g = (Element) groups.item(i);
@@ -590,20 +612,20 @@ public class ProjectUtilities {
                 break;
             }
         }
-        
+
         if (groupEl == null) {
             return Collections.emptyList();
         }
-        
+
         NodeList list = groupEl.getElementsByTagNameNS(OPEN_FILES_NS2, FILE_ELEMENT);
         Set<String> set = new LinkedHashSet<>();
         for (int i = 0; i < list.getLength (); i++) {
             String url = list.item(i).getChildNodes().item(0).getNodeValue();
             set.add(url);
-        }    
+        }
         return new ArrayList<>(set);
     }
-    
+
     // called from (ide.branding) layer.xml on Favorites tab open
     public static URL getProjectsFolder() throws MalformedURLException {
         File projectsFolder = OpenProjectListSettings.getInstance().getProjectsFolder(true);
@@ -613,13 +635,13 @@ public class ProjectUtilities {
     // interface for handling project's documents stored in project private.xml
     // it serves for a unit test of OpenProjectList
     interface OpenCloseProjectDocument {
-        
+
         // opens stored document in the document area
         boolean open(FileObject fo);
-        
+
         // closes documents of given projects and returns mapped document's urls by project
         // it's used as base for storing documents in project private.xml
         Map<Project,Set<String>> close(Project[] projects, boolean notifyUI);
     }
-    
+
 }

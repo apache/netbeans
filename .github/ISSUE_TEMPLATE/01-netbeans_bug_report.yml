@@ -29,7 +29,7 @@ body:
       options:
         - "Apache NetBeans 31"
         - "Apache NetBeans 32 latest release candidate"
-        - "Apache NetBeans 32 latest daily build"
+        - "Apache NetBeans 33 latest daily build"
     validations:
       required: true
   - type: textarea

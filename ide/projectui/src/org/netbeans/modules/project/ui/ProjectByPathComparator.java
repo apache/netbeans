@@ -25,11 +25,14 @@ import org.netbeans.api.project.Project;
  * Compares projects by their real path. As a result siblings and nested
  * projects are co-located to each other.
  */
-final class ProjectByPathComparator implements Comparator<Project> {
+public final class ProjectByPathComparator implements Comparator<Project> {
+    private ProjectByPathComparator() {
+    }
 
     public static Comparator<? super Project> projectByPath() {
         return new ProjectByPathComparator();
     }
+
     @Override
     public int compare(Project p1, Project p2) {
         if (p1 == null && p2 == null) {

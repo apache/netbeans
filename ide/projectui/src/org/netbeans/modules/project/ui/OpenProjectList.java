@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,7 +94,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.Utilities;
-import org.openide.windows.WindowManager;
 
 import static org.netbeans.modules.project.ui.Bundle.*;
 
@@ -138,11 +136,7 @@ public final class OpenProjectList {
     private static final RequestProcessor RP3 = new RequestProcessor(OpenProjectList.class);
 
     /** List which holds the open projects */
-    private List<Project> openProjects;
     private final HashMap<ModuleInfo, List<Project>> openProjectsModuleInfos;
-
-    /** Main project */
-    private Project mainProject;
 
     /** List of recently closed projects */
     private final RecentProjectList recentProjects;
@@ -157,11 +151,12 @@ public final class OpenProjectList {
     private final NbProjectDeletionListener nbprojectDeleteListener = new NbProjectDeletionListener();
 
     private final PropertyChangeListener infoListener;
-    private volatile OpenProjectOperation LOAD;
+    private final OpenProjectImpl openMainProjects;
     private final ArrayList<ProjectGroupChangeListener> projectGroupSupport;
     private final AtomicBoolean groupChanging = new AtomicBoolean(false);
 
     OpenProjectList() {
+        this.openMainProjects = new OpenProjectImpl();
         URL main = OpenProjectListSettings.getInstance().getMainProjectURL();
         pchSupport = new PropertyChangeSupport( this );
         recentTemplates = new ArrayList<String>();
@@ -197,14 +192,14 @@ public final class OpenProjectList {
     }
 
     public static void waitProjectsFullyOpen() {
-        getDefault().LOAD.waitFinished(0);
+        getDefault().openMainProjects.waitFinished(0);
     }
 
     static void preferredProject(final Project lazyP) {
         if (lazyP != null) {
             OPENING_RP.post(new Runnable() {
                 @Override public void run() {
-                    getDefault().LOAD.preferredProject(Collections.singleton(lazyP.getProjectDirectory()));
+                    getDefault().openMainProjects.preferredProject(Collections.singleton(lazyP.getProjectDirectory()));
                 }
             });
         }
@@ -224,18 +219,18 @@ public final class OpenProjectList {
 
             @Override
             public boolean isDone() {
-                return LOAD.isDone();
+                return openMainProjects.isDone();
             }
 
             @Override
             public Project[] get() throws InterruptedException, ExecutionException {
-                LOAD.waitFinished(0L);
+                openMainProjects.waitFinished(0L);
                 return getOpenProjects();
             }
 
             @Override
             public Project[] get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                if (LOAD.waitFinished(unit.toMillis(timeout))) {
+                if (openMainProjects.waitFinished(unit.toMillis(timeout))) {
                     return getOpenProjects();
                 } else {
                     throw new TimeoutException();
@@ -376,14 +371,14 @@ public final class OpenProjectList {
                     } finally {
                         handle.finish();
                     }
-                    if (mainProject != null && Arrays.asList(projects).contains(mainProject) && openProjects.contains(mainProject)) {
+                    if (mainProject != null && Arrays.asList(projects).contains(mainProject) && openMainProjects.openProjects().contains(mainProject)) {
                         setMainProject(mainProject);
                     }
                 }
             });
         } else {
             open(projects, prime, openSubprojects, null, null);
-            if (mainProject != null && Arrays.asList(projects).contains(mainProject) && openProjects.contains(mainProject)) {
+            if (mainProject != null && Arrays.asList(projects).contains(mainProject) && openMainProjects.openProjects().contains(mainProject)) {
                 setMainProject(mainProject);
             }
         }
@@ -400,7 +395,7 @@ public final class OpenProjectList {
         "# {0} - project path", "OpenProjectList.deleted_project={0} seems to have been deleted."
     })
     public void open(Project[] projects, boolean prime, boolean openSubprojects, ProgressHandle handle, AtomicBoolean canceled) {
-        LOAD.waitFinished(0);
+        openMainProjects.waitFinished(0);
 
         List<Project> toHandle = new LinkedList<Project>();
 
@@ -450,7 +445,7 @@ public final class OpenProjectList {
         }
 
         try {
-            LOAD.enter();
+            openMainProjects.enter();
         boolean recentProjectsChanged = false;
         int  maxWork = 1000;
         double workForSubprojects = maxWork / (openSubprojects ? 2.0 : 10.0);
@@ -535,7 +530,7 @@ public final class OpenProjectList {
         final List<Project> newprjs = new ArrayList<Project>();
             MUTEX.writeAccess(new Mutex.Action<Void>() {
             public @Override Void run() {
-                oldprjs.addAll(openProjects);
+                oldprjs.addAll(openMainProjects.openProjects());
                 return null;
             }
         });
@@ -563,7 +558,7 @@ public final class OpenProjectList {
         final boolean _recentProjectsChanged = recentProjectsChanged;
         MUTEX.readAccess(new Mutex.Action<Void>() {
             public @Override Void run() {
-                openprjs.addAll(openProjects);
+                openprjs.addAll(openMainProjects.openProjects());
                 return null;
             }
         });
@@ -572,7 +567,7 @@ public final class OpenProjectList {
 
         MUTEX.writeAccess(new Mutex.Action<Void>() {
             public @Override Void run() {
-                newprjs.addAll(openProjects);
+                newprjs.addAll(openMainProjects.openProjects());
                 saveProjectList(openProjectsData);
                 if (_recentProjectsChanged) {
                     recentProjects.save();
@@ -600,26 +595,22 @@ public final class OpenProjectList {
             }
         });
         } finally {
-            LOAD.exit();
+            openMainProjects.exit();
     }
     }
 
     public final void replaceProjects(Collection<URL> urls, URL mainProject) {
-        close(openProjects.toArray(Project[]::new), false);
+        close(openMainProjects.openProjects().toArray(Project[]::new), false);
         List<LazyProject> projects = urls.stream().map(LazyProject::forUrl).toList();
         MUTEX.writeAccess(() -> {
             replaceProjectsImpl(projects, mainProject);
         });
     }
 
-    private final void replaceProjectsImpl(List<LazyProject> projects, URL mainProject) {
-        openProjects = new ArrayList<>(projects);
-        pchSupport.firePropertyChange(PROPERTY_WILL_OPEN_PROJECTS, null, openProjects.toArray(Project[]::new));
+    private void replaceProjectsImpl(List<LazyProject> projects, URL mainProject1) {
+        pchSupport.firePropertyChange(PROPERTY_WILL_OPEN_PROJECTS, null, openMainProjects.openProjects().toArray(Project[]::new));
         Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
-        var urls = projects.stream().map(p -> p.url).toList();
-        var load = new OpenProjectsLoading(new LoadingCallback(), selectedFiles, urls, mainProject);
-        LOAD = load;
-        WindowManager.getDefault().invokeWhenUIReady(load);
+        openMainProjects.replaceProjectsImpl(new OpenProjectList.LoadingCallback(), projects, mainProject1, selectedFiles);
     }
 
     public void close( Project someProjects[], boolean notifyUI) {
@@ -629,9 +620,9 @@ public final class OpenProjectList {
 
     public void close( Project someProjects[], boolean notifyUI, String groupName ) {
         boolean doSave = false;
-        if (!LOAD.closeBeforeOpen(someProjects)) {
+        if (!openMainProjects.closeBeforeOpen(someProjects)) {
             doSave = true;
-            LOAD.waitFinished(0);
+            openMainProjects.waitFinished(0);
         }
 
         final Project[] projects = new Project[someProjects.length];
@@ -645,7 +636,7 @@ public final class OpenProjectList {
         }
 
         try {
-            LOAD.enter();
+            openMainProjects.enter();
             ProjectUtilities.WaitCursor.show();
             OpenProjectsLogging.logProjects("close(): closing project: ", projects);
             final AtomicBoolean mainClosed = new AtomicBoolean();
@@ -655,9 +646,9 @@ public final class OpenProjectList {
             final List<Project> notifyList = new ArrayList<Project>();
             MUTEX.writeAccess(new Mutex.Action<Void>() {
                 public @Override Void run() {
-                oldprjs.addAll(openProjects);
+                oldprjs.addAll(openMainProjects.openProjects());
                     for (Project p : projects) {
-                    Iterator<Project> it = openProjects.iterator();
+                    Iterator<Project> it = openMainProjects.openProjects().iterator();
                     boolean found = false;
                     while (it.hasNext()) {
                         if (it.next().equals(p)) {
@@ -671,7 +662,7 @@ public final class OpenProjectList {
                     if (!mainClosed.get()) {
                         mainClosed.set(isMainProject(p));
                     }
-                    // remove the project from openProjects
+                    // remove the project from LOAD.openProjects()
                     it.remove();
                     removeModuleInfo(p);
 
@@ -682,11 +673,12 @@ public final class OpenProjectList {
                     someClosed.set(true);
                 }
                 if (someClosed.get()) {
-                    newprjs.addAll(openProjects);
+                    newprjs.addAll(openMainProjects.openProjects());
                 }
                 if (mainClosed.get()) {
-                    mainProject = null;
-                    saveMainProject( mainProject );
+                    // clear the main project
+                    openMainProjects.updateGlobalState(openMainProjects.openProjects(), null);
+                    saveMainProject( null );
                 }
                 return null;
             }
@@ -712,7 +704,7 @@ public final class OpenProjectList {
                 });
             }
             //#125750 not necessary to call notifyClosed() under synchronized lock.
-            LOAD.enter();
+            openMainProjects.enter();
             OPENING_RP.post(new Runnable() { // #177427 - this can be slow, better to do asynch
                 @Override
                 public void run() {
@@ -721,11 +713,11 @@ public final class OpenProjectList {
                             notifyClosed(closed);
                         }
                     } finally {
-                        LOAD.exit();
+                        openMainProjects.exit();
                     }
                 }
             });
-            OpenProjectsLogging.logProjects("close(): openProjects == ", openProjects.toArray(new Project[0])); // NOI18N
+            OpenProjectsLogging.logProjects("close(): LOAD.openProjects() == ", openMainProjects.openProjects().toArray(new Project[0])); // NOI18N
             if (someClosed.get()) {
                 pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS,
                                 oldprjs.toArray(new Project[0]), newprjs.toArray(new Project[0]) );
@@ -756,7 +748,7 @@ public final class OpenProjectList {
             OpenProjectsLogging.log(removedRec, "org.netbeans.ui.metrics.projects");
         } finally {
             ProjectUtilities.WaitCursor.hide();
-            LOAD.exit();
+            openMainProjects.exit();
         }
     }
 
@@ -764,7 +756,7 @@ public final class OpenProjectList {
     public Project[] getOpenProjects() {
         return MUTEX.readAccess(new Mutex.Action<Project[]>() {
             public @Override Project[] run() {
-                return openProjects.toArray(new Project[0]);
+                return openMainProjects.openProjects().toArray(new Project[0]);
             }
         });
     }
@@ -772,7 +764,7 @@ public final class OpenProjectList {
     public boolean isOpen(final Project p) {
         return MUTEX.readAccess(new Mutex.Action<Boolean>() {
             public @Override Boolean run() {
-                for (Project cp : openProjects) {
+                for (Project cp : openMainProjects.openProjects()) {
                     //check for folder quity is necessary because of the lazy projects initially populating the list
                     if (p.getProjectDirectory().equals(cp.getProjectDirectory())) {
                         return true;
@@ -786,6 +778,7 @@ public final class OpenProjectList {
     public boolean isMainProject(final Project p) {
         return MUTEX.readAccess(new Mutex.Action<Boolean>() {
             public @Override Boolean run() {
+                Project mainProject = openMainProjects.mainProject();
                 if (mainProject != null && p != null && mainProject.getProjectDirectory().equals(p.getProjectDirectory())) {
                     return true;
                 } else {
@@ -798,18 +791,18 @@ public final class OpenProjectList {
     public Project getMainProject() {
         return MUTEX.readAccess(new Mutex.Action<Project>() {
             public @Override Project run() {
-                return mainProject;
+                return openMainProjects.mainProject();
             }
         });
     }
 
     public void setMainProject( Project project ) {
         OpenProjectsLogging.LOGGER.log(Level.FINER, "Setting main project: {0}", project); // NOI18N
-        OpenProjectsLogging.logProjects("setMainProject(): openProjects == ", openProjects.toArray(new Project[0])); // NOI18N
+        OpenProjectsLogging.logProjects("setMainProject(): LOAD.openProjects() == ", openMainProjects.openProjects().toArray(new Project[0])); // NOI18N
         //called here to avoid wrapping projectManager.MUTEX within PrivateMutex.MUTEX
                 //#139965 the project passed in here can be different from the current one.
                 // eg when the ManProjectAction shows a list of opened projects, it lists the "non-loaded skeletons"
-                // but when the user eventually selects one, the openProjects list already might hold the
+                // but when the user eventually selects one, the LOAD.openProjects() list already might hold the
                 // correct loaded list.
                 try {
         final Project prj = project != null ? ProjectManager.getDefault().findProject(project.getProjectDirectory()) : null;
@@ -818,9 +811,9 @@ public final class OpenProjectList {
             MUTEX.writeAccess(new Mutex.Action<Void>() {
             public @Override Void run() {
             Project main = prj;
-            if (main != null && !openProjects.contains(main)) {
+            if (main != null && !openMainProjects.openProjects().contains(main)) {
                         boolean fail = true;
-                        for (Project p : openProjects) {
+                        for (Project p : openMainProjects.openProjects()) {
                             if (p.equals(main)) {
                                 fail = false;
                                 break;
@@ -835,12 +828,11 @@ public final class OpenProjectList {
                         }
                         if (fail) {
                             OpenProjectsLogging.LOGGER.log(Level.WARNING, "Project {0} is not open and cannot be set as main.", dn);
-                            OpenProjectsLogging.logProjects("setMainProject(): openProjects == ", openProjects.toArray(new Project[0])); // NOI18N
+                            OpenProjectsLogging.logProjects("setMainProject(): LOAD.openProjects() == ", openMainProjects.openProjects().toArray(new Project[0])); // NOI18N
                             return null;
                         }
             }
-
-            mainProject = main;
+            openMainProjects.updateGlobalState(openMainProjects.openProjects(), main);
             saveMainProject(main);
             return null;
         }
@@ -957,8 +949,8 @@ public final class OpenProjectList {
                 //a bit on magic here. We want to do the goup document persistence before notifyClosed in hope of the
                 // ant projects saving their project data before being closed. (ant ptojects call saveProjct() in the openclose hook.
                 // the caller of this method calls saveAllProjectt() later.
-                Group.onShutdown(new LinkedHashSet<>(INSTANCE.openProjects));
-                for (Project p : INSTANCE.openProjects) {
+                Group.onShutdown(new LinkedHashSet<>(INSTANCE.openMainProjects.openProjects()));
+                for (Project p : INSTANCE.openMainProjects.openProjects()) {
                     notifyClosed(p);
                 }
             } catch (ConcurrentModificationException x) {
@@ -1001,12 +993,12 @@ public final class OpenProjectList {
             } catch (RuntimeException e) {
                 OpenProjectsLogging.log(Level.WARNING, null, e);
                 // Do not try to call its close hook if its open hook already failed:
-                INSTANCE.openProjects.remove(p);
+                INSTANCE.openMainProjects.openProjects().remove(p);
                 INSTANCE.removeModuleInfo(p);
                 ok = false;
             } catch (Error e) {
                 OpenProjectsLogging.log(Level.WARNING, null, e);
-                INSTANCE.openProjects.remove(p);
+                INSTANCE.openMainProjects.openProjects().remove(p);
                 INSTANCE.removeModuleInfo(p);
                 ok = false;
             }
@@ -1057,15 +1049,15 @@ public final class OpenProjectList {
         final AtomicBoolean alreadyOpen = new AtomicBoolean();
         boolean recentProjectsChanged = MUTEX.writeAccess(new Mutex.Action<Boolean>() {
             public @Override Boolean run() {
-                OpenProjectsLogging.log(Level.FINER, "already opened: {0} ", openProjects);
-            for (Project existing : openProjects) {
+                OpenProjectsLogging.log(Level.FINER, "already opened: {0} ", openMainProjects.openProjects());
+            for (Project existing : openMainProjects.openProjects()) {
                 // TODO An old hack due to broken equals() contract; see https://bz.apache.org/netbeans/show_bug.cgi?id=156536
                 if (p.equals(existing) || existing.equals(p)) {
                     alreadyOpen.set(true);
                     return false;
                 }
             }
-            openProjects.add(p);
+            openMainProjects.openProjects().add(p);
             addModuleInfo(p);
             //initially opened projects need to have these listeners also added.
             p.getProjectDirectory().addFileChangeListener(deleteListener);
@@ -1077,7 +1069,7 @@ public final class OpenProjectList {
         if (alreadyOpen.get()) {
             return false;
         }
-        OpenProjectsLogging.logProjects("doOpenProject(): openProjects == ", openProjects.toArray(new Project[0])); // NOI18N
+        OpenProjectsLogging.logProjects("doOpenProject(): LOAD.openProjects() == ", openMainProjects.openProjects().toArray(new Project[0])); // NOI18N
         // Notify projects opened
         notifyOpened(p);
 
@@ -1467,8 +1459,8 @@ public final class OpenProjectList {
                 recentProjectsInfos.clear();
             }
             // register project delete listener to all open projects
-                for (Project p : openProjects) {
-                    assert p != null : "There is null in " + openProjects;
+                for (Project p : openMainProjects.openProjects()) {
+                    assert p != null : "There is null in " + openMainProjects.openProjects();
                     assert p.getProjectDirectory() != null : "Project " + p + " has null project directory";
                     p.getProjectDirectory().addFileChangeListener(nbprojectDeleteListener);
                 }
@@ -1625,7 +1617,7 @@ public final class OpenProjectList {
             OpenProjectList.MUTEX.readAccess(new Mutex.Action<Void>() {
                 public @Override Void run() {
                 Project toRemove = null;
-                for (Project prj : openProjects) {
+                for (Project prj : openMainProjects.openProjects()) {
                     if (fe.getFile().equals(prj.getProjectDirectory())) {
                         toRemove = prj;
                         break;
@@ -1723,17 +1715,17 @@ public final class OpenProjectList {
 
             List<String> recentTemplates = new ArrayList<String>(OpenProjectListSettings.getInstance().getRecentTemplates());
 
-            openProjects = lazilyOpenedProjects;
-            if (lazyMainProject != null) {
-                mainProject = lazyMainProject;
+            if (lazyMainProject == null) {
+                lazyMainProject = openMainProjects.mainProject();
             }
-            mainProject = unwrapProject(mainProject);
+            openMainProjects.updateGlobalState(lazilyOpenedProjects, unwrapProject(lazyMainProject));
+
             getRecentTemplates().addAll(recentTemplates);
 
             MUTEX.postReadRequest(() -> {
                 Project[] opened = lazilyOpenedProjects.toArray(Project[]::new);
                 pchSupport.firePropertyChange(OpenProjectList.PROPERTY_OPEN_PROJECTS, new Project[0], opened);
-                Project main = mainProject;
+                Project main = openMainProjects.mainProject();
                 if (main != null) {
                     // else PROPERTY_MAIN_PROJECT would be fired spuriously
                     pchSupport.firePropertyChange(OpenProjectList.PROPERTY_MAIN_PROJECT, null, main);

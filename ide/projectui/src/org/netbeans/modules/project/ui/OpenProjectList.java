@@ -151,17 +151,15 @@ public final class OpenProjectList {
     private final NbProjectDeletionListener nbprojectDeleteListener = new NbProjectDeletionListener();
 
     private final PropertyChangeListener infoListener;
-    private final OpenProjectOperation LOAD;
+    private volatile OpenProjectOperation LOAD;
     private final ArrayList<ProjectGroupChangeListener> projectGroupSupport;
     private final AtomicBoolean groupChanging = new AtomicBoolean(false);
 
     OpenProjectList() {
-        Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
-        boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
-        List<URL> urls = loadProjectsOnStart ? OpenProjectListSettings.getInstance().getOpenProjectsURLs() : Collections.emptyList();
         URL main = OpenProjectListSettings.getInstance().getMainProjectURL();
-        LOAD = new OpenProjectsLoading(new LoadingCallback(), selectedFiles, urls, main);
-        openProjects = loadProjectList();
+        pchSupport = new PropertyChangeSupport( this );
+        recentTemplates = new ArrayList<String>();
+        projectGroupSupport = new ArrayList<ProjectGroupChangeListener>();
         openProjectsModuleInfos = new HashMap<ModuleInfo, List<Project>>();
         infoListener = new PropertyChangeListener() {
             @Override
@@ -171,11 +169,9 @@ public final class OpenProjectList {
                 }
             }
         };
-        pchSupport = new PropertyChangeSupport( this );
+        replaceProjectsImpl(loadProjectList(), main);
         recentProjects = new RecentProjectList(10); // #47134
         recentProjects.load();
-        recentTemplates = new ArrayList<String>();
-        projectGroupSupport = new ArrayList<ProjectGroupChangeListener>();
     }
 
 
@@ -605,6 +601,24 @@ public final class OpenProjectList {
         } finally {
             LOAD.exit();
     }
+    }
+
+    final void replaceProjects(List<LazyProject> projects, URL mainProject) {
+        MUTEX.writeAccess(() -> {
+            replaceProjectsImpl(projects, mainProject);
+        });
+    }
+
+    private final void replaceProjectsImpl(List<LazyProject> projects, URL mainProject) {
+        if (openProjects != null) {
+            close(openProjects.toArray(Project[]::new), false);
+        }
+        openProjects = new ArrayList<>(projects);
+        pchSupport.firePropertyChange(PROPERTY_WILL_OPEN_PROJECTS, null, openProjects.toArray(Project[]::new));
+        Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
+        var urls = projects.stream().map(p -> p.url).toList();
+        var load = new OpenProjectsLoading(new LoadingCallback(), selectedFiles, urls, mainProject);
+        LOAD = load;
     }
 
     public void close( Project someProjects[], boolean notifyUI) {
@@ -1075,12 +1089,16 @@ public final class OpenProjectList {
         return recentProjectsChanged;
     }
 
-    private static List<Project> loadProjectList() {
+    private static List<LazyProject> loadProjectList() {
         assert MUTEX.isReadAccess() || MUTEX.isWriteAccess();
+        boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
+        if (!loadProjectsOnStart) {
+            return Collections.emptyList();
+        }
         List<URL> URLs = OpenProjectListSettings.getInstance().getOpenProjectsURLs();
         List<String> names = OpenProjectListSettings.getInstance().getOpenProjectsDisplayNames();
         List<ExtIcon> icons = OpenProjectListSettings.getInstance().getOpenProjectsIcons();
-        List<Project> projects = new ArrayList<Project>();
+        List<LazyProject> projects = new ArrayList<>();
 
         Iterator<URL> urlIt = URLs.iterator();
         Iterator<String> namesIt = names.iterator();
@@ -1709,6 +1727,8 @@ public final class OpenProjectList {
             return false;
         }
     }
+
+
 
     final class LoadingCallback implements OpenProjectsLoading.Callback {
         @Override

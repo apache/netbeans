@@ -151,12 +151,13 @@ public final class OpenProjectList {
     private final NbProjectDeletionListener nbprojectDeleteListener = new NbProjectDeletionListener();
 
     private final PropertyChangeListener infoListener;
-    private final Loading LOAD;
+    private final OpenProjectOperation LOAD;
     private final ArrayList<ProjectGroupChangeListener> projectGroupSupport;
     private final AtomicBoolean groupChanging = new AtomicBoolean(false);
 
     OpenProjectList() {
-        LOAD = new OpenProjectsLoading(0, new LoadingCallback(), Utilities.actionsGlobalContext().lookupResult(FileObject.class));
+        Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
+        LOAD = new OpenProjectsLoading(new LoadingCallback(), selectedFiles);
         openProjects = new ArrayList<Project>();
         openProjectsModuleInfos = new HashMap<ModuleInfo, List<Project>>();
         infoListener = new PropertyChangeListener() {
@@ -1702,24 +1703,6 @@ public final class OpenProjectList {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Interface to asynchronous manipulation with project list.
-     */
-    sealed interface Loading extends Runnable permits OpenProjectsLoading {
-        public boolean isDone();
-
-        public boolean waitFinished(long toMillis);
-
-        public void enter();
-
-        public boolean closeBeforeOpen(Project[] someProjects);
-
-        public void exit();
-
-        public void preferredProject(Set<FileObject> singleton);
-
     }
 
     final class LoadingCallback implements OpenProjectsLoading.Callback {

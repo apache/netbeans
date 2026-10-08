@@ -62,7 +62,7 @@ import org.openide.util.WeakListeners;
  *
  * 
  */
-final class OpenProjectsLoading implements Runnable, LookupListener, OpenProjectList.Loading {
+final class OpenProjectsLoading implements Runnable, LookupListener, OpenProjectOperation {
     static final RequestProcessor RP = new RequestProcessor("Load Open Projects"); // NOI18N
     private final RequestProcessor.Task TASK = RP.create(this);
     private volatile int action;
@@ -79,9 +79,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener, OpenProject
 
     @NbBundle.Messages(value = "CAP_Opening_Projects=Opening Projects")
     @SuppressWarnings(value = "LeakingThisInConstructor")
-    OpenProjectsLoading(int action, Callback callback, Lookup.Result<FileObject> currentFiles) {
+    OpenProjectsLoading(Callback callback, Lookup.Result<FileObject> currentFiles) {
         this.outer = callback;
-        this.action = action;
         this.currentFiles = currentFiles;
         currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
         progress = ProgressHandle.createHandle(Bundle.CAP_Opening_Projects());

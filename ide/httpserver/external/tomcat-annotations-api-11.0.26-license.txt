@@ -1,5 +1,5 @@
 Name: Apache Tomcat (Annotations Package)
-Version: 11.0.25
+Version: 11.0.26
 License: Apache-2.0
 Description: Annotations used in Apache Tomcat
 Origin: http://tomcat.apache.org

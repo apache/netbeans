@@ -25,10 +25,24 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.netbeans.api.debugger.*;
+import org.netbeans.api.debugger.ActionsManagerListener;
+import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.DebuggerManagerListener;
+import org.netbeans.api.debugger.LazyActionsManagerListener;
 import org.netbeans.api.debugger.Session;
-import org.netbeans.api.debugger.jpda.*;
+import org.netbeans.api.debugger.Watch;
+import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.ExceptionBreakpoint;
+import org.netbeans.api.debugger.jpda.InvalidExpressionException;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.debugger.jpda.ObjectVariable;
+import org.netbeans.api.debugger.jpda.ThreadBreakpoint;
+import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.DebuggerConsoleIO;
@@ -396,7 +410,6 @@ PropertyChangeListener {
                     }, true);
                 }
                 value = refValue.getValue();
-                //value = theDebugger.evaluate (expression, csf).getValue ();
                 value = backslashEscapePattern.matcher (value).
                     replaceAll ("\\\\\\\\");
                 value = dollarEscapePattern.matcher (value).

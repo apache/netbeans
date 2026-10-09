@@ -439,6 +439,15 @@ public final class MavenEmbedder {
         return res;
     }
 
+    /**
+     * A fully configured repository session, resolving the reactor projects from the workspace.
+     */
+    RepositorySystemSession newRepositorySession() {
+        MavenExecutionRequest request = createMavenExecutionRequest();
+        request.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
+        return maven.newRepositorySession(request);
+    }
+
     public MavenExecutionResult execute(MavenExecutionRequest req) {
         return maven.execute(req);
     }

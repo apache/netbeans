@@ -174,6 +174,9 @@ public class AbstractGitTestCase extends NbTestCase {
         }
         // cache defaut branch name
         defaultBranchName = repository.getConfig().getString(ConfigConstants.CONFIG_INIT_SECTION, null, ConfigConstants.CONFIG_KEY_DEFAULT_BRANCH);
+        if (defaultBranchName == null) {
+            defaultBranchName = Constants.MASTER;
+        }
     }
     
     protected String getDefaultBranch() {

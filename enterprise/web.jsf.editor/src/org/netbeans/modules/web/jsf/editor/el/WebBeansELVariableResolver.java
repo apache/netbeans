@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.modules.web.el.spi.ELVariableResolver;
@@ -50,7 +50,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
     @Override
     public FieldInfo getInjectableField(String beanName, FileObject target, ResolverContext context) {
         for (WebBean bean : getWebBeans(target, context)) {
-            if (beanName.equals(bean.getName())) {
+            if (beanName.equals(bean.name())) {
                 return new FieldInfo(bean.getEnclodingClass(), bean.getBeanClassName());
             }
         }
@@ -61,7 +61,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
     public String getBeanName(String clazz, FileObject target, ResolverContext context) {
         for (WebBean bean : getWebBeans(target, context)) {
             if (clazz.equals(bean.getBeanClassName())) {
-                return bean.getName();
+                return bean.name();
             }
         }
         return null;
@@ -77,7 +77,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         List<WebBean> beans = getWebBeans(target, context);
         List<VariableInfo> result = new ArrayList<>(beans.size());
         for (WebBean bean : beans) {
-            result.add(VariableInfo.createResolvedVariable(bean.getName(), bean.getBeanClassName()));
+            result.add(VariableInfo.createResolvedVariable(bean.name(), bean.getBeanClassName()));
         }
         return result;
     }
@@ -89,7 +89,13 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
 
     @Override
     public List<VariableInfo> getBeansInScope(String scope, Snapshot snapshot, ResolverContext context) {
-        return Collections.emptyList();
+        List<WebBean> beans = getWebBeans(snapshot.getSource().getFileObject(), context);
+        // bean's scope is CDI FQDN (eg. "jakarta.enterprise.context.RequestScoped")
+        // the received scope filter, instead, is the simple name (eg. "request")
+        return beans.stream()
+                .filter(bean -> bean.scope() != null && bean.scope().toLowerCase(Locale.ROOT).contains(scope))
+                .map(bean -> VariableInfo.createResolvedVariable(bean.name(), bean.getBeanClassName()))
+                .toList();
     }
 
     @Override
@@ -119,13 +125,11 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
                     //filter out null elements - probably a WebBeansModel bug,
                     //happens under some circumstances when renaming/deleting beans
                     if (e != null) {
-                        webBeans.add(new WebBean(e, metadata.getName(e)));
+                        webBeans.add(new WebBean(e, metadata.getName(e), metadata.getScope(e)));
                     }
                 }
                 return webBeans;
             });
-        } catch (MetadataModelException ex) {
-            Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -133,39 +137,23 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         return Collections.emptyList();
     }
 
-    private static final class WebBean {
-
-        private final Element element;
-        private final String name;
-
-        private WebBean(Element element, String name) {
-            this.element = element;
-            this.name = name;
-        }
-
-        private Element getElement() {
-            return element;
-        }
+    private record WebBean(Element element, String name, String scope) {
 
         public String getBeanClassName() {
-            if (getElement() instanceof ExecutableElement methodElement) {
+            if (element instanceof ExecutableElement methodElement) {
                 String returnType = methodElement.getReturnType().toString();
                 int genericOffset = returnType.indexOf('<');
                 return genericOffset == -1 ? returnType : returnType.substring(0, genericOffset);
             } else {
-                return getElement().asType().toString();
+                return element.asType().toString();
             }
         }
 
-        public String getName() {
-            return name;
-        }
-
         private String getEnclodingClass() {
-            if (getElement() instanceof ExecutableElement methodElement) {
+            if (element instanceof ExecutableElement methodElement) {
                 return methodElement.getEnclosingElement().asType().toString();
             } else {
-                return getElement().asType().toString();
+                return element.asType().toString();
             }
         }
     }

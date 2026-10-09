@@ -18,9 +18,7 @@
  */
 package org.netbeans.spi.debugger.ui;
 
-import java.beans.Customizer;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +33,6 @@ import org.netbeans.api.debugger.Watch.Pin;
 import org.netbeans.modules.debugger.ui.annotations.WatchAnnotationProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**

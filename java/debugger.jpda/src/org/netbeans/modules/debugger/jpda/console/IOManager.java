@@ -112,14 +112,19 @@ public class IOManager {
         Line line,
         boolean important
     ) {
-        print(text, line == null ? null : new HyperlinkRunnable(line), important);
+        print(text, line == null ? null : new HyperlinkRunnable(line), true, important);
     }
     /**
      * Prints given text to the output.
+     * @param text the text to print
+     * @param action an action or {@code null} to associte to the hyperlinked text
+     * @param newLine should a new line follow after the print
+     * @param important bring the output to the front?
      */
     public void print (
         String text,
-        Runnable line,
+        Runnable action,
+        boolean newLine,
         boolean important
     ) {
         if (text == null)
@@ -134,7 +139,7 @@ public class IOManager {
             }
         }
         synchronized (buffer) {
-            buffer.addLast (new Text (text, line, important));
+            buffer.addLast (new Text (text, action, newLine, important));
             if (task == null) {
                 task = new RequestProcessor("Debugger Output", 1).post (new Runnable () {
                     public void run () {
@@ -150,23 +155,16 @@ public class IOManager {
                         int i, k = output.size ();
                         for (i = 0; i < k; i++) {
                             Text t = output.get(i);
-                            if (t.important) {
-                                if (t.line != null) {
-                                    Hyperlink hl = Hyperlink.from(t.line, t.important);
-                                    debuggerErr.println(t.text, hl);
-                                } else {
-                                    debuggerErr.println(t.text);
-                                }
-                                debuggerIO.show();
-                                debuggerErr.flush();
+                            var where = t.important ? debuggerErr : debuggerOut;
+                            Hyperlink hl = t.action == null ? null : Hyperlink.from(t.action, t.important);
+                            if (t.newLine) {
+                                where.println(t.text, hl);
                             } else {
-                                if (t.line != null) {
-                                    Hyperlink hl = Hyperlink.from(t.line, t.important);
-                                    debuggerOut.println(t.text, hl);
-                                } else {
-                                    debuggerOut.println(t.text);
-                                }
-                                debuggerOut.flush();
+                                where.print(t.text, hl);
+                            }
+                            where.flush();
+                            if (t.important) {
+                                debuggerIO.show();
                             }
                             if (debugger != null) {
                                 debugger.actionStatusDisplayCallback(null, t.text);
@@ -226,13 +224,15 @@ public class IOManager {
     }
     
     private static class Text {
-        private String text;
-        private Runnable line;
-        private boolean important;
+        final String text;
+        final Runnable action;
+        final boolean newLine;
+        final boolean important;
         
-        private Text (String text, Runnable line, boolean important) {
+        private Text (String text, Runnable action, boolean newLine, boolean important) {
             this.text = text;
-            this.line = line;
+            this.action = action;
+            this.newLine = newLine;
             this.important = important;
         }
     }

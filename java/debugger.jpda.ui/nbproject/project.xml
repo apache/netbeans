@@ -428,6 +428,7 @@
                 <friend>org.netbeans.modules.debugger.jpda.truffle</friend>
                 <friend>org.netbeans.modules.debugger.jpda.visual</friend>
                 <friend>org.netbeans.modules.web.debug</friend>
+                <friend>org.netbeans.modules.debugger.jpda.heapwalk</friend>
                 <package>org.netbeans.modules.debugger.jpda.ui</package>
                 <package>org.netbeans.modules.debugger.jpda.ui.options</package>
                 <package>org.netbeans.modules.debugger.jpda.ui.breakpoints</package>

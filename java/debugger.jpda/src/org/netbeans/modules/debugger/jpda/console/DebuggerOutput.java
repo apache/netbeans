@@ -31,12 +31,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.debugger.ActionsManager;
-import org.netbeans.api.debugger.ActionsManagerListener;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.api.debugger.LazyActionsManagerListener;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.AbstractDICookie;
 import org.netbeans.api.debugger.jpda.AttachingDICookie;
@@ -54,6 +50,7 @@ import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 
@@ -510,11 +507,23 @@ public class DebuggerOutput implements PropertyChangeListener {
                 return ;
             }
         }
+        findProvider();
         ioManager.println (
             text,
 //            where,
             line,
             important
         );
+    }
+
+    private void findProvider() {
+        try {
+            var clazz = Class.forName( "org.netbeans.spi.viewmodel.NodeActionsProviderFilter", true, Thread.currentThread().getContextClassLoader());
+            var where = "LocalsView";
+            var all = this.contextProvider.lookup(where, clazz);
+            System.err.println("all: " + all);
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

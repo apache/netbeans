@@ -29,7 +29,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 import org.netbeans.modules.java.graph.GraphEdge;
 import org.netbeans.modules.java.graph.GraphNode;
 import org.netbeans.modules.java.graph.DependencyGraphScene;

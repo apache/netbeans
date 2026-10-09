@@ -278,13 +278,17 @@ public class PullTest extends AbstractGitTestCase {
         makeRemoteChange(getDefaultBranch());
         GitPullResult result = client.pull(otherWT.toURI().toString(), Arrays.asList(new String[]{"+refs/heads/*:refs/remotes/origin/*"}), "origin/" + getDefaultBranch(), NULL_PROGRESS_MONITOR);
         assertEquals(GitMergeResult.MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals("Merge branch '" + getDefaultBranch() + "' of " + new URIish(otherWT.toURI().toString()).toString() + " into " + getDefaultBranch(), client.log(result.getMergeResult().getNewHead(), NULL_PROGRESS_MONITOR).getFullMessage());
+        // into branchname added on non default git config: test begining to the commit message only
+        String truncatedMessageChange1 = "Merge branch '" + getDefaultBranch() + "' of " + new URIish(otherWT.toURI().toString()).toString();
+        assertEquals(truncatedMessageChange1, client.log(result.getMergeResult().getNewHead(), NULL_PROGRESS_MONITOR).getFullMessage().substring(0, truncatedMessageChange1.length()));
 
         makeLocalChange(f, "2");
         makeRemoteChange(getDefaultBranch(), "2");
         result = client.pull("origin", Arrays.asList(new String[]{"+refs/heads/*:refs/remotes/origin/*"}), "origin/" + getDefaultBranch(), NULL_PROGRESS_MONITOR);
         assertEquals(GitMergeResult.MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals("Merge branch '" + getDefaultBranch() + "' of " + new URIish(otherWT.toURI().toString()).toString() + " into " + getDefaultBranch(), client.log(result.getMergeResult().getNewHead(), NULL_PROGRESS_MONITOR).getFullMessage());
+        // into branchname added on non default git config: test begining to the commit message only
+        String truncatedMessageChange2 = "Merge branch '" + getDefaultBranch() + "' of " + new URIish(otherWT.toURI().toString()).toString();
+        assertEquals(truncatedMessageChange2, client.log(result.getMergeResult().getNewHead(), NULL_PROGRESS_MONITOR).getFullMessage().substring(0, truncatedMessageChange2.length()));
     }
 
     private void setupRemoteSpec(String remote, String fetchSpec) throws URISyntaxException, IOException {

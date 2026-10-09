@@ -24,7 +24,7 @@
 
     <target name="build-init" depends="projectized.build-init">
         <mkdir dir="${jpda.classes.dir}"/>
-        <copy todir="${jpda.classes.dir}">
+        <copy todir="${jpda.classes.dir}" failonerror="false">
             <resources>
                 <javaresource name="com/sun/jdi/AbsentInformationException.class"/>
                 <javaresource name="com/sun/jdi/Bootstrap.class"/>

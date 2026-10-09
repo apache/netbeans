@@ -54,6 +54,10 @@ public final class DebuggerConsoleIO {
         output.getIOManager().println(text, line, important);
     }
     
+    public void printlnWithAction(String text, Runnable run) {
+        output.getIOManager().print(text, run, false);
+    }
+
     public static final class Line {
         
         private final String url;

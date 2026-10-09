@@ -112,6 +112,16 @@ public class IOManager {
         Line line,
         boolean important
     ) {
+        print(text, line == null ? null : new HyperlinkRunnable(line), important);
+    }
+    /**
+     * Prints given text to the output.
+     */
+    public void print (
+        String text,
+        Runnable line,
+        boolean important
+    ) {
         if (text == null)
             throw new NullPointerException ();
         if (!openDebuggerConsole()) {
@@ -142,7 +152,7 @@ public class IOManager {
                             Text t = output.get(i);
                             if (t.important) {
                                 if (t.line != null) {
-                                    Hyperlink hl = Hyperlink.from(new HyperlinkRunnable(t.line), t.important);
+                                    Hyperlink hl = Hyperlink.from(t.line, t.important);
                                     debuggerErr.println(t.text, hl);
                                 } else {
                                     debuggerErr.println(t.text);
@@ -151,7 +161,7 @@ public class IOManager {
                                 debuggerErr.flush();
                             } else {
                                 if (t.line != null) {
-                                    Hyperlink hl = Hyperlink.from(new HyperlinkRunnable(t.line), t.important);
+                                    Hyperlink hl = Hyperlink.from(t.line, t.important);
                                     debuggerOut.println(t.text, hl);
                                 } else {
                                     debuggerOut.println(t.text);
@@ -217,10 +227,10 @@ public class IOManager {
     
     private static class Text {
         private String text;
-        private Line line;
+        private Runnable line;
         private boolean important;
         
-        private Text (String text, Line line, boolean important) {
+        private Text (String text, Runnable line, boolean important) {
             this.text = text;
             this.line = line;
             this.important = important;

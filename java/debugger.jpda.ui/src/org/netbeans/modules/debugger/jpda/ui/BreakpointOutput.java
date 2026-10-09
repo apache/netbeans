@@ -34,6 +34,7 @@ import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.DebuggerConsoleIO;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.ui.models.BreakpointsActionsProvider;
 import org.netbeans.modules.debugger.jpda.ui.models.BreakpointsNodeModel;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.viewmodel.NodeModel;
@@ -421,10 +422,12 @@ PropertyChangeListener {
                     dbg = (JPDADebuggerImpl) debugger;
                 }
                 if (dbg != null) {
-                    dbg.getConsoleIO().println (
-                            "Cannot evaluate expression '" + expression + "' : " + msg, 
-                            null
-                        );
+                    dbg.getConsoleIO().printlnWithAction(
+                        "Cannot evaluate expression '" + expression + "' : " + msg, 
+                        () -> {
+                            BreakpointsActionsProvider.customize((Breakpoint) event.getSource());
+                        }
+                    );
                 }
             }
             printText = m.replaceFirst (value);

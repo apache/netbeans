@@ -44,7 +44,7 @@ import javax.swing.tree.TreePath;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.spi.IconResources;

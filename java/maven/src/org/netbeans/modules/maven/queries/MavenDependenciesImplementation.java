@@ -46,6 +46,11 @@ import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
+import static org.netbeans.modules.maven.embedder.tree.DependencyNode.INCLUDED;
+import static org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_CONFLICT;
+import static org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_CYCLE;
+import static org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_DUPLICATE;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyChangeException;
@@ -275,7 +280,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                 filter(Objects::nonNull).
                 collect(Collectors.toList());
         
-        org.apache.maven.shared.dependency.tree.DependencyNode n;
+        DependencyNode n;
         try {
             n = DependencyTreeFactory.createDependencyTree(mp, embedder, mavenScopes);
         } catch (MavenExecutionException ex) {
@@ -351,7 +356,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
     }
     
     private class Converter {
-        final Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes = new HashMap<>();
+        final Map<String, List<DependencyNode>> realNodes = new HashMap<>();
         final Dependency.Filter filter;
         final Set<ArtifactSpec> broken = new HashSet<>();
         List<Artifact> annotationProcessors = Collections.emptyList();
@@ -360,30 +365,30 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             this.filter = filter;
         }
 
-        private void findRealNodes(org.apache.maven.shared.dependency.tree.DependencyNode n) {
+        private void findRealNodes(DependencyNode n) {
             if (n.getArtifact() == null) {
                 return;
             }
             Artifact a = n.getArtifact();
-            if (n.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED) {
+            if (n.getState() != INCLUDED) {
                 return;
             }
             // register (if not present) using plain artifact ID, but also using the full path, which will be preferred for the lookup.
             realNodes.putIfAbsent(a.getId(), n.getChildren());
             realNodes.put(getFullArtifactId(a), n.getChildren());
 
-            for (org.apache.maven.shared.dependency.tree.DependencyNode c : n.getChildren()) {
+            for (DependencyNode c : n.getChildren()) {
                 findRealNodes(c);
             }
         }
 
-        private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n) {
+        private Dependency convertDependencies(DependencyNode n) {
             findRealNodes(n);
             return convert2(true, n, new HashSet<>());
         }
 
 
-        private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n, Set<ArtifactSpec> visited) {
+        private Dependency convert2(boolean root, DependencyNode n, Set<ArtifactSpec> visited) {
             List<Dependency> ch = new ArrayList<>();
             
             ArtifactSpec currentArtifact = mavenToArtifactSpec(n.getArtifact());
@@ -393,13 +398,13 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                 return null;
             }
             
-            List<org.apache.maven.shared.dependency.tree.DependencyNode> children = n.getChildren();
+            List<DependencyNode> children = n.getChildren();
             org.apache.maven.artifact.Artifact thisArtifact = n.getArtifact();
             org.apache.maven.artifact.Artifact relatedArtifact = n.getRelatedArtifact();
 
             switch (n.getState()) {
-                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CYCLE:
-                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_DUPLICATE:
+                case OMITTED_FOR_CYCLE:
+                case OMITTED_FOR_DUPLICATE:
                     // TODO: unless the client specifies NOT to eliminate duplicates from the tree,
                     // we need to include the duplicate including the children, to form a correct full dependency tree. 
                     if (relatedArtifact != null) {
@@ -409,7 +414,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                         children = realNodes.getOrDefault(n.getArtifact().getId(), n.getChildren());
                     }
                     break;
-                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CONFLICT:
+                case OMITTED_FOR_CONFLICT:
                     // there are two cases when OMITTED_FOR_CONFLICT is used: 
                     // 1. another version is actually used, which means that unless the client requests to omit 
                     //    duplicates, we need to include the ACTUAL dependency's artifact version and its children.
@@ -442,7 +447,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                     }
                 }
 
-                for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
+                for (DependencyNode c : children) {
                     Dependency cd = convert2(false, c, visited);
                     if (cd != null) {
                         ch.add(cd);

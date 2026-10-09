@@ -389,16 +389,7 @@ PropertyChangeListener {
                         }
                     } catch (AbsentInformationException aiex) {}
                 }
-                try {
-                value = ((Variable) theDebugger.getClass().getMethod("evaluate", String.class, CallStackFrame.class).
-                        invoke(theDebugger, expression, csf)).getValue();
-                } catch (InvocationTargetException itex) {
-                    if (itex.getTargetException() instanceof InvalidExpressionException) {
-                        throw (InvalidExpressionException) itex.getTargetException();
-                    }
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                value = theDebugger.evaluate(expression, csf).getValue();
                 //value = theDebugger.evaluate (expression, csf).getValue ();
                 value = backslashEscapePattern.matcher (value).
                     replaceAll ("\\\\\\\\");

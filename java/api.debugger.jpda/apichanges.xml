@@ -53,15 +53,17 @@
 <changes>
     <change>
         <api name="JPDADebuggerAPI"/>
-        <summary>JPDABreakpointEvent.isThreadDeath</summary>
+        <summary>JPDABreakpointEvent, JPDADebugger enhancements</summary>
         <version major="3" minor="45"/>
         <date day="16" month="10" year="2026"/>
         <author login="jtulach"/>
         <compatibility addition="yes"/>
         <description>
             Added <code>JPDABreakpointEvent.isThreadDeath()</code> method.
+            Added new overload of <code>evaluate</code> method in <code>JPDADebugger</code>.
         </description>
         <class name="JPDABreakpointEvent" package="org.netbeans.api.debugger.jpda.event"/>
+        <class name="JPDADebugger" package="org.netbeans.api.debugger.jpda"/>
     </change>
     <change>
         <api name="JPDADebuggerAPI"/>

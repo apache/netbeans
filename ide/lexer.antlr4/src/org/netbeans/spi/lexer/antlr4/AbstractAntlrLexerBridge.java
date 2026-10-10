@@ -83,7 +83,20 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         } else {
             nextToken = nextRealToken();
         }
-        return nextToken.getType() != EOF ? mapToken(nextToken) : null;
+        if (nextToken.getType() != EOF) {
+            return mapToken(nextToken);
+        }
+        // The ANTLR lexer ran out of input. Normally that is the end of the
+        // text, but it also happens when the trailing characters could not be
+        // recognized: an ANTLR lexer throws LexerNoViableAltException and then
+        // emits EOF after consuming e.g. an unterminated string literal at the
+        // end of the document. Returning null in that state would leave the
+        // consumed characters without a NetBeans token and the lexer
+        // infrastructure would fail with "returned null token but
+        // lexerInput.readLength()=...". Let the implementation map the EOF
+        // token over those still unread characters instead (usually to an
+        // error token), so they receive a token.
+        return input.readLength() > 0 ? mapToken(nextToken) : null;
     }
 
     /**
@@ -103,6 +116,16 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
      *          return token(SomeTokenId.ERROR);
      *  }
      * }</pre>
+     *
+     * <p>This method is also called with the {@code EOF} token when the ANTLR
+     * lexer reached the end of the input on characters it could not recognize,
+     * for example after an unterminated string literal at the end of the text.
+     * Those characters have already been read from the
+     * {@link org.netbeans.spi.lexer.LexerInput} (their count is reported by
+     * {@link org.netbeans.spi.lexer.LexerInput#readLength()}) and still need a
+     * token, so implementations shall return a token covering them, usually an
+     * error token, and shall not return {@code null} in that case.
+     *
      * @param antlrToken the token from the ANTLR Lexer
      *
      * @return a NetBeans lexer token.

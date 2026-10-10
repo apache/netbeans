@@ -1113,13 +1113,14 @@ public class CasualDiff {
             // diffing mechanism will solve the implements keyword.
             insertHint = oldT.implementing.iterator().next().getStartPosition();
         }
-        long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
-        PositionEstimator estimator = (flags & INTERFACE) == 0 ?
-            EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext) :
-            EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
-        if (!newT.implementing.isEmpty())
-            copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+            long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
+            PositionEstimator estimator = (flags & INTERFACE) == 0
+                    ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
+                    : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
+            if (!newT.implementing.isEmpty()) {
+                copyTo(localPointer, insertHint);
+            }
+            localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
         }
 
         {
@@ -3556,14 +3557,12 @@ public class CasualDiff {
                 }
                 case INSERT: {
                     String prec = s.head(j) ? estimator.head() : s.prev(j) ? estimator.sep() : null;
-                    String tail = s.next(j) ? estimator.sep() : null;
-                    if (estimator.getIndentString() != null && !estimator.getIndentString().equals(" ")) {
+                    if (prec!=null && estimator.getIndentString() != null && !estimator.getIndentString().equals(" ")) {
                         prec += estimator.getIndentString();
                     }
                     copyTo(lastOldPos, testPos);
                     printer.print(prec);
                     printer.print(item.element);
-                    printer.print(tail);
                     //append(Diff.insert(testPos, prec, item.element, tail, LineInsertionType.NONE));
                     firstNewItem = false;
                     newIndex++;

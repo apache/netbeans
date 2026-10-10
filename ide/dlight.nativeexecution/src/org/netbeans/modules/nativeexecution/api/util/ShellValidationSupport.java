@@ -27,10 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
 import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;
-//import org.netbeans.modules.dlight.nativeexecution.ui.ShellValidationStatusPanel;
-//import org.openide.DialogDescriptor;
-//import org.openide.DialogDisplayer;
-//import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -39,7 +35,7 @@ import org.openide.util.NbPreferences;
  * @author ak119685
  */
 public final class ShellValidationSupport {
-    
+
     protected static final ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
     protected static final ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
 
@@ -50,12 +46,25 @@ public final class ShellValidationSupport {
 
         if (shell == null) {
             return NOSHELL;
-        }
-
-        if (shell.type == ShellType.CYGWIN) {
+        } else if (shell.type == ShellType.CYGWIN) {
             return validateCygwinShell(shell);
+        } else if (shell.type == ShellType.WSL) {
+            return validateWslShell(shell);
         }
 
+        return VALID;
+    }
+
+    private static ShellValidationStatus validateWslShell(final Shell shell) {
+        assert shell != null && shell.type == ShellType.WSL;
+        File wslPath = new File(System.getenv("windir"), "system32/wsl.exe");
+        ProcessUtils.ExitStatus exitStatus = ProcessUtils.execute(new ProcessBuilder(wslPath.getPath(), shell.shell, "-c", "echo 'Works'")); // NOI18N
+        if (! exitStatus.isOK()) {
+            return new ShellValidationStatus(shell, Arrays.asList("Failed to execute smoke test for shell (WSL) " + shell.shell + ", exit status: " + exitStatus), null);
+        }
+        if(! exitStatus.getOutputString().startsWith("Works")) {
+            return new ShellValidationStatus(shell, Arrays.asList("Smoke test for shell did not yield expected result: " + exitStatus.getOutputString()), null);
+        }
         return VALID;
     }
 
@@ -131,7 +140,6 @@ public final class ShellValidationSupport {
 
                     if (!p2.startsWith(p1)) {
                         validationWarnings.add(loc("ShellValidationSupport.ValidationError.wrongMountPoint", winpath, cygpath)); // NOI18N
-                        continue;
                     }
                 }
             }
@@ -148,6 +156,7 @@ public final class ShellValidationSupport {
         return confirm(null, null, status);
     }
 
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     public static boolean confirm(final String header, final String footer, final ShellValidationStatus status) {
         if (status == null || status == NOSHELL) {
             if (Boolean.getBoolean("nativeexecution.mode.unittest") || "true".equals(System.getProperty("cnd.command.line.utility"))) { // NOI18N
@@ -174,7 +183,6 @@ public final class ShellValidationSupport {
             return true;
         }
 
-        Object response = null;
         if (Boolean.getBoolean("nativeexecution.mode.unittest")) {
             System.err.println(loc("ShellValidationSupport.ValidationError.ErrorDialogTitle", "cygwin"));
             System.err.println(header);
@@ -187,45 +195,7 @@ public final class ShellValidationSupport {
             return NativeExecutionUserNotification.getDefault().confirmShellStatusValiation(
                     loc("ShellValidationSupport.ValidationError.ErrorDialogTitle", "cygwin"),//NOI18N
                     header, footer, status.shell);
-//            final ShellValidationStatusPanel errorPanel = new ShellValidationStatusPanel(header, footer, status.shell);
-//
-//            final JButton noButton = new JButton("No"); // NOI18N
-//            errorPanel.setActionListener(new ActionListener() {
-//
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    noButton.setEnabled(!errorPanel.isRememberDecision());
-//                }
-//            });
-//
-//            DialogDescriptor dd = new DialogDescriptor(errorPanel,
-//                    loc("ShellValidationSupport.ValidationError.ErrorDialogTitle", "cygwin"), // NOI18N
-//                    true,
-//                    new Object[]{DialogDescriptor.YES_OPTION, noButton},
-//                    noButton,
-//                    DialogDescriptor.DEFAULT_ALIGN, null, null);
-//
-//            Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
-//            
-//            try {
-//                dialog.setVisible(true);
-//            } catch (Throwable th) {
-//                if (!(th.getCause() instanceof InterruptedException)) {
-//                    throw new RuntimeException(th);
-//                }
-//                dd.setValue(DialogDescriptor.CANCEL_OPTION);
-//            } finally {
-//                dialog.dispose();
-//            }
-//
-//            response = dd.getValue();
-//
-//            if (response == DialogDescriptor.YES_OPTION && errorPanel.isRememberDecision()) {
-//                NbPreferences.forModule(WindowsSupport.class).put(key, "yes"); // NOI18N
-//            }
         }
-
-       // return (response == DialogDescriptor.YES_OPTION);
     }
 
     public static class ShellValidationStatus {

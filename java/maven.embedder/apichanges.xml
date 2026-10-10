@@ -83,6 +83,25 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="own-dependency-tree">
+            <api name="general"/>
+            <summary>Dependency tree no longer based on maven-dependency-tree</summary>
+            <version major="2" minor="90"/>
+            <date day="9" month="10" year="2026"/>
+            <author login="slachiewicz"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" addition="yes" modification="yes" deletion="yes"/>
+            <description>
+                <a href="@TOP@/org/netbeans/modules/maven/embedder/DependencyTreeFactory.html">DependencyTreeFactory</a>
+                now builds the tree from Maven Resolver's verbose dependency graph and returns the new
+                <code>org.netbeans.modules.maven.embedder.tree.DependencyNode</code>, which offers the subset of the
+                former API that NetBeans used. The Maven Dependency Tree library is no longer bundled, and the
+                <code>org.apache.maven.shared.dependency.*</code> packages are no longer exported to friends.
+                Update imports to the new package; use the Maven Resolver API directly where the dependency graph is needed.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="DependencyTreeFactory"/>
+            <class package="org.netbeans.modules.maven.embedder.tree" name="DependencyNode"/>
+            <class package="org.netbeans.modules.maven.embedder.tree" name="DependencyNodeVisitor"/>
+        </change>
         <change id="artifact-resolution">
             <api name="general"/>
             <summary>Multiple scopes allowed for dependency tree query</summary>

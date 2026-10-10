@@ -61,7 +61,7 @@ import javax.swing.event.DocumentListener;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidArtifactRTException;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.netbeans.modules.maven.embedder.tree.DependencyNode;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -192,7 +192,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
     }
 
 //    private Project project;
-    private Lookup.Result<org.apache.maven.shared.dependency.tree.DependencyNode> result;
+    private Lookup.Result<org.netbeans.modules.maven.embedder.tree.DependencyNode> result;
     private Lookup.Result<MavenProject> result2;
     private Lookup.Result<POMModel> result3;
 
@@ -308,7 +308,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         super.componentOpened();
         pane.setWheelScrollingEnabled(true);
         add(pane, BorderLayout.CENTER);
-        result = getLookup().lookupResult(org.apache.maven.shared.dependency.tree.DependencyNode.class);
+        result = getLookup().lookupResult(org.netbeans.modules.maven.embedder.tree.DependencyNode.class);
         result.addLookupListener(this);
         result2 = getLookup().lookupResult(MavenProject.class);
         result2.addLookupListener(this);
@@ -540,7 +540,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
     })
 
     private void createScene() {
-        Iterator<? extends org.apache.maven.shared.dependency.tree.DependencyNode> it1 = result.allInstances().iterator();
+        Iterator<? extends org.netbeans.modules.maven.embedder.tree.DependencyNode> it1 = result.allInstances().iterator();
         Iterator<? extends MavenProject> it2 = result2.allInstances().iterator();
         Iterator<? extends POMModel> it3 = result3.allInstances().iterator();
         final MavenProject prj = it2.hasNext() ? it2.next() : null;

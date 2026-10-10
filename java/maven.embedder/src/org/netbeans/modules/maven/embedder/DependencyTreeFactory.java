@@ -18,24 +18,44 @@
  */
 package org.netbeans.modules.maven.embedder;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.MavenExecutionException;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactCollector;
+import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.CumulativeScopeArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
-import org.apache.maven.shared.dependency.tree.DependencyTreeBuilder;
-import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.artifact.ArtifactTypeRegistry;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.util.graph.manager.ClassicDependencyManager;
+import org.eclipse.aether.util.graph.selector.AndDependencySelector;
+import org.eclipse.aether.util.graph.selector.ExclusionDependencySelector;
+import org.eclipse.aether.util.graph.selector.OptionalDependencySelector;
+import org.eclipse.aether.util.graph.selector.ScopeDependencySelector;
+import org.eclipse.aether.util.graph.transformer.ConflictResolver;
+import org.eclipse.aether.util.graph.transformer.JavaScopeDeriver;
+import org.eclipse.aether.util.graph.transformer.JavaScopeSelector;
+import org.eclipse.aether.util.graph.transformer.NearestVersionSelector;
+import org.eclipse.aether.util.graph.transformer.SimpleOptionalitySelector;
+import org.eclipse.aether.util.graph.traverser.FatArtifactTraverser;
 
 /**
+ * Builds the dependency tree of a project with Maven Resolver. The dependencies are collected with the
+ * conflict resolver in verbose mode, so that the nodes dropped by the conflict resolution stay in the graph
+ * and are reported as omitted.
  *
  * @author mkleint
  */
@@ -43,7 +63,7 @@ public class DependencyTreeFactory {
     private static final Logger LOG = Logger.getLogger(DependencyTreeFactory.class.getName());
     
     @Deprecated
-    public static DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, String scope) {
+    public static org.netbeans.modules.maven.embedder.tree.DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, String scope) {
         try {
             return createDependencyTree(project, embedder, List.of(scope));
         } catch (MavenExecutionException ex) {
@@ -61,42 +81,115 @@ public class DependencyTreeFactory {
      * @throws MavenExecutionException wraps any maven-specific exception thrown by the implementation.
      * @since 2.71
      */
-    public static DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, Collection<String> scopes) throws MavenExecutionException {
-        //TODO: check alternative for deprecated maven components 
-        DependencyTreeBuilder builder = embedder.lookupComponent(DependencyTreeBuilder.class);
-        assert builder !=null : "DependencyTreeBuilder component not found in maven";
-
-        ArtifactFactory factory = embedder.lookupComponent(ArtifactFactory.class);
-        assert factory !=null : "ArtifactFactory component not found in maven";
-
-        ArtifactMetadataSource source = embedder.lookupComponent(ArtifactMetadataSource.class);
-        assert source !=null : "ArtifactMetadataSource component not found in maven";
-
-        ArtifactCollector collector = embedder.lookupComponent(ArtifactCollector.class);
-        assert collector !=null : "ArtifactCollector component not found in maven";
+    public static org.netbeans.modules.maven.embedder.tree.DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, Collection<String> scopes) throws MavenExecutionException {
+        RepositorySystem repositorySystem = embedder.lookupComponent(RepositorySystem.class);
+        assert repositorySystem != null : "RepositorySystem component not found in maven";
 
         embedder.setUpLegacySupport();
-        
-        return createDependencyTree(project, builder, embedder.getLocalRepository(), factory, source, collector, scopes);
 
-    }
-    
-    //copied from dependency:tree mojo
-    private static DependencyNode createDependencyTree(MavenProject project,
-            DependencyTreeBuilder dependencyTreeBuilder, ArtifactRepository localRepository,
-            ArtifactFactory artifactFactory, ArtifactMetadataSource artifactMetadataSource,
-            ArtifactCollector artifactCollector,
-            Collection<String> scopes) throws MavenExecutionException {
-        ArtifactFilter artifactFilter = createResolvingArtifactFilter(scopes);
-        
+        DefaultRepositorySystemSession session = new DefaultRepositorySystemSession(embedder.newRepositorySession());
+        configureVerboseSession(session);
+
+        ArtifactTypeRegistry stereotypes = session.getArtifactTypeRegistry();
+        CollectRequest request = new CollectRequest();
+        request.setRootArtifact(RepositoryUtils.toArtifact(project.getArtifact()));
+        request.setRepositories(RepositoryUtils.toRepos(project.getRemoteArtifactRepositories()));
+        for (Dependency dependency : project.getDependencies()) {
+            request.addDependency(RepositoryUtils.toDependency(dependency, stereotypes));
+        }
+        if (project.getDependencyManagement() != null) {
+            for (Dependency dependency : project.getDependencyManagement().getDependencies()) {
+                request.addManagedDependency(RepositoryUtils.toDependency(dependency, stereotypes));
+            }
+        }
+
         try {
-            // TODO: note that filter does not get applied due to MNG-3236
-            return dependencyTreeBuilder.buildDependencyTree(project,
-                    localRepository, artifactFactory,
-                    artifactMetadataSource, artifactFilter, artifactCollector);
-        } catch (DependencyTreeBuilderException exception) {
+            DependencyNode root = repositorySystem.collectDependencies(session, request).getRoot();
+            return createDependencyTree(root, project.getArtifact(), createResolvingArtifactFilter(scopes));
+        } catch (DependencyCollectionException exception) {
             throw new MavenExecutionException("Dependency tree scan failed", exception);
         }
+    }
+
+    static void configureVerboseSession(DefaultRepositorySystemSession session) {
+        // keep the nodes dropped by the conflict resolution, marked with the winner
+        session.setDependencyGraphTransformer(new ConflictResolver(
+                new NearestVersionSelector(),
+                new JavaScopeSelector(),
+                new SimpleOptionalitySelector(),
+                new JavaScopeDeriver()));
+        session.setConfigProperty(ConflictResolver.CONFIG_PROP_VERBOSE, true);
+        // a session that was not created by Maven has none of the following
+        if (session.getDependencySelector() == null) {
+            session.setDependencySelector(new AndDependencySelector(
+                    new ScopeDependencySelector("test", "provided"),
+                    new OptionalDependencySelector(),
+                    new ExclusionDependencySelector()));
+        }
+        if (session.getDependencyManager() == null) {
+            session.setDependencyManager(new ClassicDependencyManager());
+        }
+        if (session.getDependencyTraverser() == null) {
+            session.setDependencyTraverser(new FatArtifactTraverser());
+        }
+    }
+
+    /**
+     * Maps the verbose graph collected by Maven Resolver to the tree. The nodes that lost the conflict
+     * resolution carry the winner in {@link ConflictResolver#NODE_DATA_WINNER} and have no children.
+     * A loser is {@link org.netbeans.modules.maven.embedder.tree.DependencyNode#OMITTED_FOR_CYCLE} if the winner is its ancestor,
+     * {@link org.netbeans.modules.maven.embedder.tree.DependencyNode#OMITTED_FOR_DUPLICATE} if the winner has the same version, and
+     * {@link org.netbeans.modules.maven.embedder.tree.DependencyNode#OMITTED_FOR_CONFLICT} otherwise.
+     *
+     * @param root the root of the collected graph
+     * @param rootArtifact the artifact of the project
+     * @param filter filters the dependencies, may be {@code null}
+     */
+    static org.netbeans.modules.maven.embedder.tree.DependencyNode createDependencyTree(DependencyNode root, Artifact rootArtifact, ArtifactFilter filter) {
+        Set<DependencyNode> ancestors = Collections.newSetFromMap(new IdentityHashMap<>());
+        return convert(root, rootArtifact, filter, ancestors, new ArrayList<>());
+    }
+
+    private static org.netbeans.modules.maven.embedder.tree.DependencyNode convert(DependencyNode node, Artifact artifact,
+            ArtifactFilter filter, Set<DependencyNode> ancestors, List<String> trail) {
+        trail.add(artifact.getId());
+        if (trail.size() > 1) { // do not modify the artifact of the project
+            artifact.setDependencyTrail(new ArrayList<>(trail));
+        }
+        DependencyNode winner = (DependencyNode) node.getData().get(ConflictResolver.NODE_DATA_WINNER);
+        org.netbeans.modules.maven.embedder.tree.DependencyNode result;
+        if (winner == null) {
+            result = new org.netbeans.modules.maven.embedder.tree.DependencyNode(artifact);
+        } else if (ancestors.contains(winner)) {
+            result = new org.netbeans.modules.maven.embedder.tree.DependencyNode(artifact,
+                    org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_CYCLE, null);
+        } else {
+            Artifact related = toArtifact(winner);
+            boolean sameVersion = winner.getArtifact().getBaseVersion().equals(node.getArtifact().getBaseVersion());
+            result = new org.netbeans.modules.maven.embedder.tree.DependencyNode(artifact,
+                    sameVersion ? org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_DUPLICATE
+                                : org.netbeans.modules.maven.embedder.tree.DependencyNode.OMITTED_FOR_CONFLICT,
+                    related);
+        }
+        ancestors.add(node);
+        for (DependencyNode child : node.getChildren()) {
+            Artifact childArtifact = toArtifact(child);
+            if (filter == null || filter.include(childArtifact)) {
+                result.addChild(convert(child, childArtifact, filter, ancestors, trail));
+            }
+        }
+        ancestors.remove(node);
+        trail.remove(trail.size() - 1);
+        return result;
+    }
+
+    private static Artifact toArtifact(DependencyNode node) {
+        Artifact artifact = RepositoryUtils.toArtifact(node.getArtifact());
+        if (node.getDependency() != null) {
+            artifact.setScope(node.getDependency().getScope());
+            artifact.setOptional(node.getDependency().isOptional());
+        }
+        return artifact;
     }
 
     //copied from dependency:tree mojo

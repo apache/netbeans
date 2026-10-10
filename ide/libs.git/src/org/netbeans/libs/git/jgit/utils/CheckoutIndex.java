@@ -25,6 +25,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import org.eclipse.jgit.dircache.Checkout;
 import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.dircache.DirCacheCheckout.CheckoutMetadata;
 import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.FileMode;
@@ -87,25 +88,25 @@ public class CheckoutIndex {
                 if (dit != null && (recursively || directChild(roots, repository.getWorkTree(), path)) && (fit == null || fit.isModified(dit.getDirCacheEntry(), checkContent, od))) {
                     // update entry
                     listener.notifyFile(path, treeWalk.getPathString());
-                    checkoutEntry(repository, path, dit.getDirCacheEntry(), od);
+                    checkoutEntry(repository, treeWalk, path, dit.getDirCacheEntry(), od);
                 }
             }
         }
     }
 
-    public void checkoutEntry (Repository repository, File file, DirCacheEntry e, ObjectReader od) throws IOException, GitException {
+    private void checkoutEntry(Repository repository, TreeWalk treeWalk, File file, DirCacheEntry entry, ObjectReader reader) throws IOException, GitException {
         // ... create/overwrite this file ...
         if (!ensureParentFolderExists(file.getParentFile())) {
             return;
         }
 
         boolean exists = file.exists();
-        if (exists && e.getFileMode() == FileMode.SYMLINK) {
+        if (exists && entry.getFileMode() == FileMode.SYMLINK) {
             monitor.notifyWarning(MessageFormat.format(Utils.getBundle(CheckoutIndex.class).getString("MSG_Warning_SymLink"), file.getAbsolutePath())); //NOI18N
             return;
         }
 
-        if (Utils.isFromNested(e.getFileMode().getBits())) {
+        if (Utils.isFromNested(entry.getFileMode().getBits())) {
             if (!exists) {
                 file.mkdirs();
             }
@@ -116,9 +117,13 @@ public class CheckoutIndex {
             }
             file.createNewFile();
             if (file.isFile()) {
+                CheckoutMetadata checkoutMetadata = new CheckoutMetadata(
+                        treeWalk.getCheckoutEolStreamType(0),
+                        treeWalk.getSmudgeCommand(0)
+                );
                 new Checkout(repository)
                         .setRecursiveDeletion(false)
-                        .checkout(e, null, od, null);
+                        .checkout(entry, checkoutMetadata, reader, null);
             } else {
                 monitor.notifyError(MessageFormat.format(Utils.getBundle(CheckoutIndex.class).getString("MSG_Warning_CannotCreateFile"), file.getAbsolutePath())); //NOI18N
             }

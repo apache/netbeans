@@ -130,3 +130,6 @@ enterprise/web.jspparser/external/commons-logging-1.3.1.jar platform/o.apache.co
 
 # JFlex is used as scanner generator only and is not distributed
 webcommon/javascript2.jade/external/jflex-1.4.3.jar php/php.editor/external/jflex-1.4.3.jar
+
+# JavaCC is used as lexer/parser generator only and is not distributed
+ide/db.sql.visualeditor/external/javacc-7.0.10.jar ide/xml.text/external/javacc-7.0.10.jar

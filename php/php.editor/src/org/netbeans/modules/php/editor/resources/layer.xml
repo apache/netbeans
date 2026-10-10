@@ -66,6 +66,9 @@
                 <file name="org-netbeans-modules-html-editor-coloring-EmbeddingHighlightsLayerFactory.instance">
                     <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
                 </file>
+                <file name="org-netbeans-modules-php-editor-embedding-EmbeddingHighlightsLayerFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
                 <file name="org-netbeans-modules-php-editor-PhpEmbeddingProvider$Factory.instance">
                     <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
                 </file>

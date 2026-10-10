@@ -84,17 +84,17 @@ import sun.reflect.ReflectionFactory;
  * @author Martin Entlicher
  */
 public class VariableMirrorTranslator {
-    
+
     private static final Logger logger = Logger.getLogger(VariableMirrorTranslator.class.getName());
-    
+
     private static final Object NO_MIRROR = "NO_MIRROR";
-    
+
     private VariableMirrorTranslator() {}
-    
+
     static Object createMirrorObject(Value value) {
         return createMirrorObject(value, new HashMap<>());
     }
-    
+
     private static Object createMirrorObject(Value value, Map<Value, Object> mirrorsMap) {
         try {
             Type type = ValueWrapper.type(value);
@@ -115,38 +115,29 @@ public class VariableMirrorTranslator {
                 } catch (ClassNotFoundException | ClassNotLoadedException |
                         ClassNotPreparedExceptionWrapper |
                         InvalidTypeException | InvocationException |
-                        IncompatibleThreadStateException ex) {
+                        IncompatibleThreadStateException | InterruptedException ex) {
                     //nom
                 }
             } else {
                 if (null == typeStr) {
                     throw new IllegalArgumentException("Unknown primitive type: " + typeStr + " from " + type);
                 } else switch (typeStr) {
-                    case "boolean":
-                        return ((BooleanValue) value).booleanValue();
-                    case "byte":
-                        return ((ByteValue) value).byteValue();
-                    case "char":
-                        return ((CharValue) value).charValue();
-                    case "short":
-                        return ((ShortValue) value).shortValue();
-                    case "int":
-                        return ((IntegerValue) value).intValue();
-                    case "long":
-                        return ((LongValue) value).longValue();
-                    case "float":
-                        return ((FloatValue) value).floatValue();
-                    case "double":
-                        return ((DoubleValue) value).doubleValue();
-                    default:
-                        throw new IllegalArgumentException("Unknown primitive type: "+typeStr+" from "+type);
+                    case "boolean" -> { return ((BooleanValue) value).booleanValue(); }
+                    case "byte" -> { return ((ByteValue) value).byteValue(); }
+                    case "char" -> { return ((CharValue) value).charValue(); }
+                    case "short" -> { return ((ShortValue) value).shortValue(); }
+                    case "int" -> { return ((IntegerValue) value).intValue(); }
+                    case "long" -> { return ((LongValue) value).longValue(); }
+                    case "float" -> { return ((FloatValue) value).floatValue(); }
+                    case "double" -> { return ((DoubleValue) value).doubleValue(); }
+                    default -> throw new IllegalArgumentException("Unknown primitive type: "+typeStr+" from "+type);
                 }
             }
         } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper | ObjectCollectedExceptionWrapper ex) {
         }
         return null;
     }
-    
+
     private static Object createPristineInstanceOf(Class clazz) {
         try {
             //return clazz.newInstance(); - not sufficient
@@ -159,13 +150,13 @@ public class VariableMirrorTranslator {
             }
             Object newInstance = constructor.newInstance();
             return newInstance;
-            
+
         } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException ex) {
             logger.log(Level.INFO, "Problem while creating a pristine instance of "+clazz, ex);
         }
         return null;
     }
-    
+
     private static java.lang.reflect.Field getDeclaredOrInheritedField(Class clazz, String name) throws SecurityException {
         try {
             java.lang.reflect.Field field = clazz.getDeclaredField(name);
@@ -178,7 +169,7 @@ public class VariableMirrorTranslator {
             return null;
         }
     }
-    
+
     private static Object createMirrorObject(ObjectReference value, ReferenceType type,
                                              Class clazz, Map<Value, Object> mirrorsMap)
                                              throws ClassNotPreparedExceptionWrapper,
@@ -241,7 +232,7 @@ public class VariableMirrorTranslator {
             return newInstance;
         }
     }
-    
+
     private static Object setFieldsValues(Object newInstance, Class clazz, Map<Field, Value> fieldValues, Map<Value, Object> mirrorsMap) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper {
         for (Field f : fieldValues.keySet()) {
             String name = TypeComponentWrapper.name(f);
@@ -279,7 +270,7 @@ public class VariableMirrorTranslator {
         }
         return newInstance;
     }
-    
+
     private static Object createSpecialized(ObjectReference value, ReferenceType type,
                                             Class clazz, Map<Value, Object> mirrorsMap) throws InternalExceptionWrapper,
                                                                                                VMDisconnectedExceptionWrapper,
@@ -318,7 +309,7 @@ public class VariableMirrorTranslator {
             return null;
         }
     }
-    
+
     private static Map<Field, Value> getFieldValues(ObjectReference value, ReferenceType type, String... names) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, ClassNotPreparedExceptionWrapper {
         final int n = names.length;
         List<Field> fieldsToAskFor = new ArrayList<>(n);
@@ -332,13 +323,13 @@ public class VariableMirrorTranslator {
         Map<Field, Value> fieldValues = ObjectReferenceWrapper.getValues(value, fieldsToAskFor);
         return fieldValues;
     }
-    
+
     private static boolean willInvokeMethods(boolean isObject, Class clazz) {
         return isObject &&
                !clazz.isPrimitive() &&
                !String.class.equals(clazz);
     }
-    
+
     public static Value createValueFromMirror(Object mirror, boolean isObject, JPDADebuggerImpl debugger)
                                              throws InvalidObjectException, InternalExceptionWrapper,
                                                     VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper,
@@ -373,15 +364,15 @@ public class VariableMirrorTranslator {
             } else {
                 threadReference = null;
             }
-            
+
             return createValueFromMirror(mirror, clazz, isObject, vm, threadReference);
-            
+
         } catch (IncompatibleThreadStateException | UnsupportedOperationExceptionWrapper | PropertyVetoException ex) {
             InvalidObjectException ioex = new InvalidObjectException(ex.getLocalizedMessage());
             ioex.initCause(ex);
             throw ioex;
         } finally {
-            if (invoking) {
+            if (invoking && currentThread != null) {
                 currentThread.notifyMethodInvokeDone();
             }
             if (lock != null) {
@@ -389,7 +380,7 @@ public class VariableMirrorTranslator {
             }
         }
     }
-    
+
     private static Value createValueFromMirror(Object mirror, Class clazz, boolean isObject, VirtualMachine vm, ThreadReference thread)
                                                throws InvalidObjectException, InternalExceptionWrapper,
                                                       VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper,
@@ -445,10 +436,10 @@ public class VariableMirrorTranslator {
             } else {
                 String typeName = clazz.getName();
                 ReferenceType type = getOrLoadClass(vm, typeName);
-                if (type instanceof ClassType) {
+                if (type instanceof ClassType classType) {
                     ObjectReference obj;
                     try {
-                        obj = createObjectOfType((ClassType) type, vm, thread);
+                        obj = createObjectOfType(classType, vm, thread);
                     } catch (InvocationException ex) {
                         InvalidObjectException ioex = new InvalidObjectException(ex.getLocalizedMessage());
                         ioex.initCause(ex);
@@ -475,17 +466,11 @@ public class VariableMirrorTranslator {
                             fm = field.get(mirror);
                             fieldType = field.getType();
                         } catch (SecurityException seex) {
-                            InvalidObjectException ioex = new InvalidObjectException("Retrieving field "+name+" of class "+clazz);
-                            ioex.initCause(seex);
-                            throw ioex;
+                            throw new InvalidObjectException("Retrieving field "+name+" of class "+clazz, seex);
                         } catch (IllegalAccessException iaex) {
-                            InvalidObjectException ioex = new InvalidObjectException("Illegal access to field "+name+" of class "+clazz);
-                            ioex.initCause(iaex);
-                            throw ioex;
+                            throw new InvalidObjectException("Illegal access to field "+name+" of class "+clazz, iaex);
                         } catch (IllegalArgumentException iaex) {
-                            InvalidObjectException ioex = new InvalidObjectException("Illegal argument to field "+name+" of class "+clazz);
-                            ioex.initCause(iaex);
-                            throw ioex;
+                            throw new InvalidObjectException("Illegal argument to field "+name+" of class "+clazz, iaex);
                         }
                         Value fv;
                         if (fm == null) {
@@ -502,7 +487,7 @@ public class VariableMirrorTranslator {
                         if (!f.isFinal()) {
                             ObjectReferenceWrapper.setValue(obj, f, fv);
                         } else {
-                            setValueToFinalField(obj, name, (ClassType) type, fv, vm, thread);
+                            setValueToFinalField(obj, name, classType, fv, vm, thread);
                         }
                     }
                     return obj;
@@ -512,10 +497,10 @@ public class VariableMirrorTranslator {
             }
         }
     }
-    
+
     private static ReferenceType getOrLoadClass(VirtualMachine vm, String name) {
         List<ReferenceType> types = vm.classesByName(name);
-        if (types.size() > 0) {
+        if (!types.isEmpty()) {
             if (types.size() == 1) {
                 return types.get(0);
             }
@@ -533,7 +518,7 @@ public class VariableMirrorTranslator {
         // DO NOT TRY TO LOAD CLASSES AT ALL! See http://www.netbeans.org/issues/show_bug.cgi?id=168949
         return null;
     }
-    
+
     private static ObjectReference createObjectOfType(ClassType type, VirtualMachine vm, ThreadReference thread)
                                                       throws InvalidObjectException, InternalExceptionWrapper,
                                                              VMDisconnectedExceptionWrapper, ClassNotPreparedExceptionWrapper,
@@ -569,7 +554,7 @@ public class VariableMirrorTranslator {
             if (newConstructorForSerializationMethod == null) {
                 throw new InvalidObjectException("newConstructorForSerialization() method not found on Object class. Can not create a new instance.");
             }
-            
+
             ObjectReference objectConstructor = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(objectClass, thread,
                                                   getDeclaredConstructorMethod,
@@ -604,7 +589,7 @@ public class VariableMirrorTranslator {
             return ClassTypeWrapper.newInstance(type, thread, c, Collections.<Value>emptyList(), ClassType.INVOKE_SINGLE_THREADED);
         }
     }
-    
+
     private static void setValueToFinalField(ObjectReference obj, String name, ClassType clazz, Value fv, VirtualMachine vm, ThreadReference thread) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ClassNotPreparedExceptionWrapper, ClassNotLoadedException, ObjectCollectedExceptionWrapper, IncompatibleThreadStateException, UnsupportedOperationExceptionWrapper, InvalidTypeException, InvalidObjectException {
         ObjectReference fieldRef = getDeclaredOrInheritedField(clazz, name, vm, thread);
         if (fieldRef == null) {
@@ -622,10 +607,10 @@ public class VariableMirrorTranslator {
             // field.set(newInstance, fv);
             com.sun.jdi.Method setMethod = ClassTypeWrapper.concreteMethodByName(
                     fieldClassType, "set", "(Ljava/lang/Object;Ljava/lang/Object;)V");
-            if (fv instanceof PrimitiveValue) {
+            if (fv instanceof PrimitiveValue primitiveValue) {
                 PrimitiveType pt = (PrimitiveType) ValueWrapper.type(fv);
                 ReferenceType fieldBoxingClass = EvaluatorVisitor.adjustBoxingType(clazz, pt, null);
-                fv = EvaluatorVisitor.box((PrimitiveValue) fv, fieldBoxingClass, thread, null);
+                fv = EvaluatorVisitor.box(primitiveValue, fieldBoxingClass, thread, null);
             }
             List<Value> args = Arrays.asList(new Value[] { obj, fv });
             ObjectReferenceWrapper.invokeMethod(fieldRef, thread, setMethod,
@@ -636,44 +621,6 @@ public class VariableMirrorTranslator {
                     "Problem setting value "+fv+" to field "+name+" of class "+clazz+
                     " : "+iex.exception());
         }
-    }
-    
-    private static Type boxType(Type t) {
-        Type rval = t;
-
-        if (t instanceof ClassType) {
-            String name = ((ClassType)t).name();
-            
-            switch (name) {
-                case "java.lang.Boolean":
-                    rval = t.virtualMachine().mirrorOf(true).type();
-                    break;
-                case "java.lang.Byte":
-                    rval = t.virtualMachine().mirrorOf((byte) 10).type();
-                    break;
-                case "java.lang.Character":
-                    rval = t.virtualMachine().mirrorOf('a').type();
-                    break;
-                case "java.lang.Integer":
-                    rval = t.virtualMachine().mirrorOf(10).type();
-                    break;
-                case "java.lang.Long":
-                    rval = t.virtualMachine().mirrorOf(10l).type();
-                    break;
-                case "java.lang.Short":
-                    rval = t.virtualMachine().mirrorOf((short)10).type();
-                    break;
-                case "java.lang.Float":
-                    rval = t.virtualMachine().mirrorOf(10f).type();
-                    break;
-                case "java.lang.Double":
-                    rval = t.virtualMachine().mirrorOf(10.0).type();
-                    break;
-                default:
-                    break;
-            }
-        }
-        return rval;
     }
 
     private static ObjectReference getDeclaredOrInheritedField(ClassType clazz, String name, VirtualMachine vm, ThreadReference thread) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ClassNotPreparedExceptionWrapper, ClassNotLoadedException, ObjectCollectedExceptionWrapper, IncompatibleThreadStateException, UnsupportedOperationExceptionWrapper, InvalidTypeException {

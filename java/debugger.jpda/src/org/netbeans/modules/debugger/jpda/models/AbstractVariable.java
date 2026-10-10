@@ -74,13 +74,11 @@ import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.PrimitiveValueWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ReferenceTypeWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.StringReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.TypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ValueWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VirtualMachineWrapper;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 
@@ -90,15 +88,15 @@ import org.openide.util.NbBundle;
 public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
     // Customized for add/removePropertyChangeListener
     // Cloneable for fixed watches
-    
+
     private Value   value;
-    private JPDADebuggerImpl debugger;
+    private final JPDADebuggerImpl debugger;
     private String          id;
     private boolean silent;
-    
-    private final Set<PropertyChangeListener> listeners = new HashSet<PropertyChangeListener>();
 
-    
+    private final Set<PropertyChangeListener> listeners = new HashSet<>();
+
+
     public AbstractVariable (
         JPDADebuggerImpl debugger,
         Value value,
@@ -112,9 +110,9 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
         }
     }
 
-    
+
     // public interface ........................................................
-    
+
     /**
     * Returns string representation of type of this variable.
     *
@@ -125,7 +123,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
         Value v = getInnerValue ();
         return getValue(v);
     }
-    
+
     static String getValue (Value v) {
         if (v == null) {
             return "null";
@@ -140,23 +138,27 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             return v.toString ();
         }
         try {
-            if (v instanceof StringReference) {
-                String str = ShortenedStrings.getStringWithLengthControl((StringReference) v);
-                return "\"" + str + "\"";
+            if (v instanceof StringReference stringReference) {
+                Object str = ShortenedStrings.getStringWithLengthControl(stringReference);
+                if(str instanceof ShortenedStrings.StringInfo si) {
+                    return "\"" + si.getShortenedString() + "...\"";
+                } else {
+                    return "\"" + str + "\"";
+                }
             }
-            if (v instanceof ClassObjectReference) {
-                return "class " + ReferenceTypeWrapper.name(ClassObjectReferenceWrapper.reflectedType((ClassObjectReference) v));
+            if (v instanceof ClassObjectReference classObjectReference) {
+                return "class " + ReferenceTypeWrapper.name(ClassObjectReferenceWrapper.reflectedType(classObjectReference));
             }
-            if (v instanceof ArrayReference) {
-                return "#" + ObjectReferenceWrapper.uniqueID((ArrayReference) v) +
-                    "(length=" + ArrayReferenceWrapper.length((ArrayReference) v) + ")";
+            if (v instanceof ArrayReference arrayReference) {
+                return "#" + ObjectReferenceWrapper.uniqueID(arrayReference) +
+                    "(length=" + ArrayReferenceWrapper.length(arrayReference) + ")";
             }
             return "#" + ObjectReferenceWrapper.uniqueID((ObjectReference) v);
         } catch (InternalExceptionWrapper | ObjectCollectedExceptionWrapper |
                 VMDisconnectedExceptionWrapper | ClassNotLoadedException |
                 ClassNotPreparedExceptionWrapper |
                 IncompatibleThreadStateException | InvalidTypeException |
-                InvocationException e) {
+                InvocationException | InterruptedException e) {
             return "";
         }
     }
@@ -164,7 +166,8 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
     /**
     * Sets string representation of value of this variable.
     *
-    * @param value string representation of value of this variable.
+    * @param expression string representation of value of this variable.
+     * @throws org.netbeans.api.debugger.jpda.InvalidExpressionException
     */
     public void setValue (String expression) throws InvalidExpressionException {
         String oldValue = getValue();
@@ -175,20 +178,20 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
         if (vm == null) {
             return ; // Debugger has finished, no VM to set the value to.
         }
-        Value value;
+        Value newV;
         Value oldV = getInnerValue();
         //ObjectReference valueToEnableCollectionOn = null;
         //try {
         try {
             if (oldV instanceof CharValue && expression.startsWith("'") && expression.endsWith("'") && expression.length() > 1) {
-                value = VirtualMachineWrapper.mirrorOf(MirrorWrapper.virtualMachine(oldV), expression.charAt(1));
+                newV = VirtualMachineWrapper.mirrorOf(MirrorWrapper.virtualMachine(oldV), expression.charAt(1));
             } else if ((oldV instanceof StringReference || oldV == null) &&
                        expression.startsWith("\"") && expression.endsWith("\"") && expression.length() > 1) {
-                value = VirtualMachineWrapper.mirrorOf(
+                newV = VirtualMachineWrapper.mirrorOf(
                         vm,
                         expression.substring(1, expression.length() - 1));
             } else if (oldV instanceof StringReference) {
-                value = VirtualMachineWrapper.mirrorOf(
+                newV = VirtualMachineWrapper.mirrorOf(
                         vm,
                         expression);
             } else if (oldV instanceof ObjectReference &&
@@ -197,12 +200,12 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                 ClassType enumType = (ClassType) ObjectReferenceWrapper.referenceType((ObjectReference) oldV);
                 Field enumValue = ReferenceTypeWrapper.fieldByName(enumType, expression);
                 if (enumValue != null) {
-                    value = ReferenceTypeWrapper.getValue(enumType, enumValue);
+                    newV = ReferenceTypeWrapper.getValue(enumType, enumValue);
                 } else {
                     throw new InvalidExpressionException(expression);
                 }
             } else if ("null".equals(expression)) {
-                value = null;
+                newV = null;
             } else {
                 // evaluate expression to Value
                 Value evaluatedValue = debugger.evaluateIn (expression);
@@ -217,23 +220,20 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                         evaluatedValue = convertValue(evaluatedValue, type);
                     }
                 }
-                value = evaluatedValue;
+                newV = evaluatedValue;
             }
-        } catch (InternalExceptionWrapper e) {
-            throw new InvalidExpressionException(e);
-        } catch (ClassNotPreparedExceptionWrapper e) {
-            throw new InvalidExpressionException(e);
-        } catch (ObjectCollectedExceptionWrapper e) {
+        } catch (InternalExceptionWrapper
+                | ClassNotPreparedExceptionWrapper
+                | ObjectCollectedExceptionWrapper
+                | UnsupportedOperationExceptionWrapper e) {
             throw new InvalidExpressionException(e);
         } catch (VMDisconnectedExceptionWrapper e) {
             return ;
-        } catch (UnsupportedOperationExceptionWrapper e) {
-            throw new InvalidExpressionException(e);
         }
         // set new value to remote veriable
-        setValue (value);
+        setValue (newV);
         // set new value to this model
-        setInnerValue (value);
+        setInnerValue (newV);
         /*} finally {
             if (valueToEnableCollectionOn != null) {
                 try {
@@ -242,39 +242,35 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             }
         }*/
     }
-    
+
     private Value convertValue(Value value, Type type) {
-        if (type instanceof PrimitiveType) {
-            if (value instanceof ObjectReference) {
+        if (type instanceof PrimitiveType primitiveType) {
+            if (value instanceof ObjectReference objectReference) {
                 JPDAThread ct = getDebugger().getCurrentThread();
                 if (ct != null) {
                     try {
-                        value = EvaluatorVisitor.unbox((ObjectReference) value,
-                                                       (PrimitiveType) type,
+                        value = EvaluatorVisitor.unbox(objectReference, primitiveType,
                                                        ((JPDAThreadImpl) ct).getThreadReference(),
                                                        null);
-                    } catch (InvalidTypeException ex) {
-                    } catch (ClassNotLoadedException ex) {
-                    } catch (IncompatibleThreadStateException ex) {
-                    } catch (InvocationException ex) {
+                    } catch (InvalidTypeException 
+                            | ClassNotLoadedException
+                            | IncompatibleThreadStateException
+                            | InvocationException ex) {
                     }
                 }
                 boolean equalsType;
                 try {
                     equalsType = ValueWrapper.type(value).equals(type);
-                } catch (InternalExceptionWrapper ex) {
-                    equalsType = true;
-                } catch (VMDisconnectedExceptionWrapper ex) {
-                    equalsType = true;
-                } catch (ObjectCollectedExceptionWrapper ex) {
+                } catch (InternalExceptionWrapper 
+                        | VMDisconnectedExceptionWrapper
+                        | ObjectCollectedExceptionWrapper ex) {
                     equalsType = true;
                 }
                 if (equalsType) {
                     return value;
                 }
             }
-            if (value instanceof PrimitiveValue) {
-                PrimitiveValue pv = (PrimitiveValue) value;
+            if (value instanceof PrimitiveValue pv) {
                 try {
                     VirtualMachine vm = MirrorWrapper.virtualMachine(pv);
                     if (type instanceof BooleanType) {
@@ -301,8 +297,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                     if (type instanceof DoubleType) {
                         return VirtualMachineWrapper.mirrorOf(vm, PrimitiveValueWrapper.doubleValue(pv));
                     }
-                } catch (InternalExceptionWrapper e) {
-                } catch (VMDisconnectedExceptionWrapper e) {
+                } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper e) {
                 }
             }
         }
@@ -315,30 +310,33 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                                                  (ReferenceType) type,
                                                  ((JPDAThreadImpl) ct).getThreadReference(),
                                                  null);
-                } catch (InvalidTypeException ex) {
-                } catch (ClassNotLoadedException ex) {
-                } catch (IncompatibleThreadStateException ex) {
-                } catch (InvocationException ex) {
-                } catch (InternalException ex) {
-                } catch (VMDisconnectedException ex) {
+                } catch (InvalidTypeException
+                        | ClassNotLoadedException
+                        | IncompatibleThreadStateException
+                        | InvocationException
+                        | InternalException
+                        | VMDisconnectedException ex) {
                 }
             }
         }
         return value;
     }
-    
+
     /**
      * Override, but do not call directly!
+     *
+     * @param value
+     * @throws org.netbeans.api.debugger.jpda.InvalidExpressionException
      */
     protected void setValue (Value value) throws InvalidExpressionException {
         throw new InternalError (getClass().getName());
     }
-    
+
     @Override
     public void setObject(Object bean) {
         try {
-            if (bean instanceof String) {
-                setValue((String) bean);
+            if (bean instanceof String string) {
+                setValue(string);
             //} else if (bean instanceof Value) {
             //    setValue((Value) bean); -- do not call directly
             } else {
@@ -371,47 +369,45 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             return NbBundle.getMessage(AbstractVariable.class, "MSG_ObjCollected");
         }
     }
-    
+
     public JPDAClassType getClassType() {
-        Value value = getInnerValue();
-        if (value == null) {
+        Value innerValue = getInnerValue();
+        if (innerValue == null) {
             return null;
         }
         com.sun.jdi.Type type;
         try {
-            type = ValueWrapper.type(value);
-        } catch (InternalExceptionWrapper ex) {
-            return null;
-        } catch (VMDisconnectedExceptionWrapper ex) {
-            return null;
-        } catch (ObjectCollectedExceptionWrapper ex) {
+            type = ValueWrapper.type(innerValue);
+        } catch (InternalExceptionWrapper 
+                | VMDisconnectedExceptionWrapper
+                | ObjectCollectedExceptionWrapper ex) {
             return null;
         }
-        if (type instanceof ReferenceType) {
-            return debugger.getClassType((ReferenceType) type);
+        if (type instanceof ReferenceType referenceType) {
+            return debugger.getClassType(referenceType);
         } else {
             return null;
         }
     }
-    
+
     @Override
     public boolean equals (Object o) {
         return  (o instanceof AbstractVariable) &&
                 (id.equals (((AbstractVariable) o).id));
     }
-    
+
     @Override
     public int hashCode () {
         return id.hashCode ();
     }
 
-    
+
     // other methods............................................................
-    
+
     public Value getInnerValue () {
         return value;
     }
-    
+
     protected void setInnerValue (Value v) {
         value = v;
         if (!silent) {
@@ -427,33 +423,38 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             debugger.varChangeSupport.firePropertyChange(evt);
         }
     }
-    
-    /** Changes are silent, no events are fired when value is set. */
+
+    /**
+     * Changes are silent, no events are fired when value is set.
+     *
+     * @param silent
+     */
     public void setSilentChange(boolean silent) {
         this.silent = silent;
     }
-    
+
     @Override
     public Value getJDIValue() {
         return getInnerValue();
     }
-    
+
     public final JPDADebuggerImpl getDebugger() {
         return debugger;
     }
-    
+
     protected final String getID () {
         return id;
     }
-    
+
     private int cloneNumber = 1;
-    
+
     @Override
     public Variable clone() {
-        AbstractVariable clon = new AbstractVariable(debugger, value, id + "_clone"+(cloneNumber++));
+        AbstractVariable clon = new AbstractVariable(debugger, value, id + "_clone"+ cloneNumber);
+        cloneNumber++;
         return clon;
     }
-    
+
     @Override
     public Object createMirrorObject() {
         Value v = getJDIValue();
@@ -496,26 +497,26 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             throw ioex;
         }
     }
-    
+
     @Override
     public final void addPropertyChangeListener(PropertyChangeListener l) {
         synchronized (listeners) {
             listeners.add(l);
         }
     }
-    
+
     @Override
     public final void removePropertyChangeListener(PropertyChangeListener l) {
         synchronized (listeners) {
             listeners.remove(l);
         }
     }
-    
+
     @Override
     public String toString () {
         return "Variable ";
     }
-    
+
     /* Uncomment when needed. Was used to create "readable" String and Char values.
     private static String convertToStringInitializer (String s) {
         StringBuffer sb = new StringBuffer ();
@@ -548,7 +549,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             }
         return sb.toString();
     }
-    
+
     private static String convertToCharInitializer (String s) {
         StringBuffer sb = new StringBuffer ();
         int i, k = s.length ();

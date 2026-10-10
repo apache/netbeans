@@ -77,7 +77,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
         }
     }
     
-    public void setAllDescriptions(java.util.Map descriptions) throws VersionNotSupportedException {
+    public void setAllDescriptions(Map descriptions) throws VersionNotSupportedException {
         removeAllDescriptions();
         if (descriptions!=null) {
             Iterator<String> keys = descriptions.keySet().iterator();

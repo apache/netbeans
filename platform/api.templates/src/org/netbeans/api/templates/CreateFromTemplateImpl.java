@@ -310,7 +310,7 @@ final class CreateFromTemplateImpl {
         
         if (defaultMode != FileBuilder.Mode.COPY && frm instanceof MapFormat) {
             MapFormat mf = (MapFormat)frm;
-            Map<String, Object> m = mf.getMap();
+            Map<String, ?> m = mf.getMap();
             Map x = null;
             for (Map.Entry<String, ?> entry : params.entrySet()) {
                 if (m.containsKey(entry.getKey())) {

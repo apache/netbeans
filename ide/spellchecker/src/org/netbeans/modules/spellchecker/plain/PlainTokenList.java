@@ -31,7 +31,7 @@ import org.openide.util.Exceptions;
  *
  * @author Jan Lahoda
  */
-public class PlainTokenList implements TokenList {
+public final class PlainTokenList implements TokenList {
 
     private final Document doc;
     private String currentWord;
@@ -39,12 +39,14 @@ public class PlainTokenList implements TokenList {
     private int nextSearchOffset;
     private boolean hidden;
 
-    /** Creates a new instance of JavaTokenList */
+    /**
+     * Creates a new instance of JavaTokenList
+     */
     public PlainTokenList(Document doc) {
         this.doc = doc;
     }
 
-    
+    @Override
     public void setStartOffset(int offset) {
         currentWord = null;
         currentStartOffset = (-1);
@@ -54,26 +56,31 @@ public class PlainTokenList implements TokenList {
             if (!Character.isLetter(content.charAt(offset))) {
                 break;
             }
-            
+
             offset--;
         }
-        
+
         this.nextSearchOffset = offset;
-        FileObject fileObject = FileUtil.getConfigFile ("Spellcheckers/Plain");
-        Boolean b = (Boolean) fileObject.getAttribute ("Hidden");
-        hidden = Boolean.TRUE.equals (b);
+        FileObject fileObject = FileUtil.getConfigFile("Spellcheckers/Plain");
+        Boolean b = (Boolean) fileObject.getAttribute("Hidden");
+        hidden = Boolean.TRUE.equals(b);
     }
 
+    @Override
     public int getCurrentWordStartOffset() {
         return currentStartOffset;
     }
 
+    @Override
     public CharSequence getCurrentWordText() {
         return currentWord;
     }
 
+    @Override
     public boolean nextWord() {
-        if (hidden) return false;
+        if (hidden) {
+            return false;
+        }
         try {
             int offset = nextSearchOffset;
             boolean searching = true;
@@ -94,7 +101,7 @@ public class PlainTokenList implements TokenList {
                         return true;
                     }
                 }
-                
+
                 offset++;
             }
 
@@ -112,9 +119,11 @@ public class PlainTokenList implements TokenList {
         }
     }
 
+    @Override
     public void addChangeListener(ChangeListener l) {
     }
 
+    @Override
     public void removeChangeListener(ChangeListener l) {
     }
 

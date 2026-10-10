@@ -18,15 +18,9 @@
  */
 package org.netbeans.modules.spellchecker;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +35,6 @@ import org.netbeans.modules.spellchecker.spi.dictionary.Dictionary;
 import org.netbeans.modules.spellchecker.spi.dictionary.ValidityType;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.openide.util.Exceptions;
-import org.openide.util.Mutex.Action;
 import org.openide.util.RequestProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -52,10 +45,10 @@ import org.w3c.dom.NodeList;
  *
  * @author  Jan Lahoda
  */
-public class DictionaryImpl implements Dictionary {
-    
+public final class DictionaryImpl implements Dictionary {
+
     private static final RequestProcessor WORKER = new RequestProcessor(DictionaryImpl.class.getName(), 1, false, false);
-    private List<String> dictionary = null;
+    private final List<String> dictionary = new ArrayList<>();
     private StringBuffer dictionaryText = null;
     private final File source;
     private final Project p;
@@ -80,119 +73,99 @@ public class DictionaryImpl implements Dictionary {
         this.dictionaryComparator = prepareDictionaryComparator(locale);
         loadDictionary(ac);
     }
-    
-    private Comparator<String> prepareDictionaryComparator(final Locale locale) {
-        return new Comparator<String>() {
-            public int compare(String s1, String s2) {
-                return s1.toLowerCase(locale).compareTo(s2.toLowerCase(locale));
-            }
-        };
+
+    private Comparator<String> prepareDictionaryComparator(Locale locale) {
+        return (String s1, String s2) -> s1.toLowerCase(locale).compareTo(s2.toLowerCase(locale));
     }
 
     private void loadDictionary(File source) {
         if (!source.canRead())
             return ;
+
         
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(source), StandardCharsets.UTF_8));
-
-            String line = null;
-
-            while ((line = reader.readLine()) != null) {
-                addEntryImpl(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        } finally {
+        synchronized (dictionary) {
             try {
-                if (reader != null) {
-                    reader.close();
-                }
+                dictionary.addAll(Files.readAllLines(source.toPath()));
             } catch (IOException e) {
                 e.printStackTrace(System.err);
-            }
+            }            
+            dictionary.sort(dictionaryComparator);
         }
-        
-        getDictionary().sort(dictionaryComparator);
+
    }
-    
+
     private static final String WORDLIST = "spellchecker-wordlist";
     private static final String NAMESPACE = "http://www.netbeans.org/ns/spellchecker-wordlist/1";
-    
+
     private void loadDictionary(final AuxiliaryConfiguration ac) {
-        ProjectManager.mutex().readAccess(new Action<Void>() {
-            public Void run() {
-                Element conf = ac.getConfigurationFragment(WORDLIST, NAMESPACE, true);
+        ProjectManager.mutex().readAccess(() -> {
+            Element conf = ac.getConfigurationFragment(WORDLIST, NAMESPACE, true);
 
-                if (conf == null) {
-                    return null;
+            if (conf == null) {
+                return;
+            }
+
+            NodeList childNodes = conf.getChildNodes();
+
+            for (int cntr = 0; cntr < childNodes.getLength(); cntr++) {
+                Node n = childNodes.item(cntr);
+
+                if ("word".equals(n.getLocalName())) {
+                    addEntryImpl(n.getTextContent());
                 }
-                
-                NodeList childNodes = conf.getChildNodes();
-
-                for (int cntr = 0; cntr < childNodes.getLength(); cntr++) {
-                    Node n = childNodes.item(cntr);
-
-                    if ("word".equals(n.getLocalName())) {
-                        addEntryImpl(n.getTextContent());
-                    }
-                }
-                return null;
             }
         });
-        
-        getDictionary().sort(dictionaryComparator);
+
+        dictionary.sort(dictionaryComparator);
     }
-    
+
     public int findLesser(String word) {
         word = word.toLowerCase(locale);
-        List<String> dict = getDictionary();
-        
+        List<String> dict = dictionary;
+
         int lower = 0;
         int upper = dict.size() - 1;
-        
+
         boolean last = false;
-        
+
         while (true) {
             if (lower == upper)
                 break;
-            
+
             if (last)
                 break;
-            
+
             if ((upper - lower) == 1)
                 last = true;
-            
+
             int current = (lower + upper) / 2;
             String currentObj = dict.get(current);
-            
+
             int result = currentObj.toLowerCase(locale).compareTo(word);
-            
+
             if (result == 0)
                 return current;
-            
+
             if (result < 0) {
                 lower = current + 1;
             }
-            
+
             if (result > 0) {
                 upper = current - 1;
             }
         }
-        
+
         if (dict.get(lower).toLowerCase(locale).compareTo(word) == 0)
             return lower;
         else
             return (lower + 1) < dict.size() ? lower + 1 : lower;
     }
-    
+
     public ValidityType findWord(String word) {
-        if (getDictionary().isEmpty()) return ValidityType.INVALID;
-        String str = getDictionary().get(findLesser(word));
+        if (dictionary.isEmpty()) return ValidityType.INVALID;
+        String str = dictionary.get(findLesser(word));
         String lWord = word.toLowerCase(locale);
-//            System.err.println("str=" + str);
+
         if (str.startsWith(word) || str.startsWith(lWord)) {
             if (str.equals(word) || str.equals(lWord))
                 return ValidityType.VALID;
@@ -201,68 +174,44 @@ public class DictionaryImpl implements Dictionary {
         } else
             return ValidityType.INVALID;
     }
-    
-    protected synchronized List<String> getDictionary() {
-        if (dictionary == null)
-            dictionary = new ArrayList<String>();
-        
-//            System.err.println("returning dictionary=" + System.identityHashCode(dictionary));
-        return dictionary;
-    }
-    
+
     protected synchronized StringBuffer getDictionaryText() {
         if (dictionaryText == null) {
             dictionaryText = new StringBuffer();
             dictionaryText.append('\n');
-            
-            for (String e : getDictionary()) {
+
+            for (String e : dictionary) {
                 dictionaryText.append(e);
                 dictionaryText.append('\n');
             }
         }
-        
+
         return dictionaryText;
     }
-    
+
     private void addEntryImpl(String entry) {
-        getDictionary().add(entry);
+        dictionary.add(entry);
     }
-    
+
     private void dumpToFile(List<String> dictionary) {
-        BufferedWriter writer = null;
-
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(source), StandardCharsets.UTF_8));
-
-            for (String s : dictionary) {
-                writer.append(s);
-                writer.append('\n');
-            }
+            Files.write(source.toPath(), dictionary);
         } catch (IOException e) {
             Exceptions.printStackTrace(e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                Exceptions.printStackTrace(e);
-            }
         }
     }
-    
+
     private void dumpToProject(final List<String> dictionary) {
-        ProjectManager.mutex().writeAccess(new Action<Void>(){
-            public Void run() {
+        ProjectManager.mutex().writeAccess(() -> {
                 Element conf = null;
                 Document doc = createXmlDocument();
-                
+
                 if (doc != null) {
                     conf = doc.createElementNS(NAMESPACE, WORDLIST);
                 }
-                
+
                 if (conf == null) {
-                    return null;
+                    return;
                 }
 
                 for (String s : dictionary) {
@@ -273,23 +222,18 @@ public class DictionaryImpl implements Dictionary {
                 }
 
                 ac.putConfigurationFragment(conf, true);
-                return null;
             }
-        });
-        
-        WORKER.post(new Runnable() {
-            @Override public void run() {
-                try {
-                    ProjectManager.getDefault().saveProject(p);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IllegalArgumentException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        );
+
+        WORKER.post(() -> {
+            try {
+                ProjectManager.getDefault().saveProject(p);
+            } catch (IOException | IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
     }
-    
+
     private Document createXmlDocument() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -298,120 +242,90 @@ public class DictionaryImpl implements Dictionary {
             return null;
         }
     }
-    
+
     public synchronized void addEntry(String entry) {
-        List<String> dictionary = getDictionary();
         int index = Collections.binarySearch(dictionary, entry, dictionaryComparator);
-        
+
         if (index >= 0)
             return ;
-        
+
         index = -index - 1;
-        
+
         dictionary.add(index, entry);
         dictionaryText = null;
-        
+
         if (source != null) {
             dumpToFile(dictionary);
         } else {
             dumpToProject(dictionary);
         }
     }
-    
+
     public List<String> completions(String word) {
         if ("".equals(word))
             return Collections.emptyList();
-        
+
         int start = findLesser(word);
-        
-//            if (!((String )getDictionary().get(start)).equalsIgnoreCase(word)) {
-//                start++;
-//            }
-        
         int end   = findLesser(word.substring(0, word.length() - 1) + (char) (word.charAt(word.length() - 1) + 1));
-        
-        return getDictionary().subList(start, end/* + 1*/);
+
+        return dictionary.subList(start, end/* + 1*/);
     }
-    
-    private static class Pair {
-        private int distance;
-        private String proposedWord;
-        
-        public Pair(String proposedWord, int distance) {
-            this.distance = distance;
-            this.proposedWord = proposedWord;
-        }
+
+    private record Pair(String proposedWord, int distance) {
+        static final Comparator<Pair> SIMILAR_COMPARATOR = (Pair p1, Pair p2) -> p1.distance - p2.distance;
     }
-    
-    private static class SimilarComparator implements Comparator<Pair> {
-        
-        public int compare(Pair p1, Pair p2) {
-            if (p1.distance < p2.distance)
-                return (-1);
-            
-            if (p1.distance > p2.distance)
-                return 1;
-            
-            return 0;
-        }
-        
-    }
-    
+
     private static int MINIMAL_SIMILAR_COUNT = 3;
-    
+
     public List<String> getSimilarWords(String word) {
-        if (getDictionary().isEmpty()) return Collections.<String>emptyList();
+        if (dictionary.isEmpty()) return List.of();
         List<Pair> proposal = dynamicProgramming(word, getDictionaryText(), 5);
-        List<String> result   = new ArrayList<String>();
-        
-        //future:
-//            if (Character.isLowerCase(word.charAt(0)))
-//                return result;
-        
-        proposal.sort(new SimilarComparator());
-        
-        Iterator words = proposal.iterator();
+        List<String> result   = new ArrayList<>();
+
+        proposal.sort(Pair.SIMILAR_COMPARATOR);
+
+        Iterator<Pair> words = proposal.iterator();
         int      proposedCount = 0;
         int      lastDistance = 0;
-        
+
         while (words.hasNext()) {
-            Pair pair = (Pair) words.next();
-            
+            Pair pair = words.next();
+
             if (proposedCount >= MINIMAL_SIMILAR_COUNT && lastDistance != pair.distance)
                 continue;
-            
+
             result.add(pair.proposedWord);
             proposedCount++;
             lastDistance = pair.distance;
         }
-        
+
         return result;
     }
-    
+
     private static List<Pair> dynamicProgramming(String pattern, CharSequence text, int distance) {
-        List<Pair> result = new ArrayList<Pair>();
+        List<Pair> result = new ArrayList<>();
         pattern = pattern.toLowerCase();
-        
+
         int[] old = new int[pattern.length() + 1];
         int[] current = new int[pattern.length() + 1];
         int[] oldLength = new int[pattern.length() + 1];
         int[] length = new int[pattern.length() + 1];
-        
+
         for (int cntr = 0; cntr < old.length; cntr++) {
             old[cntr] = distance + 1;//cntr;
             oldLength[cntr] = (-1);
         }
-        
+
         current[0] = old[0] = oldLength[0] = length[0] = 0;
-        
+
         int currentIndex = 0;
-        
+
         while (currentIndex < text.length()) {
             for (int cntr = 0; cntr < pattern.length(); cntr++) {
                 int insert = old[cntr + 1] + 1;
                 int delete = current[cntr] + 1;
                 int replace = old[cntr] + ((pattern.charAt(cntr) == text.charAt(currentIndex)) ? 0 : 1);
-                
+
                 if (insert < delete) {
                     if (insert < replace) {
                         current[cntr + 1] = insert;
@@ -430,46 +344,49 @@ public class DictionaryImpl implements Dictionary {
                     }
                 }
             }
-            
+
             if (current[pattern.length()] <= distance) {
                 int start = currentIndex - length[pattern.length()] + 1;
                 int end   = currentIndex + 1;
-                
+
                 end = end >= text.length() ? text.length() - 1 : end;
-                
+
                 if ((start == 0 || text.charAt(start - 1) == '\n') && text.charAt(end) == '\n') {
                     String occurence = text.subSequence(start, end).toString();
-                    
+
                     if (occurence.indexOf('\n') == (-1) && !pattern.equals(occurence)) {
                         result.add(new Pair(occurence, current[pattern.length()]));
                     }
                 }
             }
-            
+
             currentIndex++;
-            
+
             int[] temp = old;
-            
+
             old = current;
             current = temp;
-            
+
             temp = oldLength;
-            
+
             oldLength = length;
             length = temp;
         }
-        
+
         return result;
     }
 
+    @Override
     public ValidityType validateWord(CharSequence word) {
         return findWord(word.toString());
     }
 
+    @Override
     public List<String> findValidWordsForPrefix(CharSequence word) {
         return Collections.emptyList();
     }
 
+    @Override
     public List<String> findProposals(CharSequence word) {
         return getSimilarWords(word.toString());
     }

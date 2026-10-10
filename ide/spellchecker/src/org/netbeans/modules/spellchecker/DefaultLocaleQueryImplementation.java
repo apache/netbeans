@@ -23,15 +23,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.netbeans.modules.spellchecker.spi.LocaleQueryImplementation;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -39,55 +38,53 @@ import org.openide.filesystems.FileUtil;
  */
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.spellchecker.spi.LocaleQueryImplementation.class, position=2000)
 public class DefaultLocaleQueryImplementation implements LocaleQueryImplementation {
-    
+
+    private static final String DEFAULT_LOCALE_FILE = "spellchecker-default-locale";
+
     /** Creates a new instance of DefaultLocaleQueryImplementation */
     public DefaultLocaleQueryImplementation() {
     }
 
+    @Override
     public Locale findLocale(FileObject file) {
         return getDefaultLocale();
     }
-    
-    private static final String FILE_NAME = "spellchecker-default-locale";
-    
+
+
     private static FileObject getDefaultLocaleFile() {
-        return FileUtil.getConfigFile(FILE_NAME);
+        return FileUtil.getConfigFile(DEFAULT_LOCALE_FILE);
     }
-    
+
     public static Locale getDefaultLocale() {
         FileObject file = getDefaultLocaleFile();
-        
+
         if (file == null)
-            return Locale.getDefault ();
-        
-        Charset UTF8 = StandardCharsets.UTF_8;
-        
+            return Locale.getDefault();
+
         BufferedReader r = null;
-        
+
         try {
-            r = new BufferedReader(new InputStreamReader(file.getInputStream(), UTF8));
-            
+            r = new BufferedReader(new InputStreamReader(file.getInputStream(), UTF_8));
+
             String localeLine = r.readLine();
-            
+
             if (localeLine == null || localeLine.trim().isEmpty())
                 return null;
-            
-            String language = "";
+
+            StringTokenizer stok = new StringTokenizer(localeLine, "_");
+
+            String language = stok.nextToken();
             String country = "";
             String variant = "";
-            
-            StringTokenizer stok = new StringTokenizer(localeLine, "_");
-            
-            language = stok.nextToken();
-            
+
             if (stok.hasMoreTokens()) {
                 country = stok.nextToken();
-                
+
                 if (stok.hasMoreTokens())
                     variant = stok.nextToken();
             }
-            
-            return new Locale(language, country, variant);
+
+            return Locale.of(language, country, variant);
         } catch (IOException e) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
         } finally {
@@ -98,36 +95,24 @@ public class DefaultLocaleQueryImplementation implements LocaleQueryImplementati
                 ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             }
         }
-        
+
         return null;
     }
-    
+
     public static void setDefaultLocale(Locale locale) {
         FileObject file = getDefaultLocaleFile();
-        Charset UTF8 = StandardCharsets.UTF_8;
-        FileLock lock = null;
-        PrintWriter pw = null;
-        
+
         try {
             if (file == null) {
-                file = FileUtil.getConfigRoot().createData(FILE_NAME);
+                file = FileUtil.getConfigRoot().createData(DEFAULT_LOCALE_FILE);
             }
-            
-            lock = file.lock();
-            pw = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lock), UTF8));
-            
-            pw.println(locale.toString());
 
-            ComponentPeer.clearDoc2DictionaryCache();
+            try (var lock = file.lock(); var pw = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lock), UTF_8))) {
+                pw.println(locale.toString());
+                ComponentPeer.clearDoc2DictionaryCache();
+            }
         } catch (IOException e) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
-        } finally {
-            if (pw != null)
-                pw.close();
-            
-            if (lock != null) {
-                lock.releaseLock();
-            }
         }
     }
 }

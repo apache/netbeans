@@ -41,6 +41,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1534,15 +1535,44 @@ public class ETable extends JTable {
         return header.getColumnModel().getColumn(columnIndex);
     }
 
+    private boolean scollingMouseMotionListenerAdded = false;
+
     /**
      * Adds mouse listener to the header for sorting and auto-sizing
-     * of the columns.
+     * of the columns. Also handle auto-scrolling during drag events.
      */
     private void updateMouseListener() {
         JTableHeader jth = getTableHeader();
         if (jth != null) {
             jth.removeMouseListener(headerMouseListener); // not to add it twice
             jth.addMouseListener(headerMouseListener);
+        }
+        if (!scollingMouseMotionListenerAdded) {
+            scollingMouseMotionListenerAdded = true;
+            /* Make sure auto-scrolling works even the selection does not change as a result of the
+            mouse dragging. See JComponent.setAutoscrolls. */
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent evt) {
+                    Rectangle r = new Rectangle(evt.getX(), evt.getY(), 1, getRowHeight());
+                    scrollRectToVisible(r);
+                }
+            });
+            /* Under certain circumstances, at least on MacOS, the autoscroller can get "stuck",
+            continuing to issue new drag events after the user has released the mouse button. I
+            suspect it happens when the mouse button is released while the cursor is outside of the
+            root Java frame. Turning the autoscroller off and back on again will reset it. Do this
+            whenever the mouse enters the component, as this will usually resolve the situation
+            naturally. */
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (getAutoscrolls()) {
+                        setAutoscrolls(false);
+                        setAutoscrolls(true);
+                    }
+                }
+            });
         }
     }
     
@@ -3212,7 +3242,61 @@ public class ETable extends JTable {
             return super.getRowSorter();
         }
     }
-    
-    
-    
+
+    /* Workaround for NETBEANS-5728 "ETable/OutlineView drag-and-drop selects spurious nodes"
+    (due to https://bugs.openjdk.java.net/browse/JDK-6693486 ). The goal is to suppress all selection
+    changes that originate from javax.swing.plaf.basic.BasicTableUI$Handler.mouseDragged. See
+    https://stackoverflow.com/questions/5969258/how-to-make-jtable-click-on-unselected-do-a-drag-instead-of-a-select .
+    I couldn't make the workaround from the StackOverflow work, so a different implementation
+    follows here. */
+
+    // An optimization to avoid some of the calls to isInMouseDragged.
+    private int inRegularDragEvent = 0;
+
+    @Override
+    protected void processMouseMotionEvent(MouseEvent evt) {
+        boolean drag = (evt.getID() == MouseEvent.MOUSE_DRAGGED);
+        if (drag) {
+            inRegularDragEvent++;
+        }
+        try {
+            super.processMouseMotionEvent(evt);
+        } finally {
+            if (drag) {
+                inRegularDragEvent--;
+            }
+        }
+    }
+
+    private boolean isInMouseDragged() {
+        /* Drag events that originate from Swing's "autoscroller" (when dragging outside the component
+        bounds) do not go through processMouseMotionEvent, and do not cause mouse press events that
+        go through processMouseEvent either. So we must examine the stack trace explicitly instead. */
+        for (StackTraceElement ste : new Exception().getStackTrace()) {
+            if (ste.getClassName().equals("javax.swing.plaf.basic.BasicTableUI$Handler") &&
+                ste.getMethodName().equals("mouseDragged"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicate if this component is currently configured in a way which would require the workaround
+     * for NETBEANS-5728 to be applied.
+     */
+    private boolean needsDragBugWorkaround() {
+        return !(getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION &&
+               getColumnModel().getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    @Override
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        if (needsDragBugWorkaround() && (inRegularDragEvent > 0 || isInMouseDragged())) {
+            // Veto any selection changes that happen as a result of mouse dragging.
+            return;
+        }
+        super.changeSelection(rowIndex, columnIndex, toggle, extend);
+    }
 }

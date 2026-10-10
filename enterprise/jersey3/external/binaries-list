@@ -1,0 +1,41 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+640C0D5AFF45DBFF1E1A1BC09673FF3A02B1BA12 jakarta.activation:jakarta.activation-api:2.1.2
+48B9BDA22B091B1F48B13AF03FE36DB3BE6E1AE3 jakarta.annotation:jakarta.annotation-api:2.1.1
+66901FA1C373C6AFF65C13791CC11DA72060A8D6 jakarta.persistence:jakarta.persistence-api:3.1.0
+ABECC699286E65035EBBA9844C03931357A6A963 jakarta.servlet:jakarta.servlet-api:6.0.0
+92B6631659BA35CA09E44874D3EB936EDFEEE532 jakarta.validation:jakarta.validation-api:3.0.2
+15CE10D249A38865B58FC39521F10F29AB0E3363 jakarta.ws.rs:jakarta.ws.rs-api:3.1.0
+CA2330866CBC624C7E5CE982E121DB1125D23E15 jakarta.xml.bind:jakarta.xml.bind-api:4.0.1
+EC406DE7356ACE192BA536294B7424194A7F44AB org.glassfish.hk2:hk2-api:3.0.4
+8AC6800F4102D2961B2D4380A483A0374A5A32DC org.glassfish.hk2:hk2-locator:3.0.4
+D33F91938DBBB239AB026E37CB75AFBD16090895 org.glassfish.hk2:hk2-utils:3.0.4
+8096EBF722902E75FBD4F532A751E514F02E1EB7 org.glassfish.hk2.external:jakarta.inject:2.6.1
+B1D38A6E64C50F501503D7C4297445A346583870 org.glassfish.hk2.external:aopalliance-repackaged:3.0.4
+E345BC5A00ED2FAB4B851F7BAB5DA99FC1A6E8FD org.glassfish.hk2:osgi-resource-locator:2.4.0
+D701564333D25B3CC9AC95756996DAB21A8CAE43 org.glassfish.jersey.core:jersey-client:3.1.3
+B4A091D46EC7D0235177338419F5C5D2D2D89039 org.glassfish.jersey.core:jersey-common:3.1.3
+3108BEC121E3C564CAD7E8C7CB53835331BD654F org.glassfish.jersey.core:jersey-server:3.1.3
+EFB05CEB53D4086CDED2D51B06A3104BD2298A8F org.glassfish.jersey.connectors:jersey-apache-connector:3.1.3
+E34ACB2DADA0BC77FF62EA8BE54F6FD1444CE43B org.glassfish.jersey.containers:jersey-container-servlet:3.1.3
+B583F9AC773BDBC87A8A3AC03FA407F1175B185F org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.3
+796DC903D14D68A8CF3A4F81D546D50777A4179C org.glassfish.jersey.ext:jersey-entity-filtering:3.1.3
+594B23AF6A09F621C16E94B85901AA3738455F9C org.glassfish.jersey.inject:jersey-hk2:3.1.3
+C08467EE1DA7F9C7CF0B28C7F3C526E183802BD7 org.glassfish.jersey.media:jersey-media-json-jackson:3.1.3
+BCA03B8ABF9BEE2408F59F79A9ADBBC51D0E4BAA org.glassfish.jersey.media:jersey-media-moxy:3.1.3
+DAA42A0E96C3B881E8C330A413813983E92D2426 org.osgi:osgi.core:8.0.0

@@ -25,26 +25,21 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.text.DateFormat;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -54,7 +49,6 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.netbeans.NbExit;
 import org.netbeans.core.startup.logging.NbLogging;
 import org.openide.filesystems.FileUtil;
@@ -181,12 +175,8 @@ public final class TopLogging {
             try (PrintStream ps = new PrintStream(os)) {
                 logging.printSystemInfo(ps);
             }
-            try {
-                Logger logger = Logger.getLogger(TopLogging.class.getName()); // NOI18N
-                logger.log(Level.INFO, os.toString("utf-8"));
-            } catch (UnsupportedEncodingException ex) {
-                assert false;
-            }
+            Logger logger = Logger.getLogger(TopLogging.class.getName()); // NOI18N
+            logger.log(Level.INFO, os.toString(StandardCharsets.UTF_8));
         }
         if (!Boolean.getBoolean("netbeans.logger.noSystem")) {
             if (!PrintStreamLogger.isLogger(System.err)) {
@@ -202,11 +192,9 @@ public final class TopLogging {
 
 
     private void printSystemInfo(PrintStream ps) {
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US);
-        Date date = new Date();
 
         ps.println("-------------------------------------------------------------------------------"); // NOI18N
-        ps.println(">Log Session: "+df.format (date)); // NOI18N
+        ps.println(">Log Session: " + Instant.now()); // NOI18N
         ps.println(">System Info: "); // NOI18N
 
         List<File> clusters = new ArrayList<>();
@@ -228,20 +216,17 @@ public final class TopLogging {
         for (File cluster : clusters) { // also print Hg ID if available; more precise
             File buildInfo = new File(cluster, "build_info"); // NOI18N
             if (buildInfo.isFile()) {
-                try {
-                    try (Reader r = new FileReader(buildInfo)) {
-                        BufferedReader b = new BufferedReader(r);
-                        Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
-                        for (;;) {
-                            String line = b.readLine();
-                            if (line == null) {
-                                break;
-                            }
-                            Matcher m = p.matcher(line);
-                            if (m.matches()) {
-                                ps.print(" (#" + m.group(1) + ")"); // NOI18N
-                                break;
-                            }
+                Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
+                try (BufferedReader br = Files.newBufferedReader(buildInfo.toPath())) {
+                    for (;;) {
+                        String line = br.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        Matcher m = p.matcher(line);
+                        if (m.matches()) {
+                            ps.print(" (#" + m.group(1) + ")"); // NOI18N
+                            break;
                         }
                     }
                 } catch (IOException x) {
@@ -276,7 +261,8 @@ public final class TopLogging {
         ps.println("  Cache Directory         = " + Places.getCacheDirectory()); // NOI18N
         ps.print(  "  Installation            = "); // NOI18N
         for (File cluster : clusters) {
-            ps.print(cluster + "\n                            "); // NOI18N
+            ps.println(cluster);
+            ps.print("                            ");// NOI18N
         }
         ps.println(CLIOptions.getHomeDir()); // platform cluster is separate
         ps.println("  Boot & Ext. Classpath   = " + createBootClassPath()); // NOI18N
@@ -286,9 +272,9 @@ public final class TopLogging {
             cp = System.getProperty("java.class.path", "unknown"); // NOI18N
         } else {
             StringBuilder sb = new StringBuilder("loaded by "); // NOI18N
-            if (l instanceof URLClassLoader) {
+            if (l instanceof URLClassLoader urlCL) {
                 sb.append("URLClassLoader"); // NOI18N
-                for (URL u : ((URLClassLoader)l).getURLs()) {
+                for (URL u : urlCL.getURLs()) {
                     sb.append(' ').append(u);
                 }
             } else {
@@ -315,29 +301,10 @@ public final class TopLogging {
     }
 
     private List<String> createJavaBootModuleList() {
-        // TODO JDK 11 equivalent
-//        return ModuleLayer.boot().modules().stream()
-//                .map(Module::getName)
-//                .sorted()
-//                .collect(Collectors.toList());
-        try {
-            Class<?> ml_class = Class.forName("java.lang.ModuleLayer");
-            Method mod_getName = Class.forName("java.lang.Module").getMethod("getName");
-            @SuppressWarnings("unchecked")
-            Set<?> mods = (Set<?>)ml_class.getDeclaredMethod("modules").invoke(
-                ml_class.getDeclaredMethod("boot").invoke(null)
-            );
-            return mods.stream().map(mod -> {
-                try {
-                    return (String) mod_getName.invoke(mod);
-                } catch (ReflectiveOperationException ex) {
-                    return "unknown"; // outer try would fail first
-                }
-            })
-            .sorted().collect(Collectors.toList());
-        } catch (ReflectiveOperationException ex) {
-            return Collections.emptyList();
-        }
+        return ModuleLayer.boot().modules().stream()
+                .map(Module::getName)
+                .sorted()
+                .toList();
     }
 
     /** Scans path list for something that can be added to classpath.
@@ -499,9 +466,6 @@ public final class TopLogging {
             
             // Either org.netbeans or org.netbeans.core.execution pkgs:
             if (e.getClass().getName().endsWith(".ExitSecurityException")) { // NOI18N
-                return;
-            }
-            if (e instanceof ThreadDeath) {
                 return;
             }
             g.log(Level.SEVERE, null, e);

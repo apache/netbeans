@@ -29,6 +29,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -51,6 +53,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -326,6 +329,41 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         }
     }
 
+    /**
+     * Adds key bindings to move the graph with the cursor-keys around.
+     * Zoom-in/-out with Alt++ and Alt+-
+     */
+    public void addKeyboardBindings() {
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.ALT_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK), "zoomOut");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, KeyEvent.ALT_DOWN_MASK), "zoomOut");
+
+        getActionMap().put("zoomIn", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnBiggerActionPerformed(e);
+            }
+        });
+
+        getActionMap().put("zoomOut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnSmallerActionPerformed(e);                
+            }
+        });
+    
+        if (scene != null) {
+            JComponent sceneView = scene.getView();
+            if (sceneView == null) {
+                sceneView = scene.createView();
+            }
+            pane.setViewportView(sceneView);
+            sceneView.requestFocusInWindow();
+        }
+    }
+  
     @Override
     public void componentClosed() {
         super.componentClosed();
@@ -371,7 +409,6 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnGraph, org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnGraph.text")); // NOI18N
@@ -386,6 +423,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         jToolBar1.add(btnGraph);
 
         btnBigger.setIcon(ImageUtilities.loadImageIcon(ZOOM_IN_ICON, true));
+        btnBigger.setToolTipText(org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnBigger.toolTipText")); // NOI18N
         btnBigger.setFocusable(false);
         btnBigger.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBigger.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -397,6 +435,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         jToolBar1.add(btnBigger);
 
         btnSmaller.setIcon(ImageUtilities.loadImageIcon(ZOOM_OUT_ICON, true));
+        btnSmaller.setToolTipText(org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnSmaller.toolTipText")); // NOI18N
         btnSmaller.setFocusable(false);
         btnSmaller.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSmaller.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -621,6 +660,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
                                 sceneView = scene.createView();
                                 // vlv: print
                                 sceneView.putClientProperty("print.printable", true); // NOI18N
+                                addKeyboardBindings();
                             }
                             pane.setViewportView(sceneView);
                             scene.setSurroundingScrollPane(pane);

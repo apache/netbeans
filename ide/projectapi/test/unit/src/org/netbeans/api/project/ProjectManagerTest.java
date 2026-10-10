@@ -31,9 +31,14 @@ import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.projectapi.nb.NbProjectManagerAccessor;
 import org.netbeans.modules.projectapi.nb.TimedWeakReference;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.test.MockLookup;
 
 /* XXX tests needed:
@@ -50,27 +55,28 @@ import org.openide.util.test.MockLookup;
  * @author Jesse Glick
  */
 public class ProjectManagerTest extends NbTestCase {
-    
+
     static {
         // For easier testing.
         TimedWeakReference.TIMEOUT = 1000;
     }
-    
+
     public ProjectManagerTest(String name) {
         super(name);
     }
-    
+
     private FileObject scratch;
     private FileObject goodproject;
     private FileObject goodproject2;
     private FileObject badproject;
     private FileObject mysteryproject;
+    private FileObject justADir;
     private ProjectManager pm;
 
     protected @Override Level logLevel() {
         return Level.FINE;
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -82,11 +88,12 @@ public class ProjectManagerTest extends NbTestCase {
         badproject = scratch.createFolder("bad");
         badproject.createFolder("testproject").createData("broken");
         mysteryproject = scratch.createFolder("mystery");
+        justADir = scratch.createFolder("justADir");
         MockLookup.setInstances(TestUtil.testProjectFactory());
         pm = ProjectManager.getDefault();
         NbProjectManagerAccessor.reset();
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         scratch = null;
@@ -96,7 +103,7 @@ public class ProjectManagerTest extends NbTestCase {
         pm = null;
         super.tearDown();
     }
-    
+
     public void testFindProject() throws Exception {
         Project p = null;
         CharSequence log = Log.enable("TIMER", Level.FINE);
@@ -126,7 +133,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("Repeated find calls should give same result", p, pm.findProject(goodproject));
         assertEquals("ProjectFactory was called only once on goodproject", 1, TestUtil.projectLoadCount(goodproject));
     }
-    
+
     public void testFindProjectGC() throws Exception {
         Project p = null;
         try {
@@ -157,7 +164,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("Correct project directory set again", goodproject, p.getProjectDirectory());
         assertEquals("ProjectFactory was called only once on new goodproject folder object", 1, TestUtil.projectLoadCount(goodproject));
     }
-    
+
     public void testFindProjectDoesNotCacheLoadErrors() throws Exception {
         Project p = null;
         try {
@@ -197,32 +204,194 @@ public class ProjectManagerTest extends NbTestCase {
             // Expected.
         }
     }
-    
+
     public void testIsProject() throws Exception {
         assertTrue("Should have recognized goodproject", pm.isProject(goodproject));
-        
+
         assertTrue("Should have recognized badproject", pm.isProject(badproject));
-        
+
         assertFalse("Should not have been able to load mysteryproject", pm.isProject(mysteryproject));
     }
-    
+
+    public void testIsFallbackProject() throws Exception {
+        var nothing = pm.findProject(justADir);
+        assertNull("No project is found for just a dir", nothing);
+        var generic = pm.findProjectOrFallback(justADir);
+        assertNotNull("But one can ask for a fallback project", generic);
+
+        var then = pm.findProject(justADir);
+        assertSame("since then findProject works for just a dir", generic, then);
+
+        var ref = new WeakReference<>(generic);
+        generic = null;
+        then = null;
+        // give the references time to disappear
+        Thread.sleep(TimedWeakReference.TIMEOUT);
+
+        assertGC("The fallback project gets GCed when no longer used", ref);
+
+        var nothingAgain = pm.findProject(justADir);
+        assertNull("Since then, findProject again returns null", nothingAgain);
+    }
+
+    public void testFallbackProjectLookup() throws Exception {
+        FileObject lookupDir = FileUtil.createFolder(FileUtil.getConfigRoot(), "Projects/org-netbeans-modules-project-fallback/Lookup");
+
+        var nothing = pm.findProject(justADir);
+        assertNull("No project is found for just a dir", nothing);
+        var fallbackProject = pm.findProjectOrFallback(justADir);
+        assertNotNull("But one can ask for a fallback project", fallbackProject);
+
+        var theProject = pm.findProject(justADir);
+        assertSame("since then findProject works for just a dir", fallbackProject, theProject);
+
+        Sources src = theProject.getLookup().lookup(Sources.class);
+        assertNotNull("sources are provided", src);
+        SourceGroup[] genSrc = src.getSourceGroups(Sources.TYPE_GENERIC);
+        assertNotNull("They support the generic sources", genSrc);
+        assertEquals("They support the generic sources", 1, genSrc.length);
+        assertEquals("root is project root", theProject.getProjectDirectory(), genSrc[0].getRootFolder());
+
+        MockLookupForProject notFoundInLookup = theProject.getLookup().lookup(MockLookupForProject.class);
+        assertNull("No MockLookuptype found in project's lookup", notFoundInLookup);
+
+        {
+            // create a registration in the lookup
+            FileObject mockLookupType = FileUtil.createData(lookupDir, MockLookupForProject.class.getName().replace(".", "-") + ".instance");
+            MockLookupForProject found = FileUtil.getConfigObject(mockLookupType.getPath(), MockLookupForProject.class);
+            assertNotNull("MockLookupForProject is registered in the lookup directory", found);
+        }
+
+        MockLookupForProject mockLookup = theProject.getLookup().lookup(MockLookupForProject.class);
+        assertNotNull("MockLookupForProject also found in project's lookup", mockLookup);
+
+        ActionProvider ap = theProject.getLookup().lookup(ActionProvider.class);
+        assertNotNull("There are always actions for a project being merged together", ap);
+        {
+            var ap1 = new ActionProvider() {
+                @Override
+                public String[] getSupportedActions() {
+                    return new String[] { "jedna", "dva" };
+                }
+
+                @Override
+                public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+                    throw new UnsupportedOperationException(command);
+                }
+
+                @Override
+                public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+                    return false;
+                }
+            };
+
+            var ap2 = new ActionProvider() {
+                @Override
+                public String[] getSupportedActions() {
+                    return new String[] { "odin", "dva" };
+                }
+
+                @Override
+                public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+                    throw new UnsupportedOperationException(command);
+                }
+
+                @Override
+                public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+                    return false;
+                }
+            };
+
+            mockLookup.ic.add(ap1);
+
+            String[] ap1Actions = theProject.getLookup().lookup(ActionProvider.class).getSupportedActions();
+            assertEquals("Found two actions", 2, ap1Actions.length);
+
+            mockLookup.ic.add(ap2);
+            String[] bothActions = theProject.getLookup().lookup(ActionProvider.class).getSupportedActions();
+            assertEquals("Found three actions", 3, bothActions.length);
+
+            assertSame("Action provider instance stays the same", ap, theProject.getLookup().lookup(ActionProvider.class));
+
+            ProjectInformation info = ProjectUtils.getInformation(theProject);
+            assertNotNull("Cannot be null", info);
+            assertEquals(theProject.getProjectDirectory().getNameExt(), info.getName());
+            assertEquals("Folder " + justADir.getNameExt(), info.getDisplayName());
+            assertNotNull("Icon is provided", info.getIcon());
+            assertSame("Same icon as the group icon", info.getIcon(), genSrc[0].getIcon(true));
+        }
+    }
+
+    public static final class MockLookupForProject implements org.netbeans.spi.project.LookupProvider {
+        final InstanceContent ic = new InstanceContent();
+        private final Lookup lkp = new AbstractLookup(ic);
+        {
+            ic.add(this);
+        }
+
+
+        @Override
+        public Lookup createAdditionalLookup(Lookup baseContext) {
+            return lkp;
+        }
+    }
+
+    public void testFallbackProjectBecomesFileOwner() throws Exception {
+        FileObject script = justADir.createData("Hello.java");
+        FileObject nested = justADir.createFolder("sub").createData("Other.java");
+        assertNull("Loose file has no owner before", FileOwnerQuery.getOwner(script));
+        assertFalse("justADir is not a project", pm.isProject(justADir));
+
+        Project fallback = pm.findProjectOrFallback(justADir);
+
+        assertTrue("Now the directory is recognized as a project", pm.isProject(justADir));
+        assertSame("but findProject returns the fallback", fallback, pm.findProject(justADir));
+        assertEquals("Now the justADir files have an owner", fallback, FileOwnerQuery.getOwner(script));
+        assertEquals("Nested files also have an owner", fallback, FileOwnerQuery.getOwner(nested));
+    }
+
+    public void testFallbackReplacedAfterClearNonProjectCacheUnderWriteAccess() throws Exception {
+        Project fallback = pm.findProjectOrFallback(justADir);
+        Project real = ProjectManager.mutex().writeAccess((Mutex.ExceptionAction<Project>) () -> {
+            // what project generators do: create metadata, clear cache, find project
+            justADir.createFolder("testproject");
+            pm.clearNonProjectCache();
+            return pm.findProject(justADir);
+        });
+        Project outside = pm.findProject(justADir);
+        assertNotNull("Project is found when mutex.writeAccess ends", outside);
+        assertNotSame("Outside project replaces the fallback", fallback, outside);
+        assertNotNull(real);
+        assertNotSame("Real project replaces the fallback", fallback, real);
+        assertSame("Outside and real are the same", outside, real);
+    }
+
+    public void testReplacedFallbackIsNoLongerValid() throws Exception {
+        Project fallback = pm.findProjectOrFallback(justADir);
+        justADir.createFolder("testproject");
+        pm.clearNonProjectCache();
+        Project real = pm.findProject(justADir);
+        assertNotSame(fallback, real);
+        assertFalse("Replaced fallback should not be valid anymore", pm.isValid(fallback));
+    }
+
     public void testIsProject2() throws Exception {
         ProjectManager.Result r = pm.isProject2(goodproject);
         assertNotNull("Should have recognized goodproject", r);
         assertEquals(goodproject.getName(), r.getDisplayName());
         assertEquals(TestUtil.TEST_PROJECT_ICON, r.getIcon());
         assertEquals(TestUtil.TEST_PROJECT_TYPE, r.getProjectType());
-        
+
         ProjectManager.Result r2 = pm.isProject2(badproject);
         assertNotNull("Should have recognized badproject", r2);
         assertNull("Should not have a project name for badproject", r2.getDisplayName());
         assertEquals(TestUtil.TEST_PROJECT_ICON, r2.getIcon());
         assertNull("Should not have a project type for badproject", r2.getProjectType());
-        
+
         ProjectManager.Result r3 = pm.isProject2(mysteryproject);
         assertNull("Should not have been able to load mysteryproject", r3);
     }
-    
+
     public void testModify() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -239,7 +408,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertTrue("p1 is modified", pm.isModified(p1));
         assertTrue("and p2 is modified too", pm.isModified(p2));
     }
-    
+
     public void testSave() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -275,7 +444,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("p1 still only saved twice", 2, TestUtil.projectSaveCount(p1));
         assertEquals("p2 still only saved twice", 2, TestUtil.projectSaveCount(p2));
     }
-    
+
     public void testSaveError() throws Exception {
         Project p1 = pm.findProject(goodproject);
         Project p2 = pm.findProject(goodproject2);
@@ -328,7 +497,7 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("p1 was now saved twice", 2, TestUtil.projectSaveCount(p1));
         assertEquals("p2 was saved exactly once (by one or the other saveAllProjects)", 1, TestUtil.projectSaveCount(p2));
     }
-    
+
     public void testClearNonProjectCache() throws Exception {
         FileObject p1 = scratch.createFolder("p1");
         p1.createFolder("testproject");
@@ -359,55 +528,55 @@ public class ProjectManagerTest extends NbTestCase {
     public void testNotifyDeleted() throws Exception {
         FileObject p1 = scratch.createFolder("p1");
         FileObject p1TestProject = p1.createFolder("testproject");
-        
+
         Project project1 = pm.findProject(p1);
-        
+
         assertNotNull("project1 is recognized", project1);
         p1TestProject.delete();
         TestUtil.notifyDeleted(project1);
-        
+
         assertFalse("project1 is not valid", pm.isValid(project1));
         assertNull("project1 is deleted", pm.findProject(p1));
 
         FileObject p2 = scratch.createFolder("p2");
         FileObject p2TestProject = p2.createFolder("testproject");
-        
+
         Project project2 = pm.findProject(p2);
-        
+
         assertNotNull("project2 is recognized", project2);
         TestUtil.notifyDeleted(project2);
-        
+
         assertFalse("project2 is not valid", pm.isValid(project2));
-        
+
         Project project2b = pm.findProject(p2);
-        
+
         assertTrue("project2 is newly recognized", project2b != project2);
         assertNotNull("project2 is newly recognized", project2b);
 
         FileObject p3 = scratch.createFolder("p3");
         FileObject p3TestProject = p3.createFolder("testproject");
-        
+
         Project project3 = pm.findProject(p3);
-        
+
         assertNotNull("project3 is recognized", project3);
         TestUtil.modify(project3);
         assertTrue("project3 is modified", pm.isModified(project3));
         TestUtil.notifyDeleted(project3);
-        
+
         assertFalse("project3 is not valid", pm.isValid(project3));
-        
+
         assertFalse(pm.isModified(project3)); // please do not throw an exception here
-        
+
         FileObject p4 = scratch.createFolder("p4");
         FileObject p4TestProject = p4.createFolder("testproject");
 
         Project project4 = pm.findProject(p4);
-        
+
         assertNotNull("project4 is recognized", project4);
         TestUtil.notifyDeleted(project4);
-        
+
         assertFalse("project4 is not valid", pm.isValid(project3));
-        
+
         TestUtil.notifyDeleted(project4); // please do not throw an exception here
     }
 
@@ -445,7 +614,7 @@ public class ProjectManagerTest extends NbTestCase {
         TestUtil.notifyDeleted(project1);
         assertEquals(project2, pm.findProject(p2));
     }
-    
+
     /**
      * Helper method allowing to reset PM from other module's tests.
      * @param pm PM to reset

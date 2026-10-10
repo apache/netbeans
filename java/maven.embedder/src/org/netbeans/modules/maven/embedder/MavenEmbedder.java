@@ -48,7 +48,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -102,6 +101,8 @@ import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
+import org.eclipse.aether.internal.impl.collect.bf.BfDependencyCollector;
+import org.eclipse.aether.internal.impl.session.DefaultCloseableSession;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
@@ -252,9 +253,18 @@ public final class MavenEmbedder {
         MavenExecutionResult result = new DefaultMavenExecutionResult();
         try {
             ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
-            configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+            configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
             configuration.setResolveDependencies(true);
-            configuration.setRepositorySession(maven.newRepositorySession(req));
+            
+            RepositorySystemSession session = maven.newRepositorySession(req);
+            
+            // TODO this forces single threaded dependency collection since NbArtifactFixer heavily
+            // uses ThreadLocals and doesn't expect the thread to change between collectPlaceholderArtifacts() and resolve()
+            DefaultRepositorySystemSession mutable = new DefaultRepositorySystemSession(session);
+            mutable.setConfigProperty(BfDependencyCollector.CONFIG_PROP_THREADS, 1);
+            configuration.setRepositorySession(mutable);
+            // end
+            
             ProjectBuildingResult projectBuildingResult = projectBuilder.build(pomFile, configuration);
             result.setProject(projectBuildingResult.getProject());
             result.setDependencyResolutionResult(projectBuildingResult.getDependencyResolutionResult());
@@ -277,7 +287,7 @@ public final class MavenEmbedder {
         List<ProjectBuildingResult> projectBuildingResults = new LinkedList<>();
         
         ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
-        configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+        configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
         configuration.setResolveDependencies(true);
         configuration.setRepositorySession(maven.newRepositorySession(req));
 
@@ -496,7 +506,7 @@ public final class MavenEmbedder {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
         req.setPomFile(pom);
         req.setProcessPlugins(false);
-        req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+        req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
         req.setLocationTracking(true);
         req.setModelResolver(createNBResolver());
         req.setSystemProperties(getSystemProperties());
@@ -644,7 +654,15 @@ public final class MavenEmbedder {
             DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
             Settings _settings = getSettings();
             for (Mirror m : _settings.getMirrors()) {
-                mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
+                mirrorSelector.add(
+                        m.getId(),
+                        m.getUrl(),
+                        m.getLayout(),
+                        false,
+                        false,
+                        m.getMirrorOf(),
+                        m.getMirrorOfLayouts()
+                );
             }
             session.setMirrorSelector(mirrorSelector);
             SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));

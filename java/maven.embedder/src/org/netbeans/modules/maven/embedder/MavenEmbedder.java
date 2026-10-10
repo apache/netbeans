@@ -253,7 +253,7 @@ public final class MavenEmbedder {
         MavenExecutionResult result = new DefaultMavenExecutionResult();
         try {
             ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
-            configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+            configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
             configuration.setResolveDependencies(true);
             
             RepositorySystemSession session = maven.newRepositorySession(req);
@@ -287,7 +287,7 @@ public final class MavenEmbedder {
         List<ProjectBuildingResult> projectBuildingResults = new LinkedList<>();
         
         ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
-        configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+        configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
         configuration.setResolveDependencies(true);
         configuration.setRepositorySession(maven.newRepositorySession(req));
 
@@ -506,7 +506,7 @@ public final class MavenEmbedder {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
         req.setPomFile(pom);
         req.setProcessPlugins(false);
-        req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+        req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0); // TODO switch back to VALIDATION_LEVEL_MINIMAL after 3.10 / maven #9642
         req.setLocationTracking(true);
         req.setModelResolver(createNBResolver());
         req.setSystemProperties(getSystemProperties());

@@ -20,5 +20,5 @@
 
 -->
 <project name="IDE Cluster" basedir="../nbbuild" default="build-nozip">
-    <description>Java Cluster build script</description>
+    <description>IDE Cluster build script</description>
 </project>

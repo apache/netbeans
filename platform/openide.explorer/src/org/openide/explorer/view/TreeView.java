@@ -1946,12 +1946,14 @@ public abstract class TreeView extends JScrollPane {
 
         @Override
         public void showNextSelection(boolean forward) {
-            if (forward) {
-                currentSelectionIndex++;
-            } else {
-                currentSelectionIndex--;
+            if (lastSearchText != null) {
+                if (forward) {
+                    currentSelectionIndex++;
+                } else {
+                    currentSelectionIndex--;
+                }
+                displaySearchResult();
             }
-            displaySearchResult();
         }
 
         @Override
@@ -2085,7 +2087,7 @@ public abstract class TreeView extends JScrollPane {
                 setSelectionPath(path);
                 scrollPathToVisible(path);
             } else {
-                if (lastSearchText.isEmpty() && origSelectionPaths != null) {
+                if ((lastSearchText == null || lastSearchText.isEmpty()) && origSelectionPaths != null) {
                     setSelectionPaths(origSelectionPaths);
                     scrollPathToVisible(origSelectionPaths[0]);
                 } else {

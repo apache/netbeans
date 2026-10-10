@@ -506,6 +506,11 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     private static class ProjectFileChooser extends JFileChooser {
 
+        @SuppressWarnings("LeakingThisInConstructor")
+        public ProjectFileChooser() {
+            OpenProjectListSettings.getInstance().restoreComponentSize(this);
+        }
+
         @Override
         public void approveSelection() {
             File selectedFile = getSelectedFile();
@@ -521,6 +526,11 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
             }
         }
 
+        @Override
+        public void removeNotify() {
+            OpenProjectListSettings.getInstance().storeComponentSize(this);
+            super.removeNotify();
+        }
 
     }
 

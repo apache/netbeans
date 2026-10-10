@@ -874,10 +874,12 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            final JavacTaskImpl javacTask = createJavacTask(cpInfo,
+            String sourceLevelStr = sourceLevel != null ? sourceLevel.getSourceLevel() : null;
+            final JavacTaskImpl javacTask = createJavacTask(
+                    cpInfo,
                     diagnosticListener,
-                    sourceLevel != null ? sourceLevel.getSourceLevel() : null,
-                    sourceLevel != null ? sourceLevel.getProfile() : null,
+                    sourceLevelStr,
+                    sourceLevel != null && "1.8".equals(sourceLevelStr) ? sourceLevel.getProfile() : null,
                     flags,
                     fqn2Files,
                     parser == null ? null : new DefaultCancelService(parser),

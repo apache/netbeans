@@ -53,8 +53,10 @@
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.modules.debugger.jpda.ui</code-name-base>
+                    <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
+                        <specification-version>1.89</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

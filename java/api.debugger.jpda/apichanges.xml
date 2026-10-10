@@ -21,7 +21,7 @@
 -->
 
 <?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!-- INFO FOR PEOPLE ADDING CHANGES:
 [most of contents snipped - see openide's apichanges for how-to instructions]
@@ -51,6 +51,20 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDABreakpointEvent, JPDADebugger enhancements</summary>
+        <version major="3" minor="45"/>
+        <date day="16" month="10" year="2026"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added <code>JPDABreakpointEvent.isThreadDeath()</code> method.
+            Added new overload of <code>evaluate</code> method in <code>JPDADebugger</code>.
+        </description>
+        <class name="JPDABreakpointEvent" package="org.netbeans.api.debugger.jpda.event"/>
+        <class name="JPDADebugger" package="org.netbeans.api.debugger.jpda"/>
+    </change>
     <change>
         <api name="JPDADebuggerAPI"/>
         <summary>Randomly select listening port</summary>

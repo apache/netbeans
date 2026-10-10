@@ -397,9 +397,25 @@ public abstract class JPDADebugger {
      * @param expression a expression to be evaluated
      *  
      * @return current value of given expression
+     * @throws org.netbeans.api.debugger.jpda.InvalidExpressionException
      */
     public abstract Variable evaluate (String expression) 
     throws InvalidExpressionException;
+
+    /**
+     * Evaluates given expression in the current context.
+     *
+     * @param expression a expression to be evaluated
+     * @param csf frame to evaluate the expression at
+     *
+     * @return current value of given expression
+     * @throws org.netbeans.api.debugger.jpda.InvalidExpressionException
+     * @since 3.45
+     */
+    public Variable evaluate (String expression, CallStackFrame csf)
+    throws InvalidExpressionException {
+        return evaluate(expression);
+    }
 
     /**
      * Waits till the Virtual Machine is started and returns 

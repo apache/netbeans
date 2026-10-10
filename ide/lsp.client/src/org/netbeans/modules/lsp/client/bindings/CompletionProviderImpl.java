@@ -203,7 +203,25 @@ public class CompletionProviderImpl implements CompletionProvider {
             items = completionResult.getRight().getItems();
             incomplete = completionResult.getRight().isIncomplete();
         }
+        int[] identSpan;
+        String ident;
+        try {
+            identSpan = Utilities.getIdentifierBlock((BaseDocument) doc, caretOffset); //TODO: what is an identifier might (should?) be taken from language configuration?
+            if (identSpan != null) {
+                int end = Math.min(caretOffset, identSpan[1]);
+                ident = doc.getText(identSpan[0], end - identSpan[0]);
+            } else {
+                ident = "";
+            }
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+            return ;
+        }
         for (CompletionItem i : items) {
+            String filterText = i.getFilterText() != null ? i.getFilterText() : i.getLabel();
+            if (!filterText.startsWith(ident)) {
+                continue;
+            }
             String insert = i.getInsertText() != null ? i.getInsertText() : i.getLabel();
             String leftLabel;
             String rightLabel;

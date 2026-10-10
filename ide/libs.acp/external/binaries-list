@@ -1,0 +1,24 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+999A4B1AC918F324E783A4462E4FD66DDC592C2B com.agentclientprotocol:acp-core:0.80.0
+8695E0F93DC520584997C154A58C5EABBD5EDA2E com.agentclientprotocol:acp-annotations:0.80.0
+C4E39D3BB8755AD15499795A124816700A4A6B60 com.agentclientprotocol:acp-json-jackson2:0.80.0
+CF54BB43D59D6BB9B3BA5C160C975D4A18F351AB io.projectreactor:reactor-core:3.8.7
+3864A1320D97D7B045F729A326E1E077661F31B7 org.reactivestreams:reactive-streams:1.0.4
+7425A601C1C7EC76645A78D22B8C6A627EDEE507 org.jspecify:jspecify:1.0.0
+78A9E7A37CD6360E0B818E86341B24123D28D4DF org.slf4j:slf4j-api:2.0.18

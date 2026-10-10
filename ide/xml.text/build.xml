@@ -21,4 +21,16 @@
 -->
 <project name="ide/xml.text" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="javacc-syntax" depends="-download.release.files">
+        <mkdir dir="build"/>
+        <copy file="external/javacc-7.0.10.jar" tofile="build/javacc.jar"/>
+        <javacc target="src/org/netbeans/modules/xml/text/syntax/javacc/DTDSyntax.jj"
+                javacchome="build">
+        </javacc>
+        <javacc target="src/org/netbeans/modules/xml/text/syntax/javacc/XMLSyntax.jj"
+                javacchome="build">
+        </javacc>
+        <delete file="src/org/netbeans/modules/xml/text/syntax/javacc/SimpleCharStream.java" />
+    </target>
 </project>

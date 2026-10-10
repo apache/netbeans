@@ -39,7 +39,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="text/x-java", service=PositionRefresherHelper.class)
+@MimeRegistration(mimeType = "text/x-java", service = PositionRefresherHelper.class, position = 990)
 public class PositionRefresherHelperImpl extends PositionRefresherHelper<DocumentVersionImpl> {
     public PositionRefresherHelperImpl() {
         super(IntroduceHint.class.getName());

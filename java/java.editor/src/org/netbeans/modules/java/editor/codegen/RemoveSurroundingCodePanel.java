@@ -184,7 +184,7 @@ public class RemoveSurroundingCodePanel extends javax.swing.JPanel {
         return bag;
     }
     
-    @MimeRegistration(mimeType = "text/x-java", service = HighlightsLayerFactory.class)
+    @MimeRegistration(mimeType = "text/x-java", service = HighlightsLayerFactory.class, position = 830)
     public static class UnwrapCodeHighlightsLayerFactory implements HighlightsLayerFactory {
 
         @Override

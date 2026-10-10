@@ -295,7 +295,7 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
 
     @MimeRegistrations({
         @MimeRegistration(mimeType=TestTokenId.MIME_TYPE, service=TaskFactory.class),
-        @MimeRegistration(mimeType="text/x-java", service=TaskFactory.class)
+        @MimeRegistration(mimeType = "text/x-java", service = TaskFactory.class, position = 920)
     })
     public static final class FactoryImpl extends TaskFactory {
         @Override

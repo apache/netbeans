@@ -28,14 +28,13 @@ import java.io.Serializable;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 
 /**
  * Class for persisting icons
  * @author Milan Kubec, mkleint
  */
-public class ExtIcon {
+public final class ExtIcon {
 
     Icon icon;
 

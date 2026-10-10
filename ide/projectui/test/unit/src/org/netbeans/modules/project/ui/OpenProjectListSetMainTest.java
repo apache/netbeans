@@ -191,11 +191,13 @@ public class OpenProjectListSetMainTest extends NbTestCase {
             this.toWaitOn = toWaitOn;
         }
         
+        @Override
         protected void projectClosed() {
             closed++;
         }
         
         Project[] arr;
+        @Override
         public void run() {
             try {
                 arr = OpenProjects.getDefault().openProjects().get(50, TimeUnit.MILLISECONDS);
@@ -208,6 +210,7 @@ public class OpenProjectListSetMainTest extends NbTestCase {
             }
         }
         
+        @Override
         protected void projectOpened() {
             assertFalse("Running", OpenProjects.getDefault().openProjects().isDone());
             // now verify that other threads do not see results from the Future

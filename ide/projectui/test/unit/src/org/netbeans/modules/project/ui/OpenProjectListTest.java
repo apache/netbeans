@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -56,6 +55,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -68,8 +68,9 @@ public class OpenProjectListTest extends NbTestCase {
     FileObject f1_1_open, f1_2_open, f1_3_close;
     FileObject f2_1_open;
 
-    Project project1, project2;
-    TestOpenCloseProjectDocument handler = new OpenProjectListTest.TestOpenCloseProjectDocument ();
+    TestSupport.TestProject project1;
+    TestSupport.TestProject project2;
+    TestOpenCloseProjectDocument handler;
 
     public OpenProjectListTest (String testName) {
         super (testName);
@@ -80,12 +81,14 @@ public class OpenProjectListTest extends NbTestCase {
         return Level.FINE;
     }
 
-    protected @Override void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
         super.setUp ();
-        MockServices.setServices(TestSupport.TestProjectFactory.class);
+        MockServices.setServices(TestSupport.TestProjectFactory.class, TestOpenCloseProjectDocument.class);
         clearWorkDir ();
 
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL = handler;
+        handler = Lookup.getDefault().lookup(TestOpenCloseProjectDocument.class);
+        assertNotNull("TestOpenCloseProjectDocument is registered", handler);
         
         FileObject workDir = FileUtil.toFileObject (getWorkDir ());
     
@@ -94,20 +97,20 @@ public class OpenProjectListTest extends NbTestCase {
         f1_2_open = p1.createData("f1_2.java");
         f1_3_close = p1.createData("f1_3.java");
 
-        project1 = ProjectManager.getDefault ().findProject (p1);
-        ((TestSupport.TestProject) project1).setLookup (Lookups.singleton (TestSupport.createAuxiliaryConfiguration ()));
+        project1 = (TestSupport.TestProject) ProjectManager.getDefault ().findProject (p1);
+        project1.setLookup (Lookups.singleton (TestSupport.createAuxiliaryConfiguration ()));
         
         FileObject p2 = TestSupport.createTestProject (workDir, "project2");
         f2_1_open = p2.createData ("f2_1.java");
 
         // project2 depends on projects1
-        project2 = ProjectManager.getDefault ().findProject (p2);
-        ((TestSupport.TestProject) project2).setLookup(Lookups.fixed(TestSupport.createAuxiliaryConfiguration(), new MySubprojectProvider(project1)));
+        project2 = (TestSupport.TestProject) ProjectManager.getDefault ().findProject (p2);
+        project2.setLookup(Lookups.fixed(TestSupport.createAuxiliaryConfiguration(), new MySubprojectProvider(project1)));
         
         // prepare set of open documents for both projects
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f1_1_open);
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f1_2_open);
-        ProjectUtilities.OPEN_CLOSE_PROJECT_DOCUMENT_IMPL.open (f2_1_open);
+        ProjectUtilities.open (f1_1_open);
+        ProjectUtilities.open (f1_2_open);
+        ProjectUtilities.open (f2_1_open);
 
         OpenProjectList.getDefault().close(OpenProjectList.getDefault().getOpenProjects(), false);
     }
@@ -123,8 +126,8 @@ public class OpenProjectListTest extends NbTestCase {
             fail("There should be TestProject\n" + log.toString());
         }
         
-        assertTrue ("Document f1_1_open is loaded.", handler.openFiles.contains (f1_1_open.toURL ().toExternalForm ()));
-        assertTrue ("Document f1_2_open is loaded.", handler.openFiles.contains (f1_2_open.toURL ().toExternalForm ()));
+        handler.assertOpened("Document f1_1_open is loaded.",f1_1_open);
+        handler.assertOpened("Document f1_2_open is loaded.", f1_2_open);
         /* XXX always fails; what was this testing?
         assertFalse ("Document f2_1_open isn't loaded.", handler.openFiles.contains (f2_1_open.getURL ().toExternalForm ()));
         */
@@ -165,8 +168,8 @@ public class OpenProjectListTest extends NbTestCase {
         if (!m.find()) {
             fail("There should be TestProject\n" + log);
         }
-        assertFalse ("Document f1_1_open isn't loaded.", handler.openFiles.contains (f1_1_open.toURL ().toExternalForm ()));
-        assertFalse ("Document f1_2_open isn't loaded.", handler.openFiles.contains (f1_2_open.toURL ().toExternalForm ()));
+        handler.assertNotOpened("Document f1_1_open is loaded.",f1_1_open);
+        handler.assertNotOpened("Document f1_2_open is loaded.", f1_2_open);
         /* XXX fails, see above
         assertFalse ("Document f2_1_open isn't loaded.", handler.openFiles.contains (f2_1_open.getURL ().toExternalForm ()));
         */
@@ -175,16 +178,16 @@ public class OpenProjectListTest extends NbTestCase {
         OpenProjectList.getDefault ().open (project2);
         
         // close all project1's documents
-        handler.openFiles.remove (f1_1_open.toURL ().toExternalForm ());
-        handler.openFiles.remove (f1_2_open.toURL ().toExternalForm ());
+        handler.removeOpenFile(f1_1_open);
+        handler.removeOpenFile(f1_2_open);
         
         ProjectUtilities.closeAllDocuments(new Project[] {project1}, false, null);
         OpenProjectList.getDefault().close(new Project[] {project1}, false, null);
 
         OpenProjectList.getDefault ().open (project1);
-        assertFalse ("Document f1_1_open isn't loaded.", handler.openFiles.contains (f1_1_open.toURL ().toExternalForm ()));
-        assertFalse ("Document f1_2_open isn't loaded.", handler.openFiles.contains (f1_2_open.toURL ().toExternalForm ()));
-        assertTrue ("Document f2_1_open is still loaded.", handler.openFiles.contains (f2_1_open.toURL ().toExternalForm ()));
+        handler.assertNotOpened("Document f1_1_open isn't loaded", f1_1_open);
+        handler.assertNotOpened("Document f1_2_open isn't loaded.", f1_2_open);
+        handler.assertOpened("Document f2_1_open is still loaded.",f1_1_open);
     }
 
     public void testSerialize() throws Exception {
@@ -221,9 +224,9 @@ public class OpenProjectListTest extends NbTestCase {
             fail("There should be TestProject\n" + log);
         }
         
-        assertTrue ("Document f1_1_open is loaded.", handler.openFiles.contains (f1_1_open.toURL ().toExternalForm ()));
-        assertTrue ("Document f1_2_open is loaded.", handler.openFiles.contains (f1_2_open.toURL ().toExternalForm ()));
-        assertTrue ("Document f2_1_open is loaded.", handler.openFiles.contains (f2_1_open.toURL ().toExternalForm ()));
+        handler.assertOpened("Document f1_1_open is loaded.", f1_1_open);
+        handler.assertOpened("Document f1_2_open is loaded.", f1_2_open);
+        handler.assertOpened("Document f2_1_open is loaded.", f2_1_open);
     }
     
     public void testCloseProjectWithoutOpenDocuments () throws Exception {
@@ -232,9 +235,8 @@ public class OpenProjectListTest extends NbTestCase {
         assertFalse ("Project1 isn't opened.", OpenProjectList.getDefault ().isOpen (project1));
         assertTrue ("Project2 is opened.", OpenProjectList.getDefault ().isOpen (project2));
         
-        handler.openFiles.remove (f2_1_open.toURL ().toExternalForm ());
-        
-        assertFalse ("Document f2_1_open isn't loaded.", handler.openFiles.contains (f2_1_open.toURL ().toExternalForm ()));
+        handler.removeOpenFile(f2_1_open);
+        handler.assertNotOpened("Document f2_1_open isn't loaded.", f2_1_open);
         
         ProjectUtilities.closeAllDocuments(new Project[] {project2}, false, null);
         OpenProjectList.getDefault().close(new Project[] {project2}, false);
@@ -243,7 +245,7 @@ public class OpenProjectListTest extends NbTestCase {
     }
     
     public void testProjectOpenedClosed() throws Exception {
-        ((TestSupport.TestProject) project1).setLookup(Lookups.fixed(new Object[] {
+        project1.setLookup(Lookups.fixed(new Object[] {
             new TestProjectOpenedHookImpl(),
             new TestProjectOpenedHookImpl(),
         }));
@@ -405,26 +407,24 @@ public class OpenProjectListTest extends NbTestCase {
                     }
                 }
             });
-        ((TestSupport.TestProject) project1).setLookup(Lookups.singleton(poh));
+        project1.setLookup(Lookups.singleton(poh));
         OpenProjectList.getDefault().open(project1);
-        Future<Project[]> becomesProjects = OpenProjectList.getDefault().openProjectsAPI();
-        Project[] projects = becomesProjects.get();
-        assertTrue("Open done", becomesProjects.isDone());          //NOI18N
+        Future<Project[]> withOneProject = OpenProjectList.getDefault().openProjectsAPI();
+        Project[] withOneArr = withOneProject.get();
+        assertTrue("Open done", withOneProject.isDone());          //NOI18N
         assertEquals("projectOpened called", 1, poh.opened.get());      //NOI18N
         assertEquals("No projectClosed called", 0, poh.closed.get());   //NOI18N
-        assertEquals("One project opened", 1, projects.length);         //NOI18N
+        assertEquals("One project opened", 1, withOneArr.length);         //NOI18N
 
         OpenProjectList.getDefault().close(new Project[] {project1}, false);
         assertEquals("no projectClosed called yet", 0, poh.closed.get());   //NOI18N
-        becomesProjects = OpenProjectList.getDefault().openProjectsAPI();
+        Future<Project[]> becomesProjects = OpenProjectList.getDefault().openProjectsAPI();
         assertFalse("Close not yet done", becomesProjects.isDone());        //NOI18N
         barrier.countDown();
-        projects = becomesProjects.get();
+        Project[] projects = becomesProjects.get();
         assertTrue("Close done", becomesProjects.isDone());          //NOI18N
         assertEquals("projectClosed called", 1, poh.closed.get());   //NOI18N
         assertEquals("No projects", 0, projects.length);            //NOI18N
-
-
     }
 
     // helper code
@@ -443,10 +443,11 @@ public class OpenProjectListTest extends NbTestCase {
 
     }
     
-    private static class TestOpenCloseProjectDocument implements ProjectUtilities.OpenCloseProjectDocument {
-        public Set<String> openFiles = new HashSet<String>();
-        public Map<Project,Set<String>> urls4project = new HashMap<Project,Set<String>>();
+    public static final class TestOpenCloseProjectDocument implements ProjectUtilities.OpenCloseProjectDocument {
+        private final Map<String, Exception> openFiles = new HashMap<>();
+        private Map<Project,Set<String>> urls4project = new HashMap<>();
         
+        @Override
         public boolean open (FileObject fo) {
             Project owner = FileOwnerQuery.getOwner (fo);
             if (!urls4project.containsKey (owner)) {
@@ -459,19 +460,20 @@ public class OpenProjectListTest extends NbTestCase {
                 dobj = DataObject.find (fo);
                 url = dobj.getPrimaryFile ().toURL ();
                 urls4project.get(owner).add(url.toExternalForm());
-                openFiles.add (fo.toURL ().toExternalForm ());
+                openFiles.put(fo.toURL ().toExternalForm (), new Exception("Opened at"));
             } catch (DataObjectNotFoundException donfe) {
                 fail ("DataObjectNotFoundException on " + fo);
             }
             return true;
         }
         
+        @Override
         public Map<Project,Set<String>> close(Project[] projects, boolean notifyUI) {
             
             for (int i = 0; i < projects.length; i++) {
                 Set<String> projectOpenFiles = urls4project.get(projects [i]);
                 if (projectOpenFiles != null) {
-                    projectOpenFiles.retainAll (openFiles);
+                    projectOpenFiles.retainAll (openFiles.keySet());
                     urls4project.put (projects [i], projectOpenFiles);
                     for (String url : projectOpenFiles) {
                         FileObject fo = null;
@@ -486,6 +488,35 @@ public class OpenProjectListTest extends NbTestCase {
             }
             
             return urls4project;
+        }
+
+        void assertOpened(String msg, FileObject fo) throws Exception {
+            assertFalse("Not on the thread", OpenProjectList.OPENING_RP.isRequestProcessorThread());
+            OpenProjectList.OPENING_RP.post(() -> {}).waitFinished();
+            Exception who = openFiles.get(fo.toURL ().toExternalForm ());
+            for (int cnt = 0; cnt < 10; cnt++) {
+                if (who != null) {
+                    if (cnt > 0) {
+                        throw new AssertionError("TOO LATE: " + msg);
+                    }
+                    break;
+                }
+                Thread.sleep(50);
+                if (cnt == 10) {
+                    assertNotNull(msg + ":" + openFiles, who);
+                }
+            }
+        }
+        void assertNotOpened(String msg, FileObject fo) {
+            Exception who = openFiles.get(fo.toURL ().toExternalForm ());
+            if (who != null) {
+                throw new AssertionError(msg, who);
+            }
+        }
+
+        void removeOpenFile(FileObject fo) {
+            var previousValue = openFiles.remove(fo.toURL().toExternalForm());
+            assertNotNull("There should be previous value for " + fo);
         }
     }
     

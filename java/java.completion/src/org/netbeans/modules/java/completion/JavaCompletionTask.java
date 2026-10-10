@@ -1876,6 +1876,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     case LONG:
                     case SHORT:
                     case VOID:
+                    case INTERSECTION:
                         boolean b = exp.getKind() == Tree.Kind.PARENTHESIZED || exp.getKind() == Tree.Kind.TYPE_CAST;
                         while (b) {
                             if (exp.getKind() == Tree.Kind.PARENTHESIZED) {

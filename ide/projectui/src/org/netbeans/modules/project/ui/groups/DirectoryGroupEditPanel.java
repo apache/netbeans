@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.project.ui.groups;
 
+import java.awt.HeadlessException;
 import java.io.File;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
@@ -160,19 +161,9 @@ public class DirectoryGroupEditPanel extends GroupEditPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void directoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directoryButtonActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setMultiSelectionEnabled(false);
-        File start = ProjectChooser.getProjectsFolder();
-        if (folderField.getText() != null && folderField.getText().trim().length() > 0) {
-            start = new File(folderField.getText().trim());
-        }
-        chooser.setCurrentDirectory(start);
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File f = chooser.getSelectedFile();
-            if (f != null) {
-                folderField.setText(f.getAbsolutePath());
-            }
+        File f = OpenFolderAsGroupAction.showWorkspaceFolderChooser(this, folderField.getText());
+        if (f != null) {
+            folderField.setText(f.getAbsolutePath());
         }
     }//GEN-LAST:event_directoryButtonActionPerformed
 

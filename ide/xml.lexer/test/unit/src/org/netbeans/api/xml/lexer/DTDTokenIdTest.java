@@ -131,8 +131,16 @@ public class DTDTokenIdTest extends AbstractTestCase {
     public void testEmbeddedEntityRefs() throws Exception {
         checkTokenSequence("embeddedEntities");
     }
-    
+
     public void testComments() throws Exception {
         checkTokenSequence("comment");
+    }
+
+    public void testNotions() throws Exception {
+        checkTokenSequence("notion");
+    }
+
+    public void testEntities() throws Exception {
+        checkTokenSequence("entity");
     }
 }

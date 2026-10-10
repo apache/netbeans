@@ -369,10 +369,8 @@ public class DTDLexer implements Lexer<DTDTokenId> {
             case ISI_DECLARATION -> {
                 return nextDeclaration();
             }
-            case ISI_ELEMENT, ISI_ATTLIST -> {
-                return processElementOrAttlist();
-            }
-            case ISI_ENTITY, ISI_NOTATION -> {
+            case ISI_ELEMENT, ISI_ATTLIST, ISI_NOTATION, ISI_ENTITY -> {
+                return processElementOrAttlistOrNotionOrEntity();
             }
         }
         int ch = input.read();
@@ -383,7 +381,7 @@ public class DTDLexer implements Lexer<DTDTokenId> {
         }
     }
 
-    private Token<DTDTokenId> processElementOrAttlist() {
+    private Token<DTDTokenId> processElementOrAttlistOrNotionOrEntity() {
         switch (substate) {
             case SUB_VALUE_DOUBLE -> {
                 restoreState();
@@ -406,6 +404,8 @@ public class DTDLexer implements Lexer<DTDTokenId> {
             // terminate definition
             setState(ISI_INIT);
             return tokenFactory.createToken(DTDTokenId.SYMBOL);
+        } else if (ch == '%' && state == ISI_ENTITY) {
+            return tokenFactory.createToken(DTDTokenId.OPERATOR);
         } else if (ch == '&' || ch == '%') {
             return processEntityOrCharacterRef();
         }
@@ -565,8 +565,9 @@ public class DTDLexer implements Lexer<DTDTokenId> {
                 return stringvalue(ch);
             }
             default -> {
-                if (ch == '#' || Character.isLetter(ch)) { // NOI18N
-                    while ((ch = input.read()) != LexerInput.EOF && Character.isLetterOrDigit(ch)) {
+                /* missing: combiner + extended characters */
+                if (ch == '#' || Character.isLetterOrDigit(ch) || ch == '.' || ch == ':' || ch == '-' ) { // NOI18N
+                    while ((ch = input.read()) != LexerInput.EOF && (Character.isLetterOrDigit(ch) || ch == '.' || ch == ':' || ch == '-')) {
                         // advance
                     }
                     input.backup(1);

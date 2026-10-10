@@ -380,7 +380,7 @@ public class TreeEvaluator {
     private boolean uploadClass(Pair<String, byte[]> namedClass,
                                 Map<String, ObjectVariable> classes,
                                 EvaluationContext evaluationContext) {
-        ObjectVariable clazz = uploadClass(namedClass);
+        ObjectVariable clazz = uploadClass(namedClass, evaluationContext.getFrame().location().declaringType().classObject());
         if (clazz != null) {
             String className = namedClass.first();
             int simpleNameIndex = className.replace('$', '.').lastIndexOf('.');
@@ -395,14 +395,14 @@ public class TreeEvaluator {
         }
     }
 
-    private ObjectVariable uploadClass(Pair<String, byte[]> namedClass) {
+    private ObjectVariable uploadClass(Pair<String, byte[]> namedClass, ClassObjectReference context) {
         if (!evaluationContext.canInvokeMethods()) {
             return null;
         }
         evaluationContext.methodToBeInvoked();
         try {
             ClassObjectReference newClass = RemoteServices.uploadClass(
-                    evaluationContext.getThread().getThreadReference(),
+                    evaluationContext.getThread().getThreadReference(), context,
                     new RemoteClass(namedClass.first(), namedClass.second()));
             if (newClass != null) {
                 evaluationContext.registerDisabledCollectionOf(newClass);

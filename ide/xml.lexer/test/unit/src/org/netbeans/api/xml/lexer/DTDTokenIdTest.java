@@ -52,8 +52,8 @@ public class DTDTokenIdTest extends AbstractTestCase {
         
         ((AbstractDocument)document).readLock();
         try {
-            TokenHierarchy th = TokenHierarchy.get(document);
-            TokenSequence ts = th.tokenSequence();
+            TokenHierarchy<?> th = TokenHierarchy.get(document);
+            TokenSequence<DTDTokenId> ts = th.tokenSequence(DTDTokenId.language());
             //assert(ts.tokenCount() == expectedIds.length);
             int overLine = 0;
             while(ts.moveNext()) {
@@ -101,16 +101,21 @@ public class DTDTokenIdTest extends AbstractTestCase {
         String path = getClass().getName();
         path = path.substring(0, path.lastIndexOf('.')).replace('.', '/');
         
-        FileObject w = FileUtil.toFileObject(getWorkDir()).createData(resource + ".out");
-        File g = new File(getDataDir(), "goldenfiles/" + path + "/" + resource + ".pass");
-        try (OutputStream o = w.getOutputStream(); 
+        FileObject testOutput = FileUtil.toFileObject(getWorkDir()).createData(resource + ".out");
+        File goldenFile = new File(getDataDir(), "goldenfiles/" + path + "/" + resource + ".pass");
+        try (OutputStream o = testOutput.getOutputStream();
             OutputStreamWriter wr = new OutputStreamWriter(o)) {
             wr.write(text);
         }
-        File d = new File(getWorkDir(), resource + ".diff");
-        assertFile(FileUtil.toFile(w), g, d);
+        File diffFile = new File(getWorkDir(), resource + ".diff");
+        assertFile(FileUtil.toFile(testOutput), goldenFile, diffFile);
     }
     
+    @Override
+    protected Language getLanguage() {
+        return DTDTokenId.language();
+    }
+
     public void testXMLDeclaration() throws Exception {
         checkTokenSequence("textDeclarations");
     }
@@ -123,16 +128,11 @@ public class DTDTokenIdTest extends AbstractTestCase {
         checkTokenSequence("attrlist");
     }
 
-    @Override
-    protected Language getLanguage() {
-        return DTDTokenId.language();
-    }
-    
     public void testEmbeddedEntityRefs() throws Exception {
         checkTokenSequence("embeddedEntities");
     }
     
     public void testComments() throws Exception {
-        
+        checkTokenSequence("comment");
     }
 }

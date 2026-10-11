@@ -52,6 +52,7 @@ import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionListener;
 import org.netbeans.modules.acp.api.AcpToolCall;
+import org.netbeans.modules.acp.ui.AcpContextReceiver;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -65,13 +66,13 @@ import org.openide.windows.TopComponent;
         preferredID = "AcpChatTopComponent",
         iconBase = "org/netbeans/modules/acp/ui/resources/acp_chat.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "rightSlidingSide", openAtStartup = false, position = 500)
+@TopComponent.Registration(mode = "output", openAtStartup = false, position = 500)
 @ActionID(category = "Window", id = "org.netbeans.modules.acp.ui.chat.AcpChatTopComponent")
-@ActionReference(path = "Menu/Window/Tools", position = 700)
+@ActionReference(path = "Menu/Window", position = 7000)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_AcpChatAction",
         preferredID = "AcpChatTopComponent")
-public final class AcpChatTopComponent extends TopComponent {
+public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
     private static final RequestProcessor RP = new RequestProcessor("ACP-Agent-RP", 2);
     private static final int RENDER_DELAY_MS = 200;
@@ -249,6 +250,20 @@ public final class AcpChatTopComponent extends TopComponent {
                 }
             });
         }
+    }
+
+    @Override
+    public void setContextForNextPrompt(String context) {
+        if (context != null && !context.isEmpty()) {
+            String existing = inputArea.getText().trim();
+            if (existing.isEmpty()) {
+                inputArea.setText(context + "\n");
+            } else {
+                inputArea.setText(context + "\n" + existing);
+            }
+            inputArea.setCaretPosition(inputArea.getDocument().getLength());
+        }
+        inputArea.requestFocusInWindow();
     }
 
     private void showAddAgentDialog() {

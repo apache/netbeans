@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -53,6 +55,7 @@ import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionListener;
 import org.netbeans.modules.acp.api.AcpToolCall;
 import org.netbeans.modules.acp.ui.AcpContextReceiver;
+import org.netbeans.modules.acp.ui.AcpProjectContextProvider;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -74,6 +77,7 @@ import org.openide.windows.TopComponent;
         preferredID = "AcpChatTopComponent")
 public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
+    private static final Logger LOG = Logger.getLogger(AcpChatTopComponent.class.getName());
     private static final RequestProcessor RP = new RequestProcessor("ACP-Agent-RP", 2);
     private static final int RENDER_DELAY_MS = 200;
 
@@ -89,6 +93,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final AtomicBoolean promptInProgress = new AtomicBoolean(false);
     private final Timer renderTimer;
 
+    private final AcpFileMentionSupport mentionSupport;
     private AcpConnection currentConnection;
     private String currentSessionId;
 
@@ -176,11 +181,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         HTMLEditorKit kit = new HTMLEditorKit();
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule("body { font-family: sans-serif; font-size: 12px; margin: 8px; }");
-        styleSheet.addRule(".user-msg { background-color: #E3F2FD; padding: 8px; margin: 4px 0; border-radius: 4px; }");
-        styleSheet.addRule(".agent-msg { background-color: #F5F5F5; padding: 8px; margin: 4px 0; border-radius: 4px; }");
-        styleSheet.addRule(".thought { color: #888; font-style: italic; padding: 4px 8px; margin: 2px 0; }");
-        styleSheet.addRule(".tool-call { background-color: #FFF3E0; padding: 6px; margin: 4px 0; border-left: 3px solid #FF9800; }");
-        styleSheet.addRule(".plan { background-color: #E8F5E9; padding: 6px; margin: 4px 0; }");
+        styleSheet.addRule(".user-msg { background-color: #BBDEFB; padding: 8px; margin: 6px 40px 6px 0; border-left: 4px solid #1976D2; }");
+        styleSheet.addRule(".agent-msg { background-color: #E8E8E8; padding: 8px; margin: 6px 0 6px 40px; border-left: 4px solid #616161; }");
+        styleSheet.addRule(".system-msg { background-color: #FFF9C4; padding: 6px; margin: 4px 0; border-left: 4px solid #F9A825; }");
+        styleSheet.addRule(".thought { color: #666; font-style: italic; padding: 4px 8px; margin: 2px 0 2px 40px; background-color: #F5F5F5; }");
+        styleSheet.addRule(".tool-call { background-color: #FFF3E0; padding: 6px; margin: 4px 0 4px 40px; border-left: 4px solid #FF9800; }");
+        styleSheet.addRule(".plan { background-color: #E8F5E9; padding: 6px; margin: 4px 0 4px 40px; border-left: 4px solid #4CAF50; }");
+        styleSheet.addRule(".user-label { color: #1565C0; font-weight: bold; }");
+        styleSheet.addRule(".agent-label { color: #424242; font-weight: bold; }");
         styleSheet.addRule("pre { background-color: #263238; color: #EEFFFF; padding: 8px; overflow-x: auto; }");
         styleSheet.addRule("code { font-family: monospace; }");
 
@@ -231,6 +239,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         renderTimer = new Timer(RENDER_DELAY_MS, e -> flushMessageBuffers());
         renderTimer.setRepeats(false);
 
+        mentionSupport = new AcpFileMentionSupport(inputArea);
+        inputArea.setTransferHandler(new AcpFileDropHandler(inputArea, mentionSupport));
         refreshAgentList();
     }
 
@@ -410,6 +420,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     statusLabel.setText("Ready");
                     updateInputState();
                 });
+                sendProjectContext(sessionId);
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() ->
                     statusLabel.setText("Error: " + ex.getMessage())
@@ -418,11 +429,30 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         });
     }
 
+    private void sendProjectContext(String sessionId) {
+        String projectContext = AcpProjectContextProvider.gatherProjectContext();
+        if (projectContext != null && !projectContext.isEmpty() && currentConnection != null) {
+            try {
+                SwingUtilities.invokeLater(() -> appendSystemMessage(
+                        "<i>Project context sent to agent.</i>"));
+                currentConnection.sendPrompt(sessionId,
+                        "[System context - do not respond to this, just acknowledge silently]\n\n"
+                        + projectContext);
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "Failed to send project context", ex);
+            }
+        }
+    }
+
     private void sendMessage() {
         String text = inputArea.getText().trim();
         if (text.isEmpty() || currentSessionId == null || promptInProgress.get()) {
             return;
         }
+        List<AcpFileMentionSupport.FileAttachment> files = mentionSupport.consumeAttachedFiles();
+        String attachmentContext = mentionSupport.buildAttachmentContext(files);
+        String fullPrompt = attachmentContext.isEmpty() ? text : attachmentContext + text;
+
         appendUserMessage(text);
         inputArea.setText("");
         promptInProgress.set(true);
@@ -431,7 +461,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
         RP.post(() -> {
             try {
-                currentConnection.sendPrompt(currentSessionId, text);
+                currentConnection.sendPrompt(currentSessionId, fullPrompt);
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
                     appendSystemMessage("Error: " + escapeHtml(ex.getMessage()));
@@ -453,14 +483,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void appendUserMessage(String text) {
-        chatHtml.append("<div class='user-msg'><b>You:</b><br/>")
-                .append(escapeHtml(text))
+        chatHtml.append("<div class='user-msg'><span class='user-label'>You:</span><br/>")
+                .append(escapeHtml(text).replace("\n", "<br/>"))
                 .append("</div>");
         updateChatDisplay();
     }
 
     private void appendSystemMessage(String html) {
-        chatHtml.append("<div class='agent-msg'>").append(html).append("</div>");
+        chatHtml.append("<div class='system-msg'>").append(html).append("</div>");
         updateChatDisplay();
     }
 
@@ -475,7 +505,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 changed = true;
             }
             if (currentMessageBuffer.length() > 0) {
-                chatHtml.append("<div class='agent-msg'><b>Agent:</b><br/>")
+                chatHtml.append("<div class='agent-msg'><span class='agent-label'>Agent:</span><br/>")
                         .append(escapeHtml(currentMessageBuffer.toString()).replace("\n", "<br/>"))
                         .append("</div>");
                 currentMessageBuffer.setLength(0);

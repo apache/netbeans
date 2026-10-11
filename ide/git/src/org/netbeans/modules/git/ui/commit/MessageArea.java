@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 import org.netbeans.modules.spellchecker.api.Spellchecker;
 import org.netbeans.modules.versioning.util.UndoRedoSupport;
 
@@ -87,5 +89,56 @@ public class MessageArea extends JTextArea {
     void setNumberOfTitleChars (int numberOfTitleChars) {
         this.titleWidth = numberOfTitleChars;
     }
-    
+
+    /**
+     * Returns the text as it appears in the text area.
+     */
+    String getCommitMessage() {
+        try {
+            return getWrappedText();
+        } catch (BadLocationException ex) {
+            return getText();
+        }
+    }
+
+    // still no easier way of doing this?
+    private String getWrappedText() throws BadLocationException {
+        String plain = getText();
+        if (plain.isEmpty()) {
+            return plain;
+        }
+        StringBuilder sb = new StringBuilder();
+        int length = getDocument().getLength();
+
+        for (int offset = 0; offset < length; ) {
+            int start = Utilities.getRowStart(this, offset);
+            int end = Utilities.getRowEnd(this, offset);
+
+            if (start < 0 || end < 0) {
+                break;
+            }
+
+            int exclusiveEnd = Math.min(end + 1, length);
+            String line = getDocument().getText(start, exclusiveEnd - start);
+
+            // check if line has an actual break already
+            // note: DefaultEditorKit is normalizing to '\n' internally
+            if (line.endsWith("\n")) {
+                sb.append(line);
+            } else {
+                sb.append(line).append("\n");
+            }
+
+            if (exclusiveEnd <= offset) {
+                break;
+            }
+            offset = exclusiveEnd;
+        }
+        if (plain.endsWith("\n")) {
+            return sb.toString();
+        } else {
+            return sb.toString().substring(0, sb.length() - 1); // eagerly added one too much
+        }
+    }
+
 }

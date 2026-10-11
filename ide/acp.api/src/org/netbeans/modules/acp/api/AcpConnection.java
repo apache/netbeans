@@ -82,9 +82,6 @@ public final class AcpConnection {
                     if (!envVars.isEmpty()) {
                         paramsBuilder.env(envVars);
                     }
-                    if (descriptor.getWorkingDirectory() != null && !descriptor.getWorkingDirectory().isBlank()) {
-                        paramsBuilder.workingDirectory(Path.of(descriptor.getWorkingDirectory()));
-                    }
                     StdioAcpClientTransport transport = new StdioAcpClientTransport(paramsBuilder.build());
                     spec = AcpClient.sync(transport);
                 }

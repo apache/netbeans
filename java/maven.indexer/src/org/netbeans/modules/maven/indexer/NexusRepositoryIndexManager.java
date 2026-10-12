@@ -1157,6 +1157,10 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                 targetFile.delete();
                 String msg = "Transfer for " + name + " failed";
                 logError(msg, e);
+                if (e.getMessage() != null && e.getMessage().contains("429")) {
+                    LOGGER.log(Level.INFO, "rate limiting detected, giving up download request");
+                    pauseRemoteRepoIndexing(120);
+                }
                 throw new IOException(msg + "; " + e.getMessage(), e);
             }
         }

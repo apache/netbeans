@@ -35,6 +35,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.acp.mcp</code-name-base>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.libs.acp</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

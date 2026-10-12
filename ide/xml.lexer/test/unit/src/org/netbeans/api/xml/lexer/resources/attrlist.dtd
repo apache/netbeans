@@ -5,6 +5,7 @@
   entities  ENTITIES    #IMPLIED                                id        ID          #IMPLIED
   idref     IDREF       #IMPLIED                                idrefs    IDREFS      #IMPLIED
   nmtoken   NMTOKEN     #IMPLIED                                nmtokens  NMTOKENS    #IMPLIED
-  notation  NOTATION    (pdf|dvi) #IMPLIED >
+  notation  NOTATION    (pdf|dvi) #IMPLIED
+  year (2025 | 2026 ) #REQUIRED >
 <!ATTLIST %entity;>
 <!ATTLIST name %parsedEntity;>

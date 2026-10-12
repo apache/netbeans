@@ -1,0 +1,7 @@
+<!ENTITY ProjectName 'Apache NetBeans' >
+<!ENTITY ProjectLogo SYSTEM "https://netbeans.apache.org/_/images/apache-netbeans.svg">
+<!ENTITY ProjectLogo PUBLIC "DEMO // PUBLIC" "https://netbeans.apache.org/_/images/apache-netbeans.svg">
+<!ENTITY ProjectLogo PUBLIC "DEMO // PUBLIC" "https://netbeans.apache.org/_/images/apache-netbeans.svg" NDATA gif>
+<!ENTITY % ProjectName 'Apache NetBeans' >
+<!ENTITY % ProjectLogo SYSTEM "https://netbeans.apache.org/_/images/apache-netbeans.svg">
+<!ENTITY % ProjectLogo PUBLIC "DEMO // PUBLIC" "https://netbeans.apache.org/_/images/apache-netbeans.svg">

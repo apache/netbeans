@@ -36,6 +36,7 @@ public class Settings {
     private static final String KEY_TEST_USE_IMAGE = "test-use-image";
     private static final String KEY_USE_ANT_BUILD = "use-langtools-ant-build";
     private static final String KEY_ANT_BUILD_LOCATION = "langtools-ant-build-location";
+    private static final String KEY_DEBUG_LISTEN_ADDRESS = "debug-listen-address";
 
     private static final String DEF_ANT_BUILD_LOCATION = "make/ide/netbeans/langtools/build.xml";
 
@@ -91,6 +92,14 @@ public class Settings {
 
     public void setAntBuildLocation(String antBuildLocation) {
         getPrivatePreferences().put(KEY_ANT_BUILD_LOCATION, antBuildLocation);
+    }
+
+    public String getDebugListenAddress() {
+        return getPrivatePreferences().get(KEY_DEBUG_LISTEN_ADDRESS, null);
+    }
+
+    public void setDebugListenAddress(String jtregLocation) {
+        getPrivatePreferences().put(KEY_DEBUG_LISTEN_ADDRESS, jtregLocation);
     }
 
     public void flush() {

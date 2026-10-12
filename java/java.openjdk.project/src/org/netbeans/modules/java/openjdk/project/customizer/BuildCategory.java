@@ -33,10 +33,11 @@ public class BuildCategory extends javax.swing.JPanel {
     /**
      * Creates new form BuildCategory
      */
-    public BuildCategory(boolean useAntBuild, String antBuildLocation) {
+        public BuildCategory(boolean useAntBuild, String antBuildLocation, String debugListenAddress) {
         initComponents();
         this.useAntBuild.setSelected(useAntBuild);
         this.antBuildLocation.setText(antBuildLocation);
+        this.debugListenAddress.setText(debugListenAddress);
         updateEnableDisable();
     }
 
@@ -56,6 +57,9 @@ public class BuildCategory extends javax.swing.JPanel {
         useAntBuild = new javax.swing.JCheckBox();
         antBuildLocationLabel = new javax.swing.JLabel();
         antBuildLocation = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        debugListenAddress = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(useAntBuild, org.openide.util.NbBundle.getMessage(BuildCategory.class, "BuildCategory.useAntBuild.text")); // NOI18N
         useAntBuild.addActionListener(new java.awt.event.ActionListener() {
@@ -68,6 +72,12 @@ public class BuildCategory extends javax.swing.JPanel {
 
         antBuildLocation.setText(org.openide.util.NbBundle.getMessage(BuildCategory.class, "BuildCategory.antBuildLocation.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(BuildCategory.class, "BuildCategory.jLabel1.text")); // NOI18N
+
+        debugListenAddress.setText(org.openide.util.NbBundle.getMessage(BuildCategory.class, "BuildCategory.debugListenAddress.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(BuildCategory.class, "BuildCategory.jLabel2.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,12 +85,20 @@ public class BuildCategory extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(useAntBuild, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(antBuildLocationLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(antBuildLocation))
-                    .addComponent(useAntBuild, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(antBuildLocationLabel))
+                            .addComponent(jLabel1))
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(antBuildLocation)
+                            .addComponent(debugListenAddress))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -92,7 +110,13 @@ public class BuildCategory extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(antBuildLocationLabel)
                     .addComponent(antBuildLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(debugListenAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -104,6 +128,9 @@ public class BuildCategory extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField antBuildLocation;
     private javax.swing.JLabel antBuildLocationLabel;
+    private javax.swing.JTextField debugListenAddress;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JCheckBox useAntBuild;
     // End of variables declaration//GEN-END:variables
 
@@ -119,10 +146,11 @@ public class BuildCategory extends javax.swing.JPanel {
             @Override
             public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
                 Settings settings = context.lookup(Settings.class);
-                BuildCategory panel = new BuildCategory(settings.isUseAntBuild(), settings.getAntBuildLocation());
+                BuildCategory panel = new BuildCategory(settings.isUseAntBuild(), settings.getAntBuildLocation(), settings.getDebugListenAddress());
                 category.setOkButtonListener(evt -> {
                     settings.setUseAntBuild(panel.useAntBuild.isSelected());
                     settings.setAntBuildLocation(panel.antBuildLocation.getText());
+                    settings.setDebugListenAddress(panel.debugListenAddress.getText());
                 });
                 category.setStoreListener(evt -> settings.flush());
                 return panel;

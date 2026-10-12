@@ -18,29 +18,20 @@
  */
 package org.netbeans.modules.acp.api;
 
+import java.util.List;
 import java.util.Objects;
 import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
- * Represents a tool call made by an ACP agent. Tool calls describe actions
- * the agent performs such as reading files, editing code, or executing commands.
- * <p>
- * Instances are immutable and created using the {@link Builder}.
+ * Represents a tool call made by an ACP agent.
  *
  * @since 1.0
  */
 public final class AcpToolCall {
 
-    /** Status value indicating the tool call has not yet started. */
     public static final String STATUS_PENDING = "pending"; // NOI18N
-
-    /** Status value indicating the tool call is currently executing. */
     public static final String STATUS_IN_PROGRESS = "in_progress"; // NOI18N
-
-    /** Status value indicating the tool call completed successfully. */
     public static final String STATUS_COMPLETED = "completed"; // NOI18N
-
-    /** Status value indicating the tool call failed. */
     public static final String STATUS_FAILED = "failed"; // NOI18N
 
     private final String toolCallId;
@@ -48,73 +39,73 @@ public final class AcpToolCall {
     private final String name;
     private final String kind;
     private final String status;
+    private final List<DiffContent> diffs;
+    private final List<Location> locations;
+    private final String textContent;
 
-    private AcpToolCall(String toolCallId, String title, String name, String kind, String status) {
+    private AcpToolCall(String toolCallId, String title, String name, String kind,
+            String status, List<DiffContent> diffs, List<Location> locations,
+            String textContent) {
         this.toolCallId = toolCallId;
         this.title = title;
         this.name = name;
         this.kind = kind;
         this.status = status;
+        this.diffs = diffs;
+        this.locations = locations;
+        this.textContent = textContent;
     }
 
-    /**
-     * Returns the unique identifier of this tool call.
-     *
-     * @return the tool call identifier, never {@code null}
-     */
     public String getToolCallId() {
         return toolCallId;
     }
 
-    /**
-     * Returns the human-readable title of this tool call.
-     *
-     * @return the title, never {@code null}
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Returns the programmatic name of the tool, if available.
-     *
-     * @return the tool name, or {@code null} if not specified
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Returns the kind of operation this tool call represents.
-     * Typical values include: read, edit, delete, execute, search, think, fetch, other.
-     *
-     * @return the kind, never {@code null}
-     */
     public String getKind() {
         return kind;
     }
 
-    /**
-     * Returns the current execution status of this tool call.
-     *
-     * @return the status, never {@code null}
-     * @see #STATUS_PENDING
-     * @see #STATUS_IN_PROGRESS
-     * @see #STATUS_COMPLETED
-     * @see #STATUS_FAILED
-     */
     public String getStatus() {
         return status;
     }
 
+    public List<DiffContent> getDiffs() {
+        return diffs;
+    }
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public String getTextContent() {
+        return textContent;
+    }
+
     @Override
     public String toString() {
-        return "AcpToolCall{" + "id=" + toolCallId + ", title=" + title + ", kind=" + kind + ", status=" + status + '}'; // NOI18N
+        return "AcpToolCall{" + "id=" + toolCallId + ", title=" + title // NOI18N
+                + ", kind=" + kind + ", status=" + status + '}'; // NOI18N
     }
 
     /**
-     * Builder for creating {@link AcpToolCall} instances.
+     * A diff produced by a tool call.
      */
+    public record DiffContent(String path, String oldText, String newText) {
+    }
+
+    /**
+     * A file location referenced by a tool call.
+     */
+    public record Location(String path, Integer line) {
+    }
+
     public static final class Builder {
 
         private final String toolCallId;
@@ -122,67 +113,52 @@ public final class AcpToolCall {
         private String name;
         private String kind = "other"; // NOI18N
         private String status = STATUS_PENDING;
+        private List<DiffContent> diffs = List.of();
+        private List<Location> locations = List.of();
+        private String textContent;
 
-        /**
-         * Creates a new builder with the required tool call identifier.
-         *
-         * @param toolCallId the unique identifier of the tool call
-         */
         public Builder(String toolCallId) {
             this.toolCallId = Objects.requireNonNull(toolCallId, "toolCallId must not be null");
         }
 
-        /**
-         * Sets the human-readable title.
-         *
-         * @param title the title
-         * @return this builder
-         */
         public Builder title(String title) {
             this.title = Objects.requireNonNull(title, "title must not be null");
             return this;
         }
 
-        /**
-         * Sets the programmatic tool name.
-         *
-         * @param name the tool name, may be {@code null}
-         * @return this builder
-         */
         public Builder name(@NullAllowed String name) {
             this.name = name;
             return this;
         }
 
-        /**
-         * Sets the kind of operation.
-         *
-         * @param kind the kind (e.g. read, edit, execute)
-         * @return this builder
-         */
         public Builder kind(String kind) {
             this.kind = Objects.requireNonNull(kind, "kind must not be null");
             return this;
         }
 
-        /**
-         * Sets the execution status.
-         *
-         * @param status the status
-         * @return this builder
-         */
         public Builder status(String status) {
             this.status = Objects.requireNonNull(status, "status must not be null");
             return this;
         }
 
-        /**
-         * Builds an immutable {@link AcpToolCall} from the current state.
-         *
-         * @return the new tool call instance
-         */
+        public Builder diffs(List<DiffContent> diffs) {
+            this.diffs = List.copyOf(Objects.requireNonNull(diffs));
+            return this;
+        }
+
+        public Builder locations(List<Location> locations) {
+            this.locations = List.copyOf(Objects.requireNonNull(locations));
+            return this;
+        }
+
+        public Builder textContent(@NullAllowed String textContent) {
+            this.textContent = textContent;
+            return this;
+        }
+
         public AcpToolCall build() {
-            return new AcpToolCall(toolCallId, title, name, kind, status);
+            return new AcpToolCall(toolCallId, title, name, kind, status,
+                    diffs, locations, textContent);
         }
     }
 }

@@ -70,6 +70,7 @@ public final class AcpConnection {
     private final Map<String, List<Path>> trustedDirectories = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> sessionAllowedTools = new ConcurrentHashMap<>();
     private final Map<String, Map<String, String>> fileSnapshots = new ConcurrentHashMap<>();
+    private final Map<String, List<AcpSchema.ToolCallLocation>> storedLocations = new ConcurrentHashMap<>();
 
     private volatile AcpSyncClient client;
     private volatile boolean connected;
@@ -131,33 +132,56 @@ public final class AcpConnection {
     }
 
     public String newSession(String workingDirectory) throws IOException {
-        return newSession(workingDirectory, null);
+        return newSession(workingDirectory, (List<String>) null);
     }
 
     public String newSession(String workingDirectory, List<String> additionalDirs) throws IOException {
+        List<AcpSchema.McpServer> mcpServers = new ArrayList<>();
+        for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
+                .lookupAll(AcpMcpServerProvider.class)) {
+            List<AcpSchema.McpServer> servers = provider.getMcpServers();
+            if (servers != null) {
+                mcpServers.addAll(servers);
+            }
+        }
+        if (!mcpServers.isEmpty()) {
+            LOG.log(Level.INFO, "Discovered {0} MCP server(s) for new session", mcpServers.size());
+        }
+        return newSession(workingDirectory, additionalDirs, mcpServers);
+    }
+
+    private static AcpSchema.NewSessionRequest basicSessionRequest(String dir,
+            List<AcpSchema.McpServer> mcpServers) {
+        return mcpServers.isEmpty()
+                ? new AcpSchema.NewSessionRequest(dir)
+                : new AcpSchema.NewSessionRequest(dir, mcpServers);
+    }
+
+    public String newSession(String workingDirectory, List<String> additionalDirs,
+            List<AcpSchema.McpServer> mcpServers) throws IOException {
         ensureConnected();
         try {
             String effectiveDir = workingDirectory;
             if (effectiveDir == null || effectiveDir.isBlank()) {
                 effectiveDir = descriptor.getWorkingDirectory();
             }
+            List<AcpSchema.McpServer> effectiveMcpServers =
+                    mcpServers != null ? mcpServers : List.of();
+
             String sessionId;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
                 try {
-                    AcpSchema.NewSessionRequest request =
-                            new AcpSchema.NewSessionRequest(effectiveDir, List.of(), additionalDirs);
-                    sessionId = client.newSession(request).sessionId();
+                    sessionId = client.newSession(new AcpSchema.NewSessionRequest(
+                            effectiveDir, effectiveMcpServers, additionalDirs)).sessionId();
                 } catch (AcpCapabilityException ex) {
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories, " // NOI18N
-                            + "falling back to single working directory"); // NOI18N
-                    AcpSchema.NewSessionRequest request =
-                            new AcpSchema.NewSessionRequest(effectiveDir);
-                    sessionId = client.newSession(request).sessionId();
+                            + "falling back without additionalDirectories"); // NOI18N
+                    sessionId = client.newSession(
+                            basicSessionRequest(effectiveDir, effectiveMcpServers)).sessionId();
                 }
             } else {
-                AcpSchema.NewSessionRequest request =
-                        new AcpSchema.NewSessionRequest(effectiveDir);
-                sessionId = client.newSession(request).sessionId();
+                sessionId = client.newSession(
+                        basicSessionRequest(effectiveDir, effectiveMcpServers)).sessionId();
             }
 
             List<Path> trusted = new ArrayList<>();
@@ -217,6 +241,8 @@ public final class AcpConnection {
     public void close() {
         connected = false;
         sessionAllowedTools.clear();
+        fileSnapshots.clear();
+        storedLocations.clear();
         if (client != null) {
             try {
                 client.close();
@@ -391,7 +417,16 @@ public final class AcpConnection {
     }
 
     private static boolean isWriteKind(AcpSchema.ToolKind kind) {
-        return kind == AcpSchema.ToolKind.EDIT;
+        // Agents classify file-modifying tools inconsistently — Claude Code
+        // sends EDIT, OTHER, or even EXECUTE for writes.  Snapshot any kind
+        // that could write to disk; the diff is only emitted when the file
+        // actually changed, so false positives are harmless.
+        return kind == AcpSchema.ToolKind.EDIT
+                || kind == AcpSchema.ToolKind.OTHER
+                || kind == AcpSchema.ToolKind.EXECUTE
+                || kind == AcpSchema.ToolKind.DELETE
+                || kind == AcpSchema.ToolKind.MOVE
+                || kind == null;
     }
 
     private void snapshotFilesForToolCall(String toolCallId,
@@ -425,6 +460,7 @@ public final class AcpConnection {
         }
         if (!snapshots.isEmpty()) {
             fileSnapshots.put(toolCallId, snapshots);
+            storedLocations.put(toolCallId, new ArrayList<>(locations));
             LOG.log(Level.INFO, "  snapshots stored for {0}: {1} file(s)",
                     new Object[]{toolCallId, snapshots.size()});
         } else {
@@ -441,13 +477,20 @@ public final class AcpConnection {
             return;
         }
         Map<String, String> snapshots = fileSnapshots.remove(toolCallId);
+        List<AcpSchema.ToolCallLocation> effectiveLocations = locations;
+        if ((effectiveLocations == null || effectiveLocations.isEmpty())) {
+            effectiveLocations = storedLocations.get(toolCallId);
+            LOG.log(Level.INFO, "  emitDiffs: update had no locations, using stored={0}",
+                    effectiveLocations != null ? effectiveLocations.size() : 0);
+        }
+        storedLocations.remove(toolCallId);
         LOG.log(Level.INFO, "  emitDiffs: hasSnapshots={0}, locationCount={1}",
-                new Object[]{snapshots != null, locations != null ? locations.size() : 0});
-        if (locations == null || locations.isEmpty()) {
+                new Object[]{snapshots != null, effectiveLocations != null ? effectiveLocations.size() : 0});
+        if (effectiveLocations == null || effectiveLocations.isEmpty()) {
             LOG.log(Level.INFO, "  emitDiffs skip: no locations");
             return;
         }
-        for (AcpSchema.ToolCallLocation loc : locations) {
+        for (AcpSchema.ToolCallLocation loc : effectiveLocations) {
             if (loc.path() == null) {
                 continue;
             }

@@ -77,7 +77,7 @@ public final class AcpPermissionDialog {
         AtomicReference<PermissionResult> result = new AtomicReference<>();
         CountDownLatch latch = new CountDownLatch(1);
 
-        Runnable showDialog = () -> {
+        Runnable buildAndShow = () -> {
             JPanel panel = new JPanel(new BorderLayout(12, 8));
             panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -102,7 +102,7 @@ public final class AcpPermissionDialog {
                 gbc.gridx = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                infoPanel.add(new JLabel("<html><b>" + escapeHtml(displayName) + "</b></html>"), gbc);
+                infoPanel.add(new JLabel("<html><b>" + HtmlUtils.escapeHtml(displayName) + "</b></html>"), gbc);
             }
             if (toolCall != null && toolCall.title() != null) {
                 gbc.gridx = 0;
@@ -113,7 +113,7 @@ public final class AcpPermissionDialog {
                 gbc.gridx = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                infoPanel.add(new JLabel(escapeHtml(toolCall.title())), gbc);
+                infoPanel.add(new JLabel(HtmlUtils.escapeHtml(toolCall.title())), gbc);
             }
             headerPanel.add(infoPanel, BorderLayout.CENTER);
             panel.add(headerPanel, BorderLayout.NORTH);
@@ -184,7 +184,14 @@ public final class AcpPermissionDialog {
                                 new AcpSchema.PermissionCancelled()),
                         null));
             }
-            latch.countDown();
+        };
+
+        Runnable showDialog = () -> {
+            try {
+                buildAndShow.run();
+            } finally {
+                latch.countDown();
+            }
         };
 
         if (SwingUtilities.isEventDispatchThread()) {
@@ -202,14 +209,9 @@ public final class AcpPermissionDialog {
             }
         }
 
-        return result.get();
-    }
-
-    private static String escapeHtml(String text) {
-        if (text == null) {
-            return "";
-        }
-        return text.replace("&", "&amp;").replace("<", "&lt;")
-                .replace(">", "&gt;").replace("\"", "&quot;");
+        PermissionResult res = result.get();
+        return res != null ? res : new PermissionResult(
+                new AcpSchema.RequestPermissionResponse(new AcpSchema.PermissionCancelled()),
+                null);
     }
 }

@@ -268,7 +268,8 @@ public final class MavenEmbedder {
             ProjectBuildingResult projectBuildingResult = projectBuilder.build(pomFile, configuration);
             result.setProject(projectBuildingResult.getProject());
             result.setDependencyResolutionResult(projectBuildingResult.getDependencyResolutionResult());
-        } catch (ProjectBuildingException ex) {
+        } catch (ProjectBuildingException 
+                | IllegalArgumentException ex) { // "Invalid Collect Request" from DefaultRepositorySystemValidator (when parent pom not in repo?)
             //don't add the exception here. this should come out as a build marker, not fill
             //the error logs with msgs
             return result.addException(ex);

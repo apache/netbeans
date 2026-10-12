@@ -28,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -48,24 +49,32 @@ import org.openide.util.NbBundle;
     "TTL_PermissionRequest=Agent Permission Request",
     "LBL_ToolName=Tool:",
     "LBL_ToolTitle=Action:",
-    "LBL_ChooseOption=Choose an option:"
+    "LBL_ChooseOption=Choose an option:",
+    "LBL_AllowForSession=Always allow this tool for this session"
 })
 public final class AcpPermissionDialog {
+
+    public record PermissionResult(
+            AcpSchema.RequestPermissionResponse response,
+            String allowToolForSession) {
+    }
 
     private AcpPermissionDialog() {
     }
 
-    public static AcpSchema.RequestPermissionResponse showPermissionRequest(
+    public static PermissionResult showPermissionRequest(
             AcpSchema.RequestPermissionRequest request) {
 
         AcpSchema.ToolCallUpdate toolCall = request.toolCall();
         List<AcpSchema.PermissionOption> options = request.options();
 
         if (options == null || options.isEmpty()) {
-            return new AcpSchema.RequestPermissionResponse(new AcpSchema.PermissionCancelled());
+            return new PermissionResult(
+                    new AcpSchema.RequestPermissionResponse(new AcpSchema.PermissionCancelled()),
+                    null);
         }
 
-        AtomicReference<AcpSchema.RequestPermissionResponse> result = new AtomicReference<>();
+        AtomicReference<PermissionResult> result = new AtomicReference<>();
         CountDownLatch latch = new CountDownLatch(1);
 
         Runnable showDialog = () -> {
@@ -82,14 +91,18 @@ public final class AcpPermissionDialog {
             gbc.anchor = GridBagConstraints.WEST;
             gbc.insets = new Insets(2, 2, 2, 8);
 
-            if (toolCall != null && toolCall.name() != null) {
+            String displayName = toolCall != null ? toolCall.name() : null;
+            if (displayName == null && toolCall != null) {
+                displayName = toolCall.title();
+            }
+            if (displayName != null) {
                 gbc.gridx = 0;
                 gbc.gridy = 0;
                 infoPanel.add(new JLabel(Bundle.LBL_ToolName()), gbc);
                 gbc.gridx = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                infoPanel.add(new JLabel("<html><b>" + escapeHtml(toolCall.name()) + "</b></html>"), gbc);
+                infoPanel.add(new JLabel("<html><b>" + escapeHtml(displayName) + "</b></html>"), gbc);
             }
             if (toolCall != null && toolCall.title() != null) {
                 gbc.gridx = 0;
@@ -115,6 +128,8 @@ public final class AcpPermissionDialog {
                 panel.add(sp, BorderLayout.CENTER);
             }
 
+            JPanel southPanel = new JPanel(new BorderLayout(0, 6));
+
             JPanel optionsPanel = new JPanel(new GridBagLayout());
             optionsPanel.setBorder(BorderFactory.createTitledBorder(Bundle.LBL_ChooseOption()));
             ButtonGroup group = new ButtonGroup();
@@ -134,7 +149,14 @@ public final class AcpPermissionDialog {
                 optionsPanel.add(buttons[i], gbc);
             }
             buttons[0].setSelected(true);
-            panel.add(optionsPanel, BorderLayout.SOUTH);
+            southPanel.add(optionsPanel, BorderLayout.CENTER);
+
+            JCheckBox rememberCb = new JCheckBox(Bundle.LBL_AllowForSession());
+            rememberCb.setEnabled(toolCall != null
+                    && (toolCall.name() != null || toolCall.title() != null));
+            southPanel.add(rememberCb, BorderLayout.SOUTH);
+
+            panel.add(southPanel, BorderLayout.SOUTH);
 
             DialogDescriptor dd = new DialogDescriptor(panel,
                     Bundle.TTL_PermissionRequest());
@@ -143,15 +165,24 @@ public final class AcpPermissionDialog {
             if (choice == NotifyDescriptor.OK_OPTION) {
                 for (int i = 0; i < buttons.length; i++) {
                     if (buttons[i].isSelected()) {
-                        result.set(new AcpSchema.RequestPermissionResponse(
-                                new AcpSchema.PermissionSelected(options.get(i).optionId())));
+                        AcpSchema.RequestPermissionResponse resp =
+                                new AcpSchema.RequestPermissionResponse(
+                                        new AcpSchema.PermissionSelected(options.get(i).optionId()));
+                        String allowTool = null;
+                        if (rememberCb.isSelected() && toolCall != null) {
+                            allowTool = toolCall.name() != null
+                                    ? toolCall.name() : toolCall.title();
+                        }
+                        result.set(new PermissionResult(resp, allowTool));
                         break;
                     }
                 }
             }
             if (result.get() == null) {
-                result.set(new AcpSchema.RequestPermissionResponse(
-                        new AcpSchema.PermissionCancelled()));
+                result.set(new PermissionResult(
+                        new AcpSchema.RequestPermissionResponse(
+                                new AcpSchema.PermissionCancelled()),
+                        null));
             }
             latch.countDown();
         };
@@ -164,8 +195,10 @@ public final class AcpPermissionDialog {
                 latch.await();
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-                return new AcpSchema.RequestPermissionResponse(
-                        new AcpSchema.PermissionCancelled());
+                return new PermissionResult(
+                        new AcpSchema.RequestPermissionResponse(
+                                new AcpSchema.PermissionCancelled()),
+                        null);
             }
         }
 

@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -46,6 +47,9 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import org.netbeans.api.project.Project;
@@ -84,6 +88,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private static final Logger LOG = Logger.getLogger(AcpChatTopComponent.class.getName());
     private static final RequestProcessor RP = new RequestProcessor("ACP-Agent-RP", 2);
+    private static final RequestProcessor CONTEXT_RP = new RequestProcessor("ACP-Context-RP", 1);
+    private static final int DISPLAY_DELAY_MS = 50;
     private static final int RENDER_DELAY_MS = 200;
 
     private final JEditorPane chatPane;
@@ -94,10 +100,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final JComboBox<String> agentSelector;
     private final JLabel statusLabel;
     private final StringBuilder chatHtml = new StringBuilder();
+    private int renderedLength;
+    private final Object bufferLock = new Object();
     private final StringBuilder currentMessageBuffer = new StringBuilder();
     private final StringBuilder currentThoughtBuffer = new StringBuilder();
     private final AtomicBoolean promptInProgress = new AtomicBoolean(false);
     private final Timer renderTimer;
+    private final Timer displayTimer;
 
     private final Map<String, AcpToolCall.DiffContent> diffStore = new HashMap<>();
     private int diffCounter;
@@ -108,13 +117,17 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final AcpSessionListener sessionListener = new AcpSessionListener() {
         @Override
         public void onAgentMessage(String sessionId, String text) {
-            currentMessageBuffer.append(text);
+            synchronized (bufferLock) {
+                currentMessageBuffer.append(text);
+            }
             renderTimer.restart();
         }
 
         @Override
         public void onAgentThought(String sessionId, String text) {
-            currentThoughtBuffer.append(text);
+            synchronized (bufferLock) {
+                currentThoughtBuffer.append(text);
+            }
             renderTimer.restart();
         }
 
@@ -231,8 +244,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         styleSheet.addRule(".plan { background-color: #E8F5E9; padding: 6px; margin: 4px 0 4px 40px; border-left: 4px solid #4CAF50; }");
         styleSheet.addRule(".user-label { color: #1565C0; font-weight: bold; }");
         styleSheet.addRule(".agent-label { color: #424242; font-weight: bold; }");
-        styleSheet.addRule(".diff-add { color: #2E7D32; font-family: monospace; font-size: 11px; }");
-        styleSheet.addRule(".diff-del { color: #C62828; font-family: monospace; font-size: 11px; }");
+        styleSheet.addRule(".diff-add { color: #2E7D32; }");
+        styleSheet.addRule(".diff-del { color: #C62828; }");
         styleSheet.addRule(".diff-link { color: #1565C0; }");
         styleSheet.addRule(".tc-kind { color: #E65100; font-weight: bold; }");
         styleSheet.addRule(".tc-status-completed { color: #2E7D32; }");
@@ -300,6 +313,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
         renderTimer = new Timer(RENDER_DELAY_MS, e -> flushMessageBuffers());
         renderTimer.setRepeats(false);
+        displayTimer = new Timer(DISPLAY_DELAY_MS, e -> renderChatDisplay());
+        displayTimer.setRepeats(false);
 
         mentionSupport = new AcpFileMentionSupport(inputArea);
         inputArea.setTransferHandler(new AcpFileDropHandler(inputArea, mentionSupport));
@@ -390,18 +405,23 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 NotifyDescriptor.YES_NO_OPTION);
         if (DialogDisplayer.getDefault().notify(confirm) == NotifyDescriptor.YES_OPTION) {
             if (currentConnection != null && currentConnection.isConnected()) {
+                final AcpConnection connectionToClose = currentConnection;
                 RP.post(() -> {
                     try {
-                        currentConnection.close();
+                        connectionToClose.close();
                     } catch (Exception ex) {
                         // ignore
                     }
+                    SwingUtilities.invokeLater(() -> {
+                        if (currentConnection == connectionToClose) {
+                            currentConnection = null;
+                            currentSessionId = null;
+                            connectButton.setText("Connect");
+                            statusLabel.setText("Disconnected");
+                            updateInputState();
+                        }
+                    });
                 });
-                currentConnection = null;
-                currentSessionId = null;
-                connectButton.setText("Connect");
-                statusLabel.setText("Disconnected");
-                updateInputState();
             }
             AcpAgentManager.getDefault().removeAgent(agentName);
             refreshAgentList();
@@ -450,7 +470,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 try {
                     AcpConnection connection = AcpConnectionManager.getDefault().connect(descriptor);
                     connection.addSessionListener(sessionListener);
-                    connection.setPermissionHandler(AcpPermissionDialog::showPermissionRequest);
+                    connection.setPermissionHandler(req -> {
+                        AcpPermissionDialog.PermissionResult pr =
+                                AcpPermissionDialog.showPermissionRequest(req);
+                        if (pr.allowToolForSession() != null) {
+                            connection.allowToolForSession(req.sessionId(), pr.allowToolForSession());
+                        }
+                        return pr.response();
+                    });
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
                         connectButton.setText("Disconnect");
@@ -480,11 +507,12 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 SwingUtilities.invokeLater(() -> {
                     currentSessionId = sessionId;
                     chatHtml.setLength(0);
+                    renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
                     statusLabel.setText("Ready");
                     updateInputState();
                 });
-                sendProjectContext(sessionId);
+                CONTEXT_RP.post(() -> sendProjectContext(sessionId));
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Failed to create new session", ex);
                 SwingUtilities.invokeLater(() -> {
@@ -581,26 +609,30 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void flushMessageBuffers() {
-        SwingUtilities.invokeLater(() -> {
-            boolean changed = false;
-            if (currentThoughtBuffer.length() > 0) {
-                chatHtml.append("<div class='thought'>")
-                        .append(escapeHtml(currentThoughtBuffer.toString()))
-                        .append("</div>");
-                currentThoughtBuffer.setLength(0);
-                changed = true;
-            }
-            if (currentMessageBuffer.length() > 0) {
-                chatHtml.append("<div class='agent-msg'><span class='agent-label'>Agent:</span><br/>")
-                        .append(escapeHtml(currentMessageBuffer.toString()).replace("\n", "<br/>"))
-                        .append("</div>");
-                currentMessageBuffer.setLength(0);
-                changed = true;
-            }
-            if (changed) {
-                updateChatDisplay();
-            }
-        });
+        String thought;
+        String message;
+        synchronized (bufferLock) {
+            thought = currentThoughtBuffer.toString();
+            message = currentMessageBuffer.toString();
+            currentThoughtBuffer.setLength(0);
+            currentMessageBuffer.setLength(0);
+        }
+        boolean changed = false;
+        if (!thought.isEmpty()) {
+            chatHtml.append("<div class='thought'>")
+                    .append(escapeHtml(thought))
+                    .append("</div>");
+            changed = true;
+        }
+        if (!message.isEmpty()) {
+            chatHtml.append("<div class='agent-msg'><span class='agent-label'>Agent:</span><br/>")
+                    .append(escapeHtml(message).replace("\n", "<br/>"))
+                    .append("</div>");
+            changed = true;
+        }
+        if (changed) {
+            updateChatDisplay();
+        }
     }
 
     private void appendToolCall(AcpToolCall toolCall) {
@@ -728,8 +760,37 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         updateChatDisplay();
     }
 
+    // Coalesces bursts of updates into a single re-render.
     private void updateChatDisplay() {
-        chatPane.setText("<html><body>" + chatHtml + "</body></html>");
+        if (!displayTimer.isRunning()) {
+            displayTimer.start();
+        }
+    }
+
+    private void renderChatDisplay() {
+        if (renderedLength > chatHtml.length()) {
+            renderedLength = 0;
+        }
+        String fragment = chatHtml.substring(renderedLength);
+        if (fragment.isEmpty()) {
+            return;
+        }
+        // Only the newly appended HTML is parsed, instead of the whole document.
+        boolean inserted = false;
+        if (renderedLength > 0 && chatPane.getDocument() instanceof HTMLDocument) {
+            HTMLDocument doc = (HTMLDocument) chatPane.getDocument();
+            try {
+                Element body = doc.getDefaultRootElement().getElement(1);
+                doc.insertBeforeEnd(body, fragment);
+                inserted = true;
+            } catch (BadLocationException | IOException | RuntimeException ex) {
+                inserted = false;
+            }
+        }
+        if (!inserted) {
+            chatPane.setText("<html><body>" + chatHtml + "</body></html>");
+        }
+        renderedLength = chatHtml.length();
         SwingUtilities.invokeLater(() -> {
             JScrollBar vertical = ((JScrollPane) chatPane.getParent().getParent()).getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());

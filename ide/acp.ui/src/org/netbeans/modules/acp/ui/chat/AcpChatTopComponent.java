@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.acp.ui.chat;
 
+import org.netbeans.modules.acp.ui.HtmlUtils;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -38,7 +39,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -57,6 +60,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentManager;
 import org.netbeans.modules.acp.api.AcpConnection;
+import org.netbeans.modules.acp.api.AcpMcpServerProvider;
 import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionListener;
@@ -70,6 +74,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.TopComponent;
@@ -96,6 +101,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final JTextArea inputArea;
     private final JButton sendButton;
     private final JButton cancelButton;
+    private final JButton toolsButton;
     private final JButton connectButton;
     private final JComboBox<String> agentSelector;
     private final JLabel statusLabel;
@@ -111,6 +117,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final Map<String, AcpToolCall.DiffContent> diffStore = new HashMap<>();
     private int diffCounter;
     private final AcpFileMentionSupport mentionSupport;
+    private List<AcpMcpServerProvider.ToolInfo> currentMcpTools = List.of();
     private AcpConnection currentConnection;
     private String currentSessionId;
 
@@ -181,10 +188,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 String label = oldContent == null ? "Created" : "Modified";
                 chatHtml.append("<div class='tool-call'>")
                         .append("&#x270F; <b>").append(label).append(": ")
-                        .append(escapeHtml(fileName)).append("</b>")
+                        .append(HtmlUtils.escapeHtml(fileName)).append("</b>")
                         .append(" <span class='tc-status-completed'>&#x2705; completed</span>")
                         .append("<br/><span class='tc-location'>")
-                        .append(escapeHtml(path)).append("</span>");
+                        .append(HtmlUtils.escapeHtml(path)).append("</span>");
                 appendDiffPreview(diff);
                 chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
                         .append(diffId).append("'>View Full Diff</a>")
@@ -228,6 +235,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         cancelButton.setEnabled(false);
         cancelButton.addActionListener(e -> cancelPrompt());
         toolbar.add(cancelButton);
+        toolsButton = new JButton("Tools (0)");
+        toolsButton.setEnabled(false);
+        toolsButton.addActionListener(e -> showToolsPopup());
+        toolbar.add(toolsButton);
         toolbar.add(Box.createHorizontalGlue());
         statusLabel = new JLabel("Disconnected");
         toolbar.add(statusLabel);
@@ -504,11 +515,15 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             try {
                 String sessionId = currentConnection.newSession(
                         getMainProjectDirectory(), getOpenProjectDirectories());
+                List<AcpMcpServerProvider.ToolInfo> mcpTools = gatherMcpToolInfo();
                 SwingUtilities.invokeLater(() -> {
                     currentSessionId = sessionId;
                     chatHtml.setLength(0);
                     renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
+                    currentMcpTools = mcpTools;
+                    toolsButton.setText("Tools (" + mcpTools.size() + ")");
+                    toolsButton.setEnabled(!mcpTools.isEmpty());
                     statusLabel.setText("Ready");
                     updateInputState();
                 });
@@ -517,7 +532,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 LOG.log(Level.WARNING, "Failed to create new session", ex);
                 SwingUtilities.invokeLater(() -> {
                     appendSystemMessage("Error creating session: "
-                            + escapeHtml(String.valueOf(ex.getMessage())));
+                            + HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())));
                     statusLabel.setText("Error");
                 });
             }
@@ -559,7 +574,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 currentConnection.sendPrompt(currentSessionId, fullPrompt);
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
-                    appendSystemMessage("Error: " + escapeHtml(ex.getMessage()));
+                    appendSystemMessage("Error: " + HtmlUtils.escapeHtml(ex.getMessage()));
                     promptInProgress.set(false);
                     updateInputState();
                     statusLabel.setText("Error");
@@ -598,7 +613,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private void appendUserMessage(String text) {
         chatHtml.append("<div class='user-msg'><span class='user-label'>You:</span><br/>")
-                .append(escapeHtml(text).replace("\n", "<br/>"))
+                .append(HtmlUtils.escapeHtml(text).replace("\n", "<br/>"))
                 .append("</div>");
         updateChatDisplay();
     }
@@ -606,6 +621,46 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private void appendSystemMessage(String html) {
         chatHtml.append("<div class='system-msg'>").append(html).append("</div>");
         updateChatDisplay();
+    }
+
+    private static List<AcpMcpServerProvider.ToolInfo> gatherMcpToolInfo() {
+        List<AcpMcpServerProvider.ToolInfo> allTools = new ArrayList<>();
+        java.util.Collection<? extends AcpMcpServerProvider> providers =
+                Lookup.getDefault().lookupAll(AcpMcpServerProvider.class);
+        LOG.log(Level.INFO, "MCP tool info: found {0} provider(s)", providers.size());
+        for (AcpMcpServerProvider provider : providers) {
+            List<AcpMcpServerProvider.ToolInfo> tools = provider.getAvailableTools();
+            LOG.log(Level.INFO, "MCP tool info: {0} returned {1} tool(s)",
+                    new Object[]{provider.getClass().getName(), tools.size()});
+            allTools.addAll(tools);
+        }
+        LOG.log(Level.INFO, "MCP tool info: total {0} tools", allTools.size());
+        return allTools;
+    }
+
+    private void showToolsPopup() {
+        if (currentMcpTools.isEmpty()) {
+            return;
+        }
+        JPopupMenu popup = new JPopupMenu();
+        for (AcpMcpServerProvider.ToolInfo tool : currentMcpTools) {
+            String desc = tool.description();
+            if (desc != null && desc.length() > 80) {
+                int dot = desc.indexOf(". ");
+                if (dot > 0 && dot <= 80) {
+                    desc = desc.substring(0, dot + 1);
+                } else {
+                    desc = desc.substring(0, 80) + "...";
+                }
+            }
+            String label = "<html><b>" + tool.name() + "</b>"
+                    + (desc != null ? " &ndash; " + desc : "")
+                    + "</html>";
+            JMenuItem item = new JMenuItem(label);
+            item.setEnabled(false);
+            popup.add(item);
+        }
+        popup.show(toolsButton, 0, toolsButton.getHeight());
     }
 
     private void flushMessageBuffers() {
@@ -620,13 +675,13 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         boolean changed = false;
         if (!thought.isEmpty()) {
             chatHtml.append("<div class='thought'>")
-                    .append(escapeHtml(thought))
+                    .append(HtmlUtils.escapeHtml(thought))
                     .append("</div>");
             changed = true;
         }
         if (!message.isEmpty()) {
             chatHtml.append("<div class='agent-msg'><span class='agent-label'>Agent:</span><br/>")
-                    .append(escapeHtml(message).replace("\n", "<br/>"))
+                    .append(HtmlUtils.escapeHtml(message).replace("\n", "<br/>"))
                     .append("</div>");
             changed = true;
         }
@@ -667,21 +722,21 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         };
 
         chatHtml.append("<div class='tool-call'>")
-                .append(kindIcon).append(" <b>").append(escapeHtml(toolCall.getTitle())).append("</b>")
-                .append(" <span class='tc-kind'>[").append(escapeHtml(toolCall.getKind())).append("]</span>")
+                .append(kindIcon).append(" <b>").append(HtmlUtils.escapeHtml(toolCall.getTitle())).append("</b>")
+                .append(" <span class='tc-kind'>[").append(HtmlUtils.escapeHtml(toolCall.getKind())).append("]</span>")
                 .append(" ").append(statusIcon)
                 .append(" <span class='").append(statusClass).append("'>")
-                .append(escapeHtml(toolCall.getStatus())).append("</span>");
+                .append(HtmlUtils.escapeHtml(toolCall.getStatus())).append("</span>");
 
         if (toolCall.getName() != null && !toolCall.getName().equals(toolCall.getTitle())) {
-            chatHtml.append("<br/><i>").append(escapeHtml(toolCall.getName())).append("</i>");
+            chatHtml.append("<br/><i>").append(HtmlUtils.escapeHtml(toolCall.getName())).append("</i>");
         }
 
         if (!toolCall.getLocations().isEmpty()) {
             chatHtml.append("<br/>");
             for (AcpToolCall.Location loc : toolCall.getLocations()) {
                 chatHtml.append("<span class='tc-location'>")
-                        .append(escapeHtml(loc.path()));
+                        .append(HtmlUtils.escapeHtml(loc.path()));
                 if (loc.line() != null) {
                     chatHtml.append(":").append(loc.line());
                 }
@@ -696,7 +751,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
                 chatHtml.append("<br/>");
                 if (diff.path() != null) {
-                    chatHtml.append("<b>").append(escapeHtml(diff.path())).append("</b><br/>");
+                    chatHtml.append("<b>").append(HtmlUtils.escapeHtml(diff.path())).append("</b><br/>");
                 }
                 appendDiffPreview(diff);
                 chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
@@ -709,7 +764,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             if (preview.length() > 200) {
                 preview = preview.substring(0, 200) + "...";
             }
-            chatHtml.append("<br/><code>").append(escapeHtml(preview)).append("</code>");
+            chatHtml.append("<br/><code>").append(HtmlUtils.escapeHtml(preview)).append("</code>");
         }
 
         chatHtml.append("</div>");
@@ -729,7 +784,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 break;
             }
             chatHtml.append("<span class='diff-del'>- ")
-                    .append(escapeHtml(line)).append("</span><br/>");
+                    .append(HtmlUtils.escapeHtml(line)).append("</span><br/>");
             previewLines++;
         }
         previewLines = 0;
@@ -739,7 +794,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 break;
             }
             chatHtml.append("<span class='diff-add'>+ ")
-                    .append(escapeHtml(line)).append("</span><br/>");
+                    .append(HtmlUtils.escapeHtml(line)).append("</span><br/>");
             previewLines++;
         }
     }
@@ -753,7 +808,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 default -> "&#x25CB;";
             };
             chatHtml.append("<li>").append(icon).append(" ")
-                    .append(escapeHtml(entry.content()))
+                    .append(HtmlUtils.escapeHtml(entry.content()))
                     .append("</li>");
         }
         chatHtml.append("</ul></div>");
@@ -792,8 +847,12 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         }
         renderedLength = chatHtml.length();
         SwingUtilities.invokeLater(() -> {
-            JScrollBar vertical = ((JScrollPane) chatPane.getParent().getParent()).getVerticalScrollBar();
-            vertical.setValue(vertical.getMaximum());
+            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(
+                    JScrollPane.class, chatPane);
+            if (scrollPane != null) {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            }
         });
     }
 
@@ -816,13 +875,5 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             dirs.add(p.getProjectDirectory().getPath());
         }
         return dirs;
-    }
-
-    private static String escapeHtml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                   .replace("<", "&lt;")
-                   .replace(">", "&gt;")
-                   .replace("\"", "&quot;");
     }
 }

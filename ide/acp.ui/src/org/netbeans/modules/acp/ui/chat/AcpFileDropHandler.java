@@ -33,7 +33,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
-import org.openide.util.datatransfer.ExTransferable;
+import org.openide.nodes.NodeTransfer;
 
 /**
  * Handles drag-and-drop of files from the Projects/Files window into the
@@ -59,7 +59,7 @@ final class AcpFileDropHandler extends TransferHandler {
         if (support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
             return true;
         }
-        if (hasNodeFlavor(support.getTransferable())) {
+        if (hasNodeDndFlavor(support.getDataFlavors())) {
             return true;
         }
         if (originalHandler != null) {
@@ -131,35 +131,10 @@ final class AcpFileDropHandler extends TransferHandler {
         }
 
         if (result.isEmpty()) {
-            result.addAll(extractFromNodes(t));
-        }
-
-        return result;
-    }
-
-    private static List<FileObject> extractFromNodes(Transferable t) {
-        List<FileObject> result = new ArrayList<>();
-        try {
-            if (t.isDataFlavorSupported(ExTransferable.multiFlavor)) {
-                Transferable[] multi = (Transferable[]) t.getTransferData(ExTransferable.multiFlavor);
-                for (Transferable sub : multi) {
-                    result.addAll(extractSingleNode(sub));
-                }
-            } else {
-                result.addAll(extractSingleNode(t));
-            }
-        } catch (UnsupportedFlavorException | IOException ex) {
-            LOG.log(Level.FINE, "Cannot extract node transfer data", ex);
-        }
-        return result;
-    }
-
-    private static List<FileObject> extractSingleNode(Transferable t) {
-        List<FileObject> result = new ArrayList<>();
-        for (DataFlavor flavor : t.getTransferDataFlavors()) {
-            if (Node.class.isAssignableFrom(flavor.getRepresentationClass())) {
-                try {
-                    Node node = (Node) t.getTransferData(flavor);
+            Node[] nodes = NodeTransfer.nodes(
+                    t, NodeTransfer.COPY | NodeTransfer.MOVE);
+            if (nodes != null) {
+                for (Node node : nodes) {
                     DataObject dobj = node.getLookup().lookup(DataObject.class);
                     if (dobj != null) {
                         FileObject fo = dobj.getPrimaryFile();
@@ -167,21 +142,23 @@ final class AcpFileDropHandler extends TransferHandler {
                             result.add(fo);
                         }
                     }
-                } catch (UnsupportedFlavorException | IOException ex) {
-                    LOG.log(Level.FINE, "Cannot extract node", ex);
                 }
-                break;
             }
         }
+
         return result;
     }
 
-    private static boolean hasNodeFlavor(Transferable t) {
-        for (DataFlavor flavor : t.getTransferDataFlavors()) {
-            if (Node.class.isAssignableFrom(flavor.getRepresentationClass())) {
+    private static final String NODE_DND_MIME_SUBTYPE = "x-java-openide-nodednd"; // NOI18N
+    private static final String NODE_DND_MIME_PRIMARY = "application"; // NOI18N
+
+    private static boolean hasNodeDndFlavor(DataFlavor[] flavors) {
+        for (DataFlavor flavor : flavors) {
+            if (NODE_DND_MIME_PRIMARY.equals(flavor.getPrimaryType())
+                    && NODE_DND_MIME_SUBTYPE.equals(flavor.getSubType())) {
                 return true;
             }
         }
-        return t.isDataFlavorSupported(ExTransferable.multiFlavor);
+        return false;
     }
 }

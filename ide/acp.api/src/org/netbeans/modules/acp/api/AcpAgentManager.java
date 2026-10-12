@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
@@ -121,7 +122,7 @@ public final class AcpAgentManager {
             oldAgents = loadAgents();
             for (AcpAgentDescriptor existing : oldAgents) {
                 if (existing.getName().equals(agent.getName())) {
-                    LOG.log(Level.WARNING, "Agent already exists: {0}", agent.getName());
+                    LOG.log(Level.FINE, "Agent already exists: {0}", agent.getName());
                     return;
                 }
             }
@@ -234,7 +235,7 @@ public final class AcpAgentManager {
 
         String commandStr = prefs.get(prefix + KEY_COMMAND, null);
         if (commandStr != null && !commandStr.isEmpty()) {
-            builder.command(Arrays.asList(commandStr.split(COMMAND_DELIMITER)));
+            builder.command(Arrays.asList(commandStr.split(Pattern.quote(COMMAND_DELIMITER))));
         }
 
         String url = prefs.get(prefix + KEY_URL, null);
@@ -267,22 +268,29 @@ public final class AcpAgentManager {
     private void saveAllAgents(List<AcpAgentDescriptor> agents) {
         Preferences prefs = getPreferences();
 
-        // Clear existing entries
+        Map<String, String> entries = new LinkedHashMap<>();
+        entries.put(KEY_AGENT_COUNT, Integer.toString(agents.size()));
+        for (int i = 0; i < agents.size(); i++) {
+            collectAgentEntries(entries, i, agents.get(i));
+        }
+
+        // Write new data first, then drop orphans, so a failure never leaves the store emptied
+        for (Map.Entry<String, String> e : entries.entrySet()) {
+            if (e.getKey().equals(KEY_AGENT_COUNT) || e.getKey().endsWith(KEY_ENV_COUNT)) {
+                prefs.putInt(e.getKey(), Integer.parseInt(e.getValue()));
+            } else {
+                prefs.put(e.getKey(), e.getValue());
+            }
+        }
+
         try {
-            String[] keys = prefs.keys();
-            for (String key : keys) {
-                if (key.startsWith(PREFIX_AGENT) || key.equals(KEY_AGENT_COUNT)) {
+            for (String key : prefs.keys()) {
+                if ((key.startsWith(PREFIX_AGENT) || key.equals(KEY_AGENT_COUNT)) && !entries.containsKey(key)) {
                     prefs.remove(key);
                 }
             }
         } catch (BackingStoreException ex) {
-            LOG.log(Level.WARNING, "Error clearing agent preferences", ex);
-        }
-
-        prefs.putInt(KEY_AGENT_COUNT, agents.size());
-
-        for (int i = 0; i < agents.size(); i++) {
-            saveAgent(prefs, i, agents.get(i));
+            LOG.log(Level.WARNING, "Error removing stale agent preferences", ex);
         }
 
         try {
@@ -292,31 +300,28 @@ public final class AcpAgentManager {
         }
     }
 
-    private void saveAgent(Preferences prefs, int index, AcpAgentDescriptor agent) {
+    private void collectAgentEntries(Map<String, String> entries, int index, AcpAgentDescriptor agent) {
         String prefix = PREFIX_AGENT + index;
 
-        prefs.put(prefix + KEY_NAME, agent.getName());
-        prefs.put(prefix + KEY_TRANSPORT_TYPE, agent.getTransportType().name());
+        entries.put(prefix + KEY_NAME, agent.getName());
+        entries.put(prefix + KEY_TRANSPORT_TYPE, agent.getTransportType().name());
 
         if (!agent.getCommand().isEmpty()) {
-            prefs.put(prefix + KEY_COMMAND, String.join(COMMAND_DELIMITER, agent.getCommand()));
+            entries.put(prefix + KEY_COMMAND, String.join(COMMAND_DELIMITER, agent.getCommand()));
         }
-
         if (agent.getUrl() != null) {
-            prefs.put(prefix + KEY_URL, agent.getUrl());
+            entries.put(prefix + KEY_URL, agent.getUrl());
         }
-
         if (agent.getWorkingDirectory() != null) {
-            prefs.put(prefix + KEY_WORKING_DIRECTORY, agent.getWorkingDirectory());
+            entries.put(prefix + KEY_WORKING_DIRECTORY, agent.getWorkingDirectory());
         }
 
         Map<String, String> envVars = agent.getEnvironmentVariables();
-        prefs.putInt(prefix + KEY_ENV_COUNT, envVars.size());
-
+        entries.put(prefix + KEY_ENV_COUNT, Integer.toString(envVars.size()));
         int j = 0;
         for (Map.Entry<String, String> entry : envVars.entrySet()) {
-            prefs.put(prefix + KEY_ENV_KEY + j, entry.getKey());
-            prefs.put(prefix + KEY_ENV_VALUE + j, entry.getValue());
+            entries.put(prefix + KEY_ENV_KEY + j, entry.getKey());
+            entries.put(prefix + KEY_ENV_VALUE + j, entry.getValue());
             j++;
         }
     }

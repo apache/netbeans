@@ -100,4 +100,19 @@ public interface AcpSessionListener {
      */
     default void onUsageUpdate(String sessionId, long usedTokens, long totalTokens) {
     }
+
+    /**
+     * Called when the agent writes a text file through the ACP file handler.
+     * The old and new content are provided so that listeners can display
+     * or review the changes.
+     *
+     * @param sessionId  the session identifier
+     * @param path       the file path that was written
+     * @param oldContent the previous file content, or {@code null} if the file
+     *                   did not exist
+     * @param newContent the new file content written by the agent
+     */
+    default void onFileWritten(String sessionId, String path,
+            String oldContent, String newContent) {
+    }
 }

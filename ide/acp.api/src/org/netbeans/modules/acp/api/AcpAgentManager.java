@@ -65,6 +65,7 @@ public final class AcpAgentManager {
 
     private static final String COMMAND_DELIMITER = "\u001F"; // unit separator // NOI18N
 
+    private final Object lock = new Object();
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     /**
@@ -86,6 +87,12 @@ public final class AcpAgentManager {
      * @return an unmodifiable list of agent descriptors
      */
     public List<AcpAgentDescriptor> getAgents() {
+        synchronized (lock) {
+            return loadAgents();
+        }
+    }
+
+    private List<AcpAgentDescriptor> loadAgents() {
         Preferences prefs = getPreferences();
         int count = prefs.getInt(KEY_AGENT_COUNT, 0);
         List<AcpAgentDescriptor> result = new ArrayList<>(count);
@@ -108,17 +115,21 @@ public final class AcpAgentManager {
     public void addAgent(AcpAgentDescriptor agent) {
         Objects.requireNonNull(agent, "agent must not be null");
 
-        List<AcpAgentDescriptor> oldAgents = getAgents();
-        for (AcpAgentDescriptor existing : oldAgents) {
-            if (existing.getName().equals(agent.getName())) {
-                LOG.log(Level.WARNING, "Agent already exists: {0}", agent.getName());
-                return;
+        List<AcpAgentDescriptor> oldAgents;
+        List<AcpAgentDescriptor> newAgents;
+        synchronized (lock) {
+            oldAgents = loadAgents();
+            for (AcpAgentDescriptor existing : oldAgents) {
+                if (existing.getName().equals(agent.getName())) {
+                    LOG.log(Level.WARNING, "Agent already exists: {0}", agent.getName());
+                    return;
+                }
             }
-        }
 
-        List<AcpAgentDescriptor> newAgents = new ArrayList<>(oldAgents);
-        newAgents.add(agent);
-        saveAllAgents(newAgents);
+            newAgents = new ArrayList<>(oldAgents);
+            newAgents.add(agent);
+            saveAllAgents(newAgents);
+        }
 
         changeSupport.firePropertyChange(PROP_AGENTS, oldAgents, Collections.unmodifiableList(newAgents));
     }
@@ -131,20 +142,24 @@ public final class AcpAgentManager {
     public void removeAgent(String name) {
         Objects.requireNonNull(name, "name must not be null");
 
-        List<AcpAgentDescriptor> oldAgents = getAgents();
+        List<AcpAgentDescriptor> oldAgents;
         List<AcpAgentDescriptor> newAgents = new ArrayList<>();
-
         boolean found = false;
-        for (AcpAgentDescriptor agent : oldAgents) {
-            if (agent.getName().equals(name)) {
-                found = true;
-            } else {
-                newAgents.add(agent);
+        synchronized (lock) {
+            oldAgents = loadAgents();
+            for (AcpAgentDescriptor agent : oldAgents) {
+                if (agent.getName().equals(name)) {
+                    found = true;
+                } else {
+                    newAgents.add(agent);
+                }
+            }
+            if (found) {
+                saveAllAgents(newAgents);
             }
         }
 
         if (found) {
-            saveAllAgents(newAgents);
             changeSupport.firePropertyChange(PROP_AGENTS, oldAgents, Collections.unmodifiableList(newAgents));
         }
     }
@@ -158,24 +173,26 @@ public final class AcpAgentManager {
     public void updateAgent(AcpAgentDescriptor agent) {
         Objects.requireNonNull(agent, "agent must not be null");
 
-        List<AcpAgentDescriptor> oldAgents = getAgents();
+        List<AcpAgentDescriptor> oldAgents;
         List<AcpAgentDescriptor> newAgents = new ArrayList<>();
-
-        boolean found = false;
-        for (AcpAgentDescriptor existing : oldAgents) {
-            if (existing.getName().equals(agent.getName())) {
-                newAgents.add(agent);
-                found = true;
-            } else {
-                newAgents.add(existing);
+        synchronized (lock) {
+            oldAgents = loadAgents();
+            boolean found = false;
+            for (AcpAgentDescriptor existing : oldAgents) {
+                if (existing.getName().equals(agent.getName())) {
+                    newAgents.add(agent);
+                    found = true;
+                } else {
+                    newAgents.add(existing);
+                }
             }
-        }
 
-        if (!found) {
-            newAgents.add(agent);
-        }
+            if (!found) {
+                newAgents.add(agent);
+            }
 
-        saveAllAgents(newAgents);
+            saveAllAgents(newAgents);
+        }
         changeSupport.firePropertyChange(PROP_AGENTS, oldAgents, Collections.unmodifiableList(newAgents));
     }
 

@@ -19,6 +19,7 @@
 package org.netbeans.modules.acp.api;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -70,17 +71,28 @@ public final class AcpConnectionManager {
     public AcpConnection connect(AcpAgentDescriptor descriptor) throws IOException {
         Objects.requireNonNull(descriptor, "descriptor must not be null");
 
-        AcpConnection existing = connections.get(descriptor.getName());
-        if (existing != null && existing.isConnected()) {
-            return existing;
+        // compute() is atomic per key, so concurrent calls cannot create duplicates
+        try {
+            AcpConnection connection = connections.compute(descriptor.getName(), (name, existing) -> {
+                if (existing != null && existing.isConnected()) {
+                    return existing;
+                }
+                if (existing != null) {
+                    existing.close();
+                }
+                AcpConnection created = new AcpConnection(descriptor);
+                try {
+                    created.connect();
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
+                LOG.log(Level.INFO, "Agent connected: {0}", name);
+                return created;
+            });
+            return connection;
+        } catch (UncheckedIOException ex) {
+            throw ex.getCause();
         }
-
-        AcpConnection connection = new AcpConnection(descriptor);
-        connection.connect();
-        connections.put(descriptor.getName(), connection);
-
-        LOG.log(Level.INFO, "Agent connected: {0}", descriptor.getName());
-        return connection;
     }
 
     /**

@@ -1977,4 +1977,11 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("h2 ::slotted(span) {}");
         assertParses("::slotted(*) {}");
     }
+
+    public void testHostHostContext() {
+        assertParses(":host-context(h1) button {}");
+        assertParses(":host-context([data-high-contrast='true']) button {}");
+        assertParses(":host-context([data-high-contrast='true'] > h1) button {}");
+        assertParses(":host-context([data-high-contrast=\"true\"] > h1) button {}");
+    }
 }

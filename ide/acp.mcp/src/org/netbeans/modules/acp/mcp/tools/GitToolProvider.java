@@ -236,9 +236,11 @@ public final class GitToolProvider implements McpToolProvider {
         return null;
     }
 
+    private static final int MAX_PARENT_DEPTH = 10;
+
     private static File findGitRoot(File dir) {
         File current = dir;
-        while (current != null) {
+        for (int depth = 0; current != null && depth < MAX_PARENT_DEPTH; depth++) {
             if (new File(current, ".git").exists()) {
                 return current;
             }

@@ -86,7 +86,7 @@ public final class McpHttpServer {
         }
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/mcp", new McpHandler());
-        executor = Executors.newCachedThreadPool(r -> {
+        executor = Executors.newFixedThreadPool(4, r -> {
             Thread t = new Thread(r, "MCP-Server-Worker");
             t.setDaemon(true);
             return t;

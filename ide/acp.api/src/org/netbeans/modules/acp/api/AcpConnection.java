@@ -692,18 +692,35 @@ public final class AcpConnection {
             AcpSchema.RequestPermissionRequest request) {
         List<AcpSchema.PermissionOption> options = request.options();
         if (options != null && !options.isEmpty() && isToolCallTrusted(request)) {
-            return new AcpSchema.RequestPermissionResponse(
-                    new AcpSchema.PermissionSelected(options.get(0).optionId()));
+            AcpSchema.PermissionOption allow = findAllowOption(options);
+            if (allow != null) {
+                return new AcpSchema.RequestPermissionResponse(
+                        new AcpSchema.PermissionSelected(allow.optionId()));
+            }
         }
         if (options != null && !options.isEmpty() && isToolSessionAllowed(request)) {
-            return new AcpSchema.RequestPermissionResponse(
-                    new AcpSchema.PermissionSelected(options.get(0).optionId()));
+            AcpSchema.PermissionOption allow = findAllowOption(options);
+            if (allow != null) {
+                return new AcpSchema.RequestPermissionResponse(
+                        new AcpSchema.PermissionSelected(allow.optionId()));
+            }
         }
         if (permissionHandler != null) {
             return permissionHandler.apply(request);
         }
         LOG.log(Level.WARNING, "No permission handler registered, cancelling permission request"); // NOI18N
         return new AcpSchema.RequestPermissionResponse(new AcpSchema.PermissionCancelled());
+    }
+
+    private static AcpSchema.PermissionOption findAllowOption(List<AcpSchema.PermissionOption> options) {
+        for (AcpSchema.PermissionOption opt : options) {
+            AcpSchema.PermissionOptionKind kind = opt.kind();
+            if (AcpSchema.PermissionOptionKind.ALLOW_ONCE.equals(kind)
+                    || AcpSchema.PermissionOptionKind.ALLOW_ALWAYS.equals(kind)) {
+                return opt;
+            }
+        }
+        return null;
     }
 
     private boolean isToolSessionAllowed(AcpSchema.RequestPermissionRequest request) {

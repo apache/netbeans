@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -62,6 +64,8 @@ public final class AcpAgentManager {
     private static final String KEY_ENV_COUNT = ".envCount"; // NOI18N
     private static final String KEY_ENV_KEY = ".envKey."; // NOI18N
     private static final String KEY_ENV_VALUE = ".envValue."; // NOI18N
+    private static final String KEY_TOOL_COUNT = ".toolCount"; // NOI18N
+    private static final String KEY_TOOL_NAME = ".toolName."; // NOI18N
     private static final String KEY_AGENT_COUNT = "agentCount"; // NOI18N
 
     private static final String COMMAND_DELIMITER = "\u001F"; // unit separator // NOI18N
@@ -257,6 +261,18 @@ public final class AcpAgentManager {
             builder.environmentVariables(envVars);
         }
 
+        int toolCount = prefs.getInt(prefix + KEY_TOOL_COUNT, -1);
+        if (toolCount >= 0) {
+            Set<String> enabledTools = new LinkedHashSet<>();
+            for (int j = 0; j < toolCount; j++) {
+                String toolName = prefs.get(prefix + KEY_TOOL_NAME + j, null);
+                if (toolName != null) {
+                    enabledTools.add(toolName);
+                }
+            }
+            builder.enabledTools(enabledTools);
+        }
+
         try {
             return builder.build();
         } catch (IllegalStateException ex) {
@@ -323,6 +339,16 @@ public final class AcpAgentManager {
             entries.put(prefix + KEY_ENV_KEY + j, entry.getKey());
             entries.put(prefix + KEY_ENV_VALUE + j, entry.getValue());
             j++;
+        }
+
+        Set<String> enabledTools = agent.getEnabledTools();
+        if (enabledTools != null) {
+            entries.put(prefix + KEY_TOOL_COUNT, Integer.toString(enabledTools.size()));
+            int t = 0;
+            for (String toolName : enabledTools) {
+                entries.put(prefix + KEY_TOOL_NAME + t, toolName);
+                t++;
+            }
         }
     }
 

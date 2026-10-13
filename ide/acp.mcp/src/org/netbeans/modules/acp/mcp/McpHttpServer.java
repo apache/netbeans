@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,10 +47,17 @@ public final class McpHttpServer {
     private final ObjectMapper mapper;
     private HttpServer server;
     private int port;
+    private volatile Set<String> enabledTools;
 
     public McpHttpServer(McpToolRegistry registry) {
         this.registry = registry;
         this.mapper = new ObjectMapper();
+    }
+
+    public void setEnabledTools(Set<String> enabledTools) {
+        this.enabledTools = enabledTools;
+        LOG.log(Level.INFO, "MCP tools sent to agent: {0}",
+                enabledTools != null ? enabledTools : "defaults");
     }
 
     public synchronized void start() throws IOException {
@@ -161,9 +169,14 @@ public final class McpHttpServer {
         }
 
         private Map<String, Object> handleToolsList(Object id) {
-            List<McpToolProvider.McpToolDefinition> tools = registry.getAllTools();
+            Set<String> filter = enabledTools;
+            List<McpToolProvider.McpToolDefinition> tools = filter != null
+                    ? registry.getAllAvailableTools() : registry.getAllTools();
             List<Map<String, Object>> toolList = new ArrayList<>();
             for (McpToolProvider.McpToolDefinition tool : tools) {
+                if (filter != null && !filter.contains(tool.name())) {
+                    continue;
+                }
                 Map<String, Object> toolMap = new LinkedHashMap<>();
                 toolMap.put("name", tool.name());
                 toolMap.put("description", tool.description());
@@ -177,6 +190,10 @@ public final class McpHttpServer {
             String name = (String) params.get("name");
             if (name == null) {
                 return errorResponse(id, -32602, "Invalid params: missing tool name");
+            }
+            Set<String> filter = enabledTools;
+            if (filter != null && !filter.contains(name)) {
+                return errorResponse(id, -32602, "Tool not enabled: " + name);
             }
             @SuppressWarnings("unchecked")
             Map<String, Object> arguments = (Map<String, Object>) params.getOrDefault("arguments", Map.of());

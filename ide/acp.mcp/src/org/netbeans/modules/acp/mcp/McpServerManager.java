@@ -21,6 +21,7 @@ package org.netbeans.modules.acp.mcp;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,5 +74,13 @@ public final class McpServerManager {
 
     public boolean isRunning() {
         return httpServer.isRunning();
+    }
+
+    public void setEnabledTools(Set<String> enabledTools) {
+        httpServer.setEnabledTools(enabledTools);
+    }
+
+    public McpToolRegistry getRegistry() {
+        return registry;
     }
 }

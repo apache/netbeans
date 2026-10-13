@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
@@ -40,6 +42,8 @@ import org.openide.windows.TopComponent;
 
 @ServiceProvider(service = McpToolProvider.class)
 public final class EditorToolProvider implements McpToolProvider {
+
+    private static final Logger LOG = Logger.getLogger(EditorToolProvider.class.getName());
 
     @Override
     public List<McpToolDefinition> getTools() {
@@ -80,12 +84,19 @@ public final class EditorToolProvider implements McpToolProvider {
 
     @Override
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
-        return switch (name) {
+        LOG.log(Level.FINE, "Executing editor tool: {0}", name);
+        Map<String, Object> result = switch (name) {
             case "get_current_file_context" -> getCurrentFileContext();
             case "get_tabs" -> getTabs();
             case "open_pos" -> openPos(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
+        if ("error".equals(result.get("status"))) {
+            LOG.log(Level.WARNING, "Editor tool {0} failed: {1}", new Object[]{name, result.get("message")});
+        } else {
+            LOG.log(Level.FINE, "Editor tool {0} succeeded", name);
+        }
+        return result;
     }
 
     private Map<String, Object> getCurrentFileContext() throws Exception {

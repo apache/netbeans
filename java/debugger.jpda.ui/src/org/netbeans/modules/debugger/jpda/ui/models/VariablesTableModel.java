@@ -20,8 +20,10 @@
 package org.netbeans.modules.debugger.jpda.ui.models;
 
 import com.sun.jdi.Value;
-import java.awt.Color;
 import java.io.InvalidObjectException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,25 +79,25 @@ import org.openide.util.NbBundle;
                                  position=750)
 })
 public class VariablesTableModel implements TableModel, Constants {
-    
-    private static final Map<Variable, Object> mirrors = new WeakHashMap<Variable, Object>();
-    private static final Map<Variable, String> values = new WeakHashMap<Variable, String>();
-    private static final Map<Variable, String> errorValueMsg = new WeakHashMap<Variable, String>();
-    private static final Map<Variable, String> errorToStringMsg = new WeakHashMap<Variable, String>();
-    private final Map<Variable, Value> origValues = new WeakHashMap<Variable, Value>();
+
+    private static final Map<Variable, Object> mirrors = new WeakHashMap<>();
+    private static final Map<Variable, String> values = new WeakHashMap<>();
+    private static final Map<Variable, String> errorValueMsg = new WeakHashMap<>();
+    private static final Map<Variable, String> errorToStringMsg = new WeakHashMap<>();
+    private final Map<Variable, Value> origValues = new WeakHashMap<>();
     private static final Set<Variable> checkReadOnlyMutables = Collections.newSetFromMap(new WeakHashMap<>());
-    
-    private JPDADebugger debugger;
-    private final List<ModelListener> modelListeners = new ArrayList<ModelListener>();
+
+    private final JPDADebugger debugger;
+    private final List<ModelListener> modelListeners = new ArrayList<>();
 
     public VariablesTableModel(ContextProvider contextProvider) {
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
     }
-    
+
     @Override
-    public Object getValueAt (Object row, String columnID) throws 
+    public Object getValueAt (Object row, String columnID) throws
     UnknownTypeException {
-        
+
         if ( LOCALS_TO_STRING_COLUMN_ID.equals (columnID) ||
              WATCH_TO_STRING_COLUMN_ID.equals (columnID)
         ) {
@@ -103,47 +105,46 @@ public class VariablesTableModel implements TableModel, Constants {
                 return "";
             else
 
-            if (row instanceof ObjectVariable)
+            if (row instanceof ObjectVariable objectVariable)
                 try {
-                    String toStr = ((ObjectVariable) row).getToStringValue ();
-                    setErrorToStringMsg((ObjectVariable) row, null);
+                    String toStr = objectVariable.getToStringValue ();
+                    setErrorToStringMsg(objectVariable, null);
                     return toStr;
                 } catch (InvalidExpressionException ex) {
                     String errorMsg = getMessage (ex);
-                    setErrorToStringMsg((ObjectVariable) row, errorMsg);
+                    setErrorToStringMsg(objectVariable, errorMsg);
                     return errorMsg;
                 }
             else
-            if (row instanceof Variable) {
-                return ((Variable) row).getValue ();
+            if (row instanceof Variable variable) {
+                return variable.getValue ();
             }
             if (row instanceof Operation ||
                 row == "lastOperations" || // NOI18N
                 row instanceof String && ((String) row).startsWith("operationArguments ")) { // NOI18N
-                
+
                 return ""; // NOI18N
             }
         } else
         if ( LOCALS_TYPE_COLUMN_ID.equals (columnID) ||
              WATCH_TYPE_COLUMN_ID.equals (columnID)
         ) {
-            if (row instanceof Variable)
-                return getShort (((Variable) row).getType ());
-            if (row instanceof javax.swing.JToolTip) {
-                row = ((javax.swing.JToolTip) row).getClientProperty("getShortDescription");
-                if (row instanceof Variable) {
+            if (row instanceof Variable variable)
+                return getShort (variable.getType ());
+            if (row instanceof javax.swing.JToolTip jToolTip) {
+                row = jToolTip.getClientProperty("getShortDescription");
+                if (row instanceof Variable variable) {
                     if (row instanceof Refreshable && !((Refreshable) row).isCurrent()) {
                         return "";
                     }
-                    return ((Variable) row).getType();
+                    return variable.getType();
                 }
             }
         } else
         if ( LOCALS_VALUE_COLUMN_ID.equals (columnID) ||
              WATCH_VALUE_COLUMN_ID.equals (columnID)
         ) {
-            if (row instanceof JPDAWatch) {
-                JPDAWatch w = (JPDAWatch) row;
+            if (row instanceof JPDAWatch w) {
                 String e = w.getExceptionDescription ();
                 if (e != null) {
                     setErrorValueMsg(w, e);
@@ -152,8 +153,7 @@ public class VariablesTableModel implements TableModel, Constants {
                     setErrorValueMsg(w, null);
                 }
             }
-            if (row instanceof Variable) {
-                Variable var = (Variable) row;
+            if (row instanceof Variable var) {
                 if (VariablesViewButtons.isShowValuePropertyEditors()) {
                     return getValueOf(var, row, columnID);
                 } else {
@@ -164,7 +164,7 @@ public class VariablesTableModel implements TableModel, Constants {
         if (row instanceof JPDAClassType) {
             return ""; // NOI18N
         }
-        if (row.toString().startsWith("SubArray")) { // NOI18N
+        if (row != null && row.toString().startsWith("SubArray")) { // NOI18N
             return ""; // NOI18N
         }
         if (row instanceof Operation ||
@@ -181,15 +181,16 @@ public class VariablesTableModel implements TableModel, Constants {
         }
         throw new UnknownTypeException (row);
     }
-    
+
     private Object getValueOf(Variable var, Object row, String columnID) {
-        if (var instanceof Refreshable) {
-            boolean current = ((Refreshable) var).isCurrent();
+        if (var instanceof Refreshable refreshable) {
+            boolean current = refreshable.isCurrent();
             if (!current) {
                 return var.getValue();
             }
         }
         if (ValuePropertyEditor.hasPropertyEditorFor(var)) {
+            assert var != null;
             Object mirror = var.createMirrorObject();
             synchronized (mirrors) {
                 if (mirror == null) {
@@ -203,10 +204,10 @@ public class VariablesTableModel implements TableModel, Constants {
                 values.put(var, var.getValue());
             }
         } else {
+            if(var == null) {
+                return null;
+            }
             return var.getValue();
-            /*synchronized (mirrors) {
-                values.put(var, var.getValue());
-            }*/
         }
         boolean isROCheck;
         synchronized (checkReadOnlyMutables) {
@@ -217,31 +218,25 @@ public class VariablesTableModel implements TableModel, Constants {
         }
         return var;
     }
-    
-    void setOrigValue(Variable var) {
-        synchronized (mirrors) {
-            origValues.put(var, ((JDIVariable) var).getJDIValue());
-        }
-    }
-    
+
     static Object getMirrorFor(Variable var) {
         synchronized (mirrors) {
             return mirrors.get(var);
         }
     }
-    
+
     static String getValueOf(Variable var) {
         synchronized (mirrors) {
             return values.get(var);
         }
     }
-    
+
     static String getErrorValueMsg(Variable v) {
         synchronized (errorValueMsg) {
             return errorValueMsg.get(v);
         }
     }
-    
+
     static void setErrorValueMsg(Variable v, String errorMsg) {
         synchronized (errorValueMsg) {
             if (errorMsg != null) {
@@ -251,13 +246,13 @@ public class VariablesTableModel implements TableModel, Constants {
             }
         }
     }
-    
+
     static String getErrorToStringMsg(Variable v) {
         synchronized (errorToStringMsg) {
             return errorToStringMsg.get(v);
         }
     }
-    
+
     static void setErrorToStringMsg(Variable v, String errorMsg) {
         synchronized (errorToStringMsg) {
             if (errorMsg != null) {
@@ -267,7 +262,7 @@ public class VariablesTableModel implements TableModel, Constants {
             }
         }
     }
-    
+
     static boolean isReadOnlyVar(Object row, JPDADebugger debugger) {
         if (row instanceof This)
             return true;
@@ -281,34 +276,33 @@ public class VariablesTableModel implements TableModel, Constants {
                     java.lang.reflect.Method getEvaluatedWatchMethod = row.getClass().getDeclaredMethod("getEvaluatedWatch");
                     getEvaluatedWatchMethod.setAccessible(true);
                     row = (JPDAWatch) getEvaluatedWatchMethod.invoke(row);
-                } catch (Exception ex) {
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            if (row instanceof JPDAWatch) {
-                JPDAWatch w = (JPDAWatch) row;
+            if (row instanceof JPDAWatch w) {
                 String e = w.getExceptionDescription ();
                 if (e != null) {
                     return true; // Errors are read only
                 }
             }
-            if (row instanceof MutableVariable) {
+            if (row instanceof MutableVariable mutableVariable) {
                 synchronized (checkReadOnlyMutables) {
-                    checkReadOnlyMutables.add((MutableVariable) row);
+                    checkReadOnlyMutables.add(mutableVariable);
                 }
                 Object mirror = getMirrorFor((Variable) row);
                 if (mirror != null) {
                     return false;
                 }
             }
-            if (row instanceof ObjectVariable) {
+            if (row instanceof ObjectVariable objectVariable) {
                 String declaredType;
-                if (row instanceof LocalVariable) {
-                    declaredType = ((LocalVariable) row).getDeclaredType();
-                } else if (row instanceof Field) {
-                    declaredType = ((Field) row).getDeclaredType();
+                if (row instanceof LocalVariable localVariable) {
+                    declaredType = localVariable.getDeclaredType();
+                } else if (row instanceof Field field) {
+                    declaredType = field.getDeclaredType();
                 } else {
-                    declaredType = ((ObjectVariable) row).getType();
+                    declaredType = objectVariable.getType();
                 }
                 // Allow to edit Strings
                 if (!"java.lang.String".equals(declaredType)) { // NOI18N
@@ -331,7 +325,7 @@ public class VariablesTableModel implements TableModel, Constants {
     }
 
     @Override
-    public boolean isReadOnly (Object row, String columnID) throws 
+    public boolean isReadOnly (Object row, String columnID) throws
     UnknownTypeException {
         if (row instanceof Variable) {
             if ( LOCALS_TO_STRING_COLUMN_ID.equals (columnID) ||
@@ -340,7 +334,7 @@ public class VariablesTableModel implements TableModel, Constants {
                  WATCH_TYPE_COLUMN_ID.equals (columnID)
             ) return true;
             if ( LOCALS_VALUE_COLUMN_ID.equals (columnID) ||
-                 WATCH_VALUE_COLUMN_ID.equals (columnID) 
+                 WATCH_VALUE_COLUMN_ID.equals (columnID)
             ) {
                 return isReadOnlyVar(row, debugger);
             }
@@ -348,7 +342,7 @@ public class VariablesTableModel implements TableModel, Constants {
         if (row instanceof JPDAClassType) {
             return true;
         }
-        if (row.toString().startsWith("SubArray")) {
+        if (row != null && row.toString().startsWith("SubArray")) {
             return true;
         }
         if (row instanceof Operation) {
@@ -362,11 +356,11 @@ public class VariablesTableModel implements TableModel, Constants {
         }
         throw new UnknownTypeException (row);
     }
-    
+
     @Override
-    public void setValueAt (Object row, String columnID, Object value) 
+    public void setValueAt (Object row, String columnID, Object value)
     throws UnknownTypeException {
-        if (row instanceof MutableVariable) {
+        if (row instanceof MutableVariable mutableVariable) {
             if ( LOCALS_VALUE_COLUMN_ID.equals (columnID) ||
                  WATCH_VALUE_COLUMN_ID.equals (columnID)
             ) {
@@ -389,27 +383,17 @@ public class VariablesTableModel implements TableModel, Constants {
                     }
                 }
                 try {
-                    if (value instanceof String) {
-                        ((MutableVariable) row).setValue((String) value);
-                    } else if (value instanceof ValuePropertyEditor.VariableWithMirror) {
-                        Object mirror = ((ValuePropertyEditor.VariableWithMirror) value).createMirrorObject();
-                        ((MutableVariable) row).setFromMirrorObject(mirror);
+                    if (value instanceof String string) {
+                        mutableVariable.setValue(string);
                     } else if (value instanceof Variable) {
                         return ; // Value is set already.
                     } else {
-                        ((MutableVariable) row).setFromMirrorObject(value);
+                        mutableVariable.setFromMirrorObject(value);
                     }
-                } catch (InvalidExpressionException e) {
-                    NotifyDescriptor.Message descriptor = 
+                } catch (InvalidExpressionException | InvalidObjectException e) {
+                    NotifyDescriptor.Message descriptor =
                         new NotifyDescriptor.Message (
-                            e.getLocalizedMessage (), 
-                            NotifyDescriptor.WARNING_MESSAGE
-                        );
-                    DialogDisplayer.getDefault ().notify (descriptor);
-                } catch (InvalidObjectException e) {
-                    NotifyDescriptor.Message descriptor = 
-                        new NotifyDescriptor.Message (
-                            e.getLocalizedMessage (), 
+                            e.getLocalizedMessage (),
                             NotifyDescriptor.WARNING_MESSAGE
                         );
                     DialogDisplayer.getDefault ().notify (descriptor);
@@ -417,60 +401,9 @@ public class VariablesTableModel implements TableModel, Constants {
                 return;
             }
         }
-        /*
-        if (row instanceof LocalVariable) {
-            if (LOCALS_VALUE_COLUMN_ID.equals (columnID)) {
-                try {
-                    ((LocalVariable) row).setValue ((String) value);
-                } catch (InvalidExpressionException e) {
-                    NotifyDescriptor.Message descriptor = 
-                        new NotifyDescriptor.Message (
-                            e.getLocalizedMessage (), 
-                            NotifyDescriptor.WARNING_MESSAGE
-                        );
-                    DialogDisplayer.getDefault ().notify (descriptor);
-                }
-                return;
-            }
-        }
-        if (row instanceof Field) {
-            if ( LOCALS_VALUE_COLUMN_ID.equals (columnID) ||
-                 WATCH_VALUE_COLUMN_ID.equals (columnID)
-            ) {
-                try {
-                    ((Field) row).setValue ((String) value);
-                } catch (InvalidExpressionException e) {
-                    NotifyDescriptor.Message descriptor = 
-                        new NotifyDescriptor.Message (
-                            e.getLocalizedMessage (), 
-                            NotifyDescriptor.WARNING_MESSAGE
-                        );
-                    DialogDisplayer.getDefault ().notify (descriptor);
-                }
-                return;
-            }
-        }
-        if (row instanceof JPDAWatch) {
-            if ( LOCALS_VALUE_COLUMN_ID.equals (columnID) ||
-                 WATCH_VALUE_COLUMN_ID.equals (columnID)
-            ) {
-                try {
-                    ((JPDAWatch) row).setValue ((String) value);
-                } catch (InvalidExpressionException e) {
-                    NotifyDescriptor.Message descriptor = 
-                        new NotifyDescriptor.Message (
-                            e.getLocalizedMessage (), 
-                            NotifyDescriptor.WARNING_MESSAGE
-                        );
-                    DialogDisplayer.getDefault ().notify (descriptor);
-                }
-                return;
-            }
-        }
-        */
         throw new UnknownTypeException (row);
     }
-    
+
     private static void setValueToVar(Variable var, Value value) {
         synchronized (mirrors) {
             mirrors.remove(var);
@@ -483,14 +416,14 @@ public class VariablesTableModel implements TableModel, Constants {
             if (pe != null) {
                 pe.setValue(var);
             }
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
 
-    /** 
+    /**
      * Registers given listener.
-     * 
+     *
      * @param l the listener to add
      */
     @Override
@@ -500,7 +433,7 @@ public class VariablesTableModel implements TableModel, Constants {
         }
     }
 
-    /** 
+    /**
      * Unregisters given listener.
      *
      * @param l the listener to remove
@@ -511,7 +444,7 @@ public class VariablesTableModel implements TableModel, Constants {
             modelListeners.remove(l);
         }
     }
-    
+
     protected void fireModelChange(ModelEvent me) {
         Object[] listeners;
         synchronized (modelListeners) {
@@ -527,7 +460,7 @@ public class VariablesTableModel implements TableModel, Constants {
         if (i < 0) return c;
         return c.substring (i + 1);
     }
-    
+
     static String getMessage (InvalidExpressionException e) {
         String m = e.getLocalizedMessage ();
         if (m == null) {
@@ -538,10 +471,10 @@ public class VariablesTableModel implements TableModel, Constants {
         }
         Throwable t = e.getTargetException();
         if (t != null && e.hasApplicationTarget()) {
-            java.io.StringWriter s = new java.io.StringWriter();
-            java.io.PrintWriter p = new java.io.PrintWriter(s);
-            t.printStackTrace(p);
-            p.close();
+            StringWriter s = new StringWriter();
+            try (PrintWriter p = new PrintWriter(s)) {
+                t.printStackTrace(p);
+            }
             m += " \n"+s.toString();
         }
         return m;

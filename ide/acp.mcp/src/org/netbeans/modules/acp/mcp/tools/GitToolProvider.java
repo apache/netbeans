@@ -222,17 +222,27 @@ public final class GitToolProvider implements McpToolProvider {
             if (!ProjectPathGuard.isInOpenProject(repoDir.trim())) {
                 return null;
             }
-            File dir = new File(repoDir.trim());
-            if (dir.isDirectory() && new File(dir, ".git").exists()) {
-                return dir;
-            }
-            return null;
+            return findGitRoot(new File(repoDir.trim()));
         }
         for (Project p : OpenProjects.getDefault().getOpenProjects()) {
             File projectDir = FileUtil.toFile(p.getProjectDirectory());
-            if (projectDir != null && new File(projectDir, ".git").exists()) {
-                return projectDir;
+            if (projectDir != null) {
+                File gitRoot = findGitRoot(projectDir);
+                if (gitRoot != null) {
+                    return gitRoot;
+                }
             }
+        }
+        return null;
+    }
+
+    private static File findGitRoot(File dir) {
+        File current = dir;
+        while (current != null) {
+            if (new File(current, ".git").exists()) {
+                return current;
+            }
+            current = current.getParentFile();
         }
         return null;
     }

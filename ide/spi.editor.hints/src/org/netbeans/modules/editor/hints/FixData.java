@@ -20,7 +20,6 @@
 package org.netbeans.modules.editor.hints;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -38,35 +37,33 @@ import org.netbeans.spi.editor.hints.LazyFixList;
 public class FixData extends CompoundLazyFixList {
 
     public FixData(LazyFixList errorFixes, LazyFixList otherFixes) {
-        super(Arrays.asList(errorFixes, otherFixes));
+        super(List.of(errorFixes, otherFixes));
     }
 
     public List<Fix> getSortedFixes() {
         LazyFixList errorFixes = delegates.get(0);
         LazyFixList otherFixes = delegates.get(1);
-        List<Fix> result = new LinkedList<Fix>();
+        List<Fix> result = new LinkedList<>();
         
-        result.addAll(sortFixes(new LinkedHashSet<Fix>(errorFixes.getFixes())));
-        result.addAll(sortFixes(new LinkedHashSet<Fix>(otherFixes.getFixes())));
+        result.addAll(sortFixes(new LinkedHashSet<>(errorFixes.getFixes())));
+        result.addAll(sortFixes(new LinkedHashSet<>(otherFixes.getFixes())));
         
         return result;
     }
 
     private List<Fix> sortFixes(Collection<Fix> fixes) {
-        List<Fix> result = new ArrayList<Fix>(fixes);
-
+        List<Fix> result = new ArrayList<>(fixes);
         result.sort(new FixComparator());
-
         return result;
     }
 
     private static final String DEFAULT_SORT_TEXT = "\uFFFF";
 
     private static CharSequence getSortText(Fix f) {
-        if (f instanceof EnhancedFix) {
-            return ((EnhancedFix) f).getSortText();
+        if (f instanceof EnhancedFix ef) {
+            return ef.getSortText();
         } else {
-            return DEFAULT_SORT_TEXT;
+            return DEFAULT_SORT_TEXT + f.getText();
         }
     }
     private static final class FixComparator implements Comparator<Fix> {

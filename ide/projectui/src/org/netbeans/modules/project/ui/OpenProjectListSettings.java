@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.project.ui;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.io.File;
 import java.util.prefs.Preferences;
+import javax.swing.JComponent;
 import javax.swing.filechooser.FileSystemView;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.openide.filesystems.FileUtil;
@@ -64,7 +66,7 @@ public class OpenProjectListSettings {
         return INSTANCE;
     }
     
-    protected final String putProperty(String key, String value, boolean notify) {
+    protected final String putProperty(String key, String value) {
         String retval = getProperty(key);
         if (value != null) {
             getPreferences().put(key, value);
@@ -82,7 +84,7 @@ public class OpenProjectListSettings {
         return getPreferences(true).get(key, null);
     }
     
-    private String putGroupedProperty(String key, String value, boolean notify) {
+    private String putGroupedProperty(String key, String value) {
         Preferences prefs = getPreferences(true);
         String retval = prefs.get(key, null);
         if (value != null) {
@@ -92,7 +94,27 @@ public class OpenProjectListSettings {
         }
         return retval;
     }
-    
+
+    /// Persists the current size of the given component.
+    /// note: class name is used as key - meant for specialized types.
+    public void storeComponentSize(JComponent component) {
+        Preferences prefs = getPreferences();
+        String prefix = component.getClass().getName();
+        prefs.put(prefix + ".width", String.valueOf(component.getWidth())); //NOI18N
+        prefs.put(prefix + ".height", String.valueOf(component.getHeight())); //NOI18N
+    }
+
+    /// Restores the previously stored component size as preferred size.
+    /// note: class name is used as key - meant for specialized types.
+    public void restoreComponentSize(JComponent component) {
+        Preferences prefs = getPreferences();
+        String prefix = component.getClass().getName();
+        try {
+            int width = Integer.parseInt(prefs.get(prefix + ".width", null)); //NOI18N
+            int height = Integer.parseInt(prefs.get(prefix + ".height", null)); //NOI18N
+            component.setPreferredSize(new Dimension(width, height));
+        } catch (IllegalArgumentException ignore) {}
+    }
     
     protected final List<URL> getURLList(String key, boolean allowGrouped) {
         List<String> strs = getStringList(key, allowGrouped);
@@ -262,7 +284,7 @@ public class OpenProjectListSettings {
         setMainProjectURL(mainProjectURL != null ? mainProjectURL.toString() : null);
     }
     public void setMainProjectURL(String mainProjectURL) {
-        putProperty(MAIN_PROJECT_URL, mainProjectURL, true);
+        putProperty(MAIN_PROJECT_URL, mainProjectURL);
     }
     
     public String getLastOpenProjectDir() {
@@ -274,7 +296,7 @@ public class OpenProjectListSettings {
     }
     
     public void setLastOpenProjectDir( String path ) {
-        putGroupedProperty( LAST_OPEN_PROJECT_DIR, path, true );
+        putGroupedProperty(LAST_OPEN_PROJECT_DIR, path);
     }
     
     public List<URL> getRecentProjectsURLs() {
@@ -345,10 +367,9 @@ public class OpenProjectListSettings {
 
     public void setProjectsFolder (File folder) {
         if (folder == null) {
-            putProperty(PROP_PROJECTS_FOLDER, (String)null, true);
-        }
-        else {
-            putProperty(PROP_PROJECTS_FOLDER, folder.getAbsolutePath(), true);
+            putProperty(PROP_PROJECTS_FOLDER, (String)null);
+        } else {
+            putProperty(PROP_PROJECTS_FOLDER, folder.getAbsolutePath());
         }
     }
     
@@ -365,7 +386,7 @@ public class OpenProjectListSettings {
     }
     
     public void setLastSelectedProjectCategory (String category) {
-        putGroupedProperty(PROP_PROJECT_CATEGORY,category,true);
+        putGroupedProperty(PROP_PROJECT_CATEGORY, category);
     }
     
     public String getLastSelectedProjectType () {
@@ -373,7 +394,7 @@ public class OpenProjectListSettings {
     }
     
     public void setLastSelectedProjectType (String type) {
-        putGroupedProperty(PROP_PROJECT_TYPE,type,true);
+        putGroupedProperty(PROP_PROJECT_TYPE, type);
     }
 
 }

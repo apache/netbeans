@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
 import org.netbeans.modules.acp.mcp.ProjectPathGuard;
 import org.netbeans.modules.acp.mcp.ToolResult;
+import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.SingleCopyRefactoring;
 import org.netbeans.modules.refactoring.api.MoveRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -163,16 +164,17 @@ public final class RefactoringToolProvider implements McpToolProvider {
     }
 
     private Map<String, Object> doRename(Map<String, Object> args) throws Exception {
-        String filePath = (String) args.get("filePath");
-        String newName = (String) args.get("newName");
-        if (filePath == null || filePath.isBlank()) {
+        String filePath = requireString(args, "filePath");
+        String newName = requireString(args, "newName");
+        if (filePath == null) {
             return ToolResult.error("filePath is required");
         }
-        if (newName == null || newName.isBlank()) {
+        if (newName == null) {
             return ToolResult.error("newName is required");
         }
-        if (!ProjectPathGuard.isInOpenProject(filePath)) {
-            return ProjectPathGuard.outsideProjectError(filePath);
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath);
+        if (guardError != null) {
+            return guardError;
         }
         FileObject fo = resolveFileObject(filePath);
         if (fo == null) {
@@ -186,66 +188,22 @@ public final class RefactoringToolProvider implements McpToolProvider {
         refactoring.setNewName(newName);
         refactoring.setSearchInComments(searchComments);
 
-        Problem preCheck = refactoring.preCheck();
-        String preCheckMsg = collectProblems(preCheck);
-        if (preCheck != null && preCheck.isFatal()) {
-            return ToolResult.error("Pre-check failed: " + preCheckMsg);
-        }
-
-        Problem paramCheck = refactoring.checkParameters();
-        String paramCheckMsg = collectProblems(paramCheck);
-        if (paramCheck != null && paramCheck.isFatal()) {
-            return ToolResult.error("Parameter check failed: " + paramCheckMsg);
-        }
-
-        RefactoringSession session = RefactoringSession.create("Rename " + fo.getNameExt() + " to " + newName);
-        Problem prepare = refactoring.prepare(session);
-        String prepareMsg = collectProblems(prepare);
-        if (prepare != null && prepare.isFatal()) {
-            return ToolResult.error("Prepare failed: " + prepareMsg);
-        }
-
-        Collection<RefactoringElement> elements = session.getRefactoringElements();
-        List<String> affectedFiles = collectAffectedFiles(elements);
-
-        Problem result = session.doRefactoring(true);
-        if (result != null && result.isFatal()) {
-            return ToolResult.error("Refactoring failed: " + collectProblems(result));
-        }
-
-        List<String> warnings = new ArrayList<>();
-        if (preCheckMsg != null) {
-            warnings.add(preCheckMsg);
-        }
-        if (paramCheckMsg != null) {
-            warnings.add(paramCheckMsg);
-        }
-        if (prepareMsg != null) {
-            warnings.add(prepareMsg);
-        }
-
-        Map<String, Object> out = ToolResult.ok("affectedFiles", affectedFiles,
-                "affectedCount", affectedFiles.size());
-        if (!warnings.isEmpty()) {
-            out.put("warnings", warnings);
-        }
-        return out;
+        return executeRefactoring(refactoring,
+                "Rename " + fo.getNameExt() + " to " + newName);
     }
 
     private Map<String, Object> doMove(Map<String, Object> args) throws Exception {
-        String filePath = (String) args.get("filePath");
-        String targetDir = (String) args.get("targetDirectory");
-        if (filePath == null || filePath.isBlank()) {
+        String filePath = requireString(args, "filePath");
+        String targetDir = requireString(args, "targetDirectory");
+        if (filePath == null) {
             return ToolResult.error("filePath is required");
         }
-        if (targetDir == null || targetDir.isBlank()) {
+        if (targetDir == null) {
             return ToolResult.error("targetDirectory is required");
         }
-        if (!ProjectPathGuard.isInOpenProject(filePath)) {
-            return ProjectPathGuard.outsideProjectError(filePath);
-        }
-        if (!ProjectPathGuard.isInOpenProject(targetDir)) {
-            return ProjectPathGuard.outsideProjectError(targetDir);
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath, targetDir);
+        if (guardError != null) {
+            return guardError;
         }
         FileObject fo = resolveFileObject(filePath);
         if (fo == null) {
@@ -267,49 +225,17 @@ public final class RefactoringToolProvider implements McpToolProvider {
         MoveRefactoring refactoring = new MoveRefactoring(lkp);
         refactoring.setTarget(Lookups.singleton(targetUrl));
 
-        Problem preCheck = refactoring.preCheck();
-        String preCheckMsg = collectProblems(preCheck);
-        if (preCheck != null && preCheck.isFatal()) {
-            return ToolResult.error("Pre-check failed: " + preCheckMsg);
-        }
-
-        Problem paramCheck = refactoring.checkParameters();
-        String paramCheckMsg = collectProblems(paramCheck);
-        if (paramCheck != null && paramCheck.isFatal()) {
-            return ToolResult.error("Parameter check failed: " + paramCheckMsg);
-        }
-
-        RefactoringSession session = RefactoringSession.create("Move " + fo.getNameExt());
-        Problem prepare = refactoring.prepare(session);
-        String prepareMsg = collectProblems(prepare);
-        if (prepare != null && prepare.isFatal()) {
-            return ToolResult.error("Prepare failed: " + prepareMsg);
-        }
-
-        Collection<RefactoringElement> elements = session.getRefactoringElements();
-        List<String> affectedFiles = collectAffectedFiles(elements);
-
-        Problem result = session.doRefactoring(true);
-        if (result != null && result.isFatal()) {
-            return ToolResult.error("Refactoring failed: " + collectProblems(result));
-        }
-
-        Map<String, Object> out = ToolResult.ok("affectedFiles", affectedFiles,
-                "affectedCount", affectedFiles.size());
-        List<String> warnings = collectWarnings(preCheckMsg, paramCheckMsg, prepareMsg);
-        if (!warnings.isEmpty()) {
-            out.put("warnings", warnings);
-        }
-        return out;
+        return executeRefactoring(refactoring, "Move " + fo.getNameExt());
     }
 
     private Map<String, Object> doSafeDelete(Map<String, Object> args) throws Exception {
-        String filePath = (String) args.get("filePath");
-        if (filePath == null || filePath.isBlank()) {
+        String filePath = requireString(args, "filePath");
+        if (filePath == null) {
             return ToolResult.error("filePath is required");
         }
-        if (!ProjectPathGuard.isInOpenProject(filePath)) {
-            return ProjectPathGuard.outsideProjectError(filePath);
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath);
+        if (guardError != null) {
+            return guardError;
         }
         FileObject fo = resolveFileObject(filePath);
         if (fo == null) {
@@ -376,12 +302,13 @@ public final class RefactoringToolProvider implements McpToolProvider {
     }
 
     private Map<String, Object> doFindUsages(Map<String, Object> args) throws Exception {
-        String filePath = (String) args.get("filePath");
-        if (filePath == null || filePath.isBlank()) {
+        String filePath = requireString(args, "filePath");
+        if (filePath == null) {
             return ToolResult.error("filePath is required");
         }
-        if (!ProjectPathGuard.isInOpenProject(filePath)) {
-            return ProjectPathGuard.outsideProjectError(filePath);
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath);
+        if (guardError != null) {
+            return guardError;
         }
         FileObject fo = resolveFileObject(filePath);
         if (fo == null) {
@@ -435,16 +362,17 @@ public final class RefactoringToolProvider implements McpToolProvider {
     }
 
     private Map<String, Object> doCopy(Map<String, Object> args) throws Exception {
-        String filePath = (String) args.get("filePath");
-        String newName = (String) args.get("newName");
-        if (filePath == null || filePath.isBlank()) {
+        String filePath = requireString(args, "filePath");
+        String newName = requireString(args, "newName");
+        if (filePath == null) {
             return ToolResult.error("filePath is required");
         }
-        if (newName == null || newName.isBlank()) {
+        if (newName == null) {
             return ToolResult.error("newName is required");
         }
-        if (!ProjectPathGuard.isInOpenProject(filePath)) {
-            return ProjectPathGuard.outsideProjectError(filePath);
+        Map<String, Object> guardError = ProjectPathGuard.requireInOpenProject(filePath);
+        if (guardError != null) {
+            return guardError;
         }
         FileObject fo = resolveFileObject(filePath);
         if (fo == null) {
@@ -454,8 +382,9 @@ public final class RefactoringToolProvider implements McpToolProvider {
         String targetDir = (String) args.get("targetDirectory");
         File target;
         if (targetDir != null && !targetDir.isBlank()) {
-            if (!ProjectPathGuard.isInOpenProject(targetDir)) {
-                return ProjectPathGuard.outsideProjectError(targetDir);
+            Map<String, Object> targetGuardError = ProjectPathGuard.requireInOpenProject(targetDir);
+            if (targetGuardError != null) {
+                return targetGuardError;
             }
             target = new File(targetDir);
         } else {
@@ -477,37 +406,92 @@ public final class RefactoringToolProvider implements McpToolProvider {
         refactoring.setNewName(newName);
         refactoring.setTarget(Lookups.singleton(targetUrl));
 
+        RefactoringResult rr = runRefactoring(refactoring,
+                "Copy " + fo.getNameExt() + " as " + newName);
+        if (rr.error != null) {
+            return rr.error;
+        }
+
+        String newFilePath = new File(target, newName + "." + fo.getExt()).getAbsolutePath();
+        Map<String, Object> out = ToolResult.ok("newFile", newFilePath);
+        if (!rr.warnings.isEmpty()) {
+            out.put("warnings", rr.warnings);
+        }
+        return out;
+    }
+
+    /**
+     * Executes a refactoring through the standard preCheck/paramCheck/prepare/doRefactoring
+     * pipeline and returns affected files with any non-fatal warnings.
+     */
+    private static Map<String, Object> executeRefactoring(AbstractRefactoring refactoring,
+            String sessionName) throws Exception {
+        RefactoringResult rr = runRefactoring(refactoring, sessionName);
+        if (rr.error != null) {
+            return rr.error;
+        }
+
+        Map<String, Object> out = ToolResult.ok("affectedFiles", rr.affectedFiles,
+                "affectedCount", rr.affectedFiles.size());
+        if (!rr.warnings.isEmpty()) {
+            out.put("warnings", rr.warnings);
+        }
+        return out;
+    }
+
+    private static RefactoringResult runRefactoring(AbstractRefactoring refactoring,
+            String sessionName) throws Exception {
         Problem preCheck = refactoring.preCheck();
         String preCheckMsg = collectProblems(preCheck);
         if (preCheck != null && preCheck.isFatal()) {
-            return ToolResult.error("Pre-check failed: " + preCheckMsg);
+            return RefactoringResult.fail("Pre-check failed: " + preCheckMsg);
         }
 
         Problem paramCheck = refactoring.checkParameters();
         String paramCheckMsg = collectProblems(paramCheck);
         if (paramCheck != null && paramCheck.isFatal()) {
-            return ToolResult.error("Parameter check failed: " + paramCheckMsg);
+            return RefactoringResult.fail("Parameter check failed: " + paramCheckMsg);
         }
 
-        RefactoringSession session = RefactoringSession.create("Copy " + fo.getNameExt() + " as " + newName);
+        RefactoringSession session = RefactoringSession.create(sessionName);
         Problem prepare = refactoring.prepare(session);
         String prepareMsg = collectProblems(prepare);
         if (prepare != null && prepare.isFatal()) {
-            return ToolResult.error("Prepare failed: " + prepareMsg);
+            return RefactoringResult.fail("Prepare failed: " + prepareMsg);
         }
+
+        Collection<RefactoringElement> elements = session.getRefactoringElements();
+        List<String> affectedFiles = collectAffectedFiles(elements);
 
         Problem result = session.doRefactoring(true);
         if (result != null && result.isFatal()) {
-            return ToolResult.error("Refactoring failed: " + collectProblems(result));
+            return RefactoringResult.fail("Refactoring failed: " + collectProblems(result));
         }
 
-        String newFilePath = new File(target, newName + "." + fo.getExt()).getAbsolutePath();
-        Map<String, Object> out = ToolResult.ok("newFile", newFilePath);
-        List<String> warnings = collectWarnings(preCheckMsg, paramCheckMsg, prepareMsg);
-        if (!warnings.isEmpty()) {
-            out.put("warnings", warnings);
+        return new RefactoringResult(null, affectedFiles,
+                collectWarnings(preCheckMsg, paramCheckMsg, prepareMsg));
+    }
+
+    private static final class RefactoringResult {
+        final Map<String, Object> error;
+        final List<String> affectedFiles;
+        final List<String> warnings;
+
+        RefactoringResult(Map<String, Object> error, List<String> affectedFiles,
+                List<String> warnings) {
+            this.error = error;
+            this.affectedFiles = affectedFiles;
+            this.warnings = warnings;
         }
-        return out;
+
+        static RefactoringResult fail(String message) {
+            return new RefactoringResult(ToolResult.error(message), List.of(), List.of());
+        }
+    }
+
+    private static String requireString(Map<String, Object> args, String key) {
+        String value = (String) args.get(key);
+        return (value != null && !value.isBlank()) ? value : null;
     }
 
     private static FileObject resolveFileObject(String path) {

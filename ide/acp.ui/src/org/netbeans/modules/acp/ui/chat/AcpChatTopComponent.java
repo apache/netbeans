@@ -228,7 +228,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             String projectName = HtmlUtils.extractProjectName(title);
             String projectDir = HtmlUtils.extractProjectDirectory(title);
             List<String> sourceRoots = HtmlUtils.extractSourceRoots(title);
-            if (projectName != null) {
+            String effectiveName = projectName != null ? projectName : "";
+            if (!effectiveName.isEmpty()) {
                 String agent = (String) agentSelector.getSelectedItem();
                 String workDir = projectDir != null ? projectDir
                         : currentWorkingDir != null ? currentWorkingDir : "";
@@ -237,7 +238,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 SwingUtilities.invokeLater(() -> setToolTipText(
                         Bundle.HINT_SessionContext(
                                 agent != null ? agent : "",
-                                projectName, workDir, roots)));
+                                effectiveName, workDir, roots)));
             }
         }
 
@@ -735,14 +736,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         List<AcpMcpServerProvider.ToolInfo> allTools = new ArrayList<>();
         java.util.Collection<? extends AcpMcpServerProvider> providers =
                 Lookup.getDefault().lookupAll(AcpMcpServerProvider.class);
-        LOG.log(Level.INFO, "MCP tool info: found {0} provider(s)", providers.size());
+        LOG.log(Level.FINE, "MCP tool info: found {0} provider(s)", providers.size());
         for (AcpMcpServerProvider provider : providers) {
             List<AcpMcpServerProvider.ToolInfo> tools = provider.getAvailableTools();
-            LOG.log(Level.INFO, "MCP tool info: {0} returned {1} tool(s)",
+            LOG.log(Level.FINE, "MCP tool info: {0} returned {1} tool(s)",
                     new Object[]{provider.getClass().getName(), tools.size()});
             allTools.addAll(tools);
         }
-        LOG.log(Level.INFO, "MCP tool info: total {0} tools", allTools.size());
+        LOG.log(Level.FINE, "MCP tool info: total {0} tools", allTools.size());
         return allTools;
     }
 

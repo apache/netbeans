@@ -360,7 +360,7 @@ public final class AcpConnection {
             String text = extractText(chunk.content());
             notifyListeners(l -> l.onAgentThought(sessionId, text));
         } else if (update instanceof AcpSchema.ToolCall tc) {
-            LOG.log(Level.INFO, "ToolCall: id={0}, name={1}, title={2}, kind={3}, status={4}, "
+            LOG.log(Level.FINE, "ToolCall: id={0}, name={1}, title={2}, kind={3}, status={4}, "
                     + "contentCount={5}, locationCount={6}",
                     new Object[]{tc.toolCallId(), tc.name(), tc.title(),
                         tc.kind(), tc.status(),
@@ -368,13 +368,13 @@ public final class AcpConnection {
                         tc.locations() != null ? tc.locations().size() : 0});
             if (tc.content() != null) {
                 for (AcpSchema.ToolCallContent tcc : tc.content()) {
-                    LOG.log(Level.INFO, "  ToolCall content type: {0}",
+                    LOG.log(Level.FINE, "  ToolCall content type: {0}",
                             tcc.getClass().getSimpleName());
                 }
             }
             if (tc.locations() != null) {
                 for (AcpSchema.ToolCallLocation loc : tc.locations()) {
-                    LOG.log(Level.INFO, "  ToolCall location: path={0}, line={1}",
+                    LOG.log(Level.FINE, "  ToolCall location: path={0}, line={1}",
                             new Object[]{loc.path(), loc.line()});
                 }
             }
@@ -383,7 +383,7 @@ public final class AcpConnection {
             snapshotFilesForToolCall(tc.toolCallId(), tc.kind(), tc.locations());
             notifyListeners(l -> l.onToolCall(sessionId, toolCall));
         } else if (update instanceof ToolCallUpdateNotification tcu) {
-            LOG.log(Level.INFO, "ToolCallUpdate: id={0}, name={1}, title={2}, kind={3}, status={4}, "
+            LOG.log(Level.FINE, "ToolCallUpdate: id={0}, name={1}, title={2}, kind={3}, status={4}, "
                     + "contentCount={5}, locationCount={6}",
                     new Object[]{tcu.toolCallId(), tcu.name(), tcu.title(),
                         tcu.kind(), tcu.status(),
@@ -391,26 +391,26 @@ public final class AcpConnection {
                         tcu.locations() != null ? tcu.locations().size() : 0});
             if (tcu.content() != null) {
                 for (AcpSchema.ToolCallContent tcc : tcu.content()) {
-                    LOG.log(Level.INFO, "  ToolCallUpdate content type: {0}",
+                    LOG.log(Level.FINE, "  ToolCallUpdate content type: {0}",
                             tcc.getClass().getSimpleName());
                 }
             }
             if (tcu.locations() != null) {
                 for (AcpSchema.ToolCallLocation loc : tcu.locations()) {
-                    LOG.log(Level.INFO, "  ToolCallUpdate location: path={0}, line={1}",
+                    LOG.log(Level.FINE, "  ToolCallUpdate location: path={0}, line={1}",
                             new Object[]{loc.path(), loc.line()});
                 }
             }
             if (!fileSnapshots.containsKey(tcu.toolCallId())) {
-                LOG.log(Level.INFO, "  No snapshot yet for {0}, attempting late snapshot", tcu.toolCallId());
+                LOG.log(Level.FINE, "  No snapshot yet for {0}, attempting late snapshot", tcu.toolCallId());
                 snapshotFilesForToolCall(tcu.toolCallId(), tcu.kind(), tcu.locations());
             }
             AcpToolCall toolCall = buildToolCall(tcu.toolCallId(), tcu.title(), tcu.name(),
                     tcu.kind(), tcu.status(), tcu.content(), tcu.locations());
-            LOG.log(Level.INFO, "  Built AcpToolCall: diffs={0}, hasTextContent={1}",
+            LOG.log(Level.FINE, "  Built AcpToolCall: diffs={0}, hasTextContent={1}",
                     new Object[]{toolCall.getDiffs().size(), toolCall.getTextContent() != null});
             if (toolCall.getDiffs().isEmpty()) {
-                LOG.log(Level.INFO, "  No SDK diffs, trying snapshot-based diff emission");
+                LOG.log(Level.FINE, "  No SDK diffs, trying snapshot-based diff emission");
                 emitDiffsFromSnapshots(sessionId, tcu.toolCallId(), tcu.status(), tcu.locations());
             }
             notifyListeners(l -> l.onToolCallUpdate(sessionId, toolCall));
@@ -445,7 +445,7 @@ public final class AcpConnection {
             String updatedAt = siu.updatedAt();
             notifyListeners(l -> l.onSessionInfo(sessionId, title, updatedAt));
         } else {
-            LOG.log(Level.INFO, "Unhandled session update type: {0}", // NOI18N
+            LOG.log(Level.FINE, "Unhandled session update type: {0}", // NOI18N
                     update != null ? update.getClass().getName() : "null"); // NOI18N
         }
     }
@@ -517,11 +517,11 @@ public final class AcpConnection {
             AcpSchema.ToolKind kind,
             List<AcpSchema.ToolCallLocation> locations) {
         if (!isWriteKind(kind)) {
-            LOG.log(Level.INFO, "  snapshot skip: kind={0} is not a write kind", kind);
+            LOG.log(Level.FINE, "  snapshot skip: kind={0} is not a write kind", kind);
             return;
         }
         if (locations == null || locations.isEmpty()) {
-            LOG.log(Level.INFO, "  snapshot skip: no locations for toolCallId={0}", toolCallId);
+            LOG.log(Level.FINE, "  snapshot skip: no locations for toolCallId={0}", toolCallId);
             return;
         }
         Map<String, String> snapshots = new ConcurrentHashMap<>();
@@ -532,10 +532,10 @@ public final class AcpConnection {
                     if (Files.exists(p) && Files.isRegularFile(p)) {
                         String content = Files.readString(p);
                         snapshots.put(loc.path(), content);
-                        LOG.log(Level.INFO, "  snapshot captured: {0} ({1} chars)",
+                        LOG.log(Level.FINE, "  snapshot captured: {0} ({1} chars)",
                                 new Object[]{loc.path(), content.length()});
                     } else {
-                        LOG.log(Level.INFO, "  snapshot: file not found or not regular: {0}", loc.path());
+                        LOG.log(Level.FINE, "  snapshot: file not found or not regular: {0}", loc.path());
                     }
                 } catch (IOException ex) {
                     LOG.log(Level.WARNING, "Could not snapshot file: " + loc.path(), ex); // NOI18N
@@ -544,11 +544,11 @@ public final class AcpConnection {
         }
         if (!snapshots.isEmpty()) {
             fileSnapshots.put(toolCallId, snapshots);
-            storedLocations.put(toolCallId, new ArrayList<>(locations));
-            LOG.log(Level.INFO, "  snapshots stored for {0}: {1} file(s)",
+            storedLocations.put(toolCallId, List.copyOf(locations));
+            LOG.log(Level.FINE, "  snapshots stored for {0}: {1} file(s)",
                     new Object[]{toolCallId, snapshots.size()});
         } else {
-            LOG.log(Level.INFO, "  no snapshots captured for {0}", toolCallId);
+            LOG.log(Level.FINE, "  no snapshots captured for {0}", toolCallId);
         }
     }
 
@@ -556,7 +556,7 @@ public final class AcpConnection {
             AcpSchema.ToolCallStatus status,
             List<AcpSchema.ToolCallLocation> locations) {
         if (status == null || !AcpToolCall.STATUS_COMPLETED.equals(status.value())) {
-            LOG.log(Level.INFO, "  emitDiffs skip: status={0} (need completed)",
+            LOG.log(Level.FINE, "  emitDiffs skip: status={0} (need completed)",
                     status != null ? status.value() : "null");
             return;
         }
@@ -564,14 +564,14 @@ public final class AcpConnection {
         List<AcpSchema.ToolCallLocation> effectiveLocations = locations;
         if ((effectiveLocations == null || effectiveLocations.isEmpty())) {
             effectiveLocations = storedLocations.get(toolCallId);
-            LOG.log(Level.INFO, "  emitDiffs: update had no locations, using stored={0}",
+            LOG.log(Level.FINE, "  emitDiffs: update had no locations, using stored={0}",
                     effectiveLocations != null ? effectiveLocations.size() : 0);
         }
         storedLocations.remove(toolCallId);
-        LOG.log(Level.INFO, "  emitDiffs: hasSnapshots={0}, locationCount={1}",
+        LOG.log(Level.FINE, "  emitDiffs: hasSnapshots={0}, locationCount={1}",
                 new Object[]{snapshots != null, effectiveLocations != null ? effectiveLocations.size() : 0});
         if (effectiveLocations == null || effectiveLocations.isEmpty()) {
-            LOG.log(Level.INFO, "  emitDiffs skip: no locations");
+            LOG.log(Level.FINE, "  emitDiffs skip: no locations");
             return;
         }
         for (AcpSchema.ToolCallLocation loc : effectiveLocations) {
@@ -584,15 +584,15 @@ public final class AcpConnection {
                 if (Files.exists(p) && Files.isRegularFile(p)) {
                     String newContent = Files.readString(p);
                     boolean changed = !Objects.equals(oldContent, newContent);
-                    LOG.log(Level.INFO, "  emitDiffs: path={0}, hasOld={1}, newLen={2}, changed={3}",
+                    LOG.log(Level.FINE, "  emitDiffs: path={0}, hasOld={1}, newLen={2}, changed={3}",
                             new Object[]{loc.path(), oldContent != null, newContent.length(), changed});
                     if (changed) {
                         String path = loc.path();
                         notifyListeners(l -> l.onFileWritten(sessionId, path, oldContent, newContent));
-                        LOG.log(Level.INFO, "  emitDiffs: fired onFileWritten for {0}", path);
+                        LOG.log(Level.FINE, "  emitDiffs: fired onFileWritten for {0}", path);
                     }
                 } else {
-                    LOG.log(Level.INFO, "  emitDiffs: file not found or not regular: {0}", loc.path());
+                    LOG.log(Level.FINE, "  emitDiffs: file not found or not regular: {0}", loc.path());
                 }
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Could not read file for diff: " + loc.path(), ex); // NOI18N
@@ -652,7 +652,7 @@ public final class AcpConnection {
     }
 
     private AcpSchema.WriteTextFileResponse handleWriteTextFile(AcpSchema.WriteTextFileRequest request) {
-        LOG.log(Level.INFO, "writeTextFileHandler CALLED: path={0}", request.path());
+        LOG.log(Level.FINE, "writeTextFileHandler called: path={0}", request.path());
         Path filePath = Path.of(request.path());
         String sessionId = request.sessionId();
         String writtenPath = request.path();

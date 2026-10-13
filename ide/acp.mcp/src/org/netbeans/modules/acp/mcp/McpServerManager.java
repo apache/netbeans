@@ -22,6 +22,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +33,7 @@ public final class McpServerManager {
 
     private final McpToolRegistry registry;
     private final McpHttpServer httpServer;
+    private final AtomicReference<Set<String>> pendingEnabledTools = new AtomicReference<>();
 
     private McpServerManager() {
         this.registry = McpToolRegistry.getInstance();
@@ -56,20 +58,30 @@ public final class McpServerManager {
         httpServer.stop();
     }
 
-    public AcpSchema.McpServer toAcpMcpServer() {
+    public void setEnabledTools(Set<String> enabledTools) {
+        pendingEnabledTools.set(enabledTools);
+        LOG.log(Level.INFO, "MCP tools staged for next session: {0}",
+                enabledTools != null ? enabledTools : "all");
+    }
+
+    public AcpSchema.McpServer createSession() {
         ensureRunning();
         if (!httpServer.isRunning()) {
             return null;
         }
-        String token = httpServer.getBearerToken();
-        List<AcpSchema.HttpHeader> headers = token != null
-                ? List.of(new AcpSchema.HttpHeader("Authorization", "Bearer " + token))
-                : List.of();
+        Set<String> tools = pendingEnabledTools.getAndSet(null);
+        String token = httpServer.createSessionToken(tools);
+        List<AcpSchema.HttpHeader> headers = List.of(
+                new AcpSchema.HttpHeader("Authorization", "Bearer " + token));
         return new AcpSchema.McpServerHttp(
                 "netbeans-ide",
                 httpServer.getUrl(),
                 headers
         );
+    }
+
+    public void removeSession(String bearerToken) {
+        httpServer.removeSessionToken(bearerToken);
     }
 
     public String getUrl() {
@@ -78,10 +90,6 @@ public final class McpServerManager {
 
     public boolean isRunning() {
         return httpServer.isRunning();
-    }
-
-    public void setEnabledTools(Set<String> enabledTools) {
-        httpServer.setEnabledTools(enabledTools);
     }
 
     public McpToolRegistry getRegistry() {

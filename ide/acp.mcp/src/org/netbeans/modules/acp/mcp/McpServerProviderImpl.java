@@ -34,7 +34,7 @@ public final class McpServerProviderImpl implements AcpMcpServerProvider {
     @Override
     public List<AcpSchema.McpServer> getMcpServers() {
         McpServerManager manager = McpServerManager.getInstance();
-        AcpSchema.McpServer server = manager.toAcpMcpServer();
+        AcpSchema.McpServer server = manager.createSession();
         if (server == null) {
             LOG.log(Level.WARNING, "MCP server could not be started");
             return List.of();

@@ -40,7 +40,9 @@ import org.openide.windows.WindowManager;
  */
 @NbBundle.Messages({
     "TTL_DiffOld=Original",
-    "TTL_DiffNew=Modified"
+    "TTL_DiffNew=Modified",
+    "TTL_DiffTab=Diff: {0}",
+    "LBL_UnknownFile=unknown"
 })
 public final class AcpDiffViewer {
 
@@ -52,7 +54,7 @@ public final class AcpDiffViewer {
     public static void showDiff(AcpToolCall.DiffContent diff) {
         SwingUtilities.invokeLater(() -> {
             try {
-                String fileName = diff.path() != null ? diff.path() : "unknown";
+                String fileName = diff.path() != null ? diff.path() : Bundle.LBL_UnknownFile();
                 String mimeType = guessMimeType(fileName);
 
                 StreamSource oldSource = new StringStreamSource(
@@ -69,7 +71,7 @@ public final class AcpDiffViewer {
                     {
                         setLayout(new java.awt.BorderLayout());
                         add(diffComponent, java.awt.BorderLayout.CENTER);
-                        setDisplayName("Diff: " + extractFileName(fileName));
+                        setDisplayName(Bundle.TTL_DiffTab(extractFileName(fileName)));
                     }
                 };
 

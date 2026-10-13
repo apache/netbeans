@@ -28,7 +28,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +46,16 @@ public final class McpHttpServer {
     private static final Logger LOG = Logger.getLogger(McpHttpServer.class.getName());
     private static final String MCP_PROTOCOL_VERSION = "2025-03-26";
     private static final String SERVER_NAME = "netbeans-ide";
+    private static final int TOKEN_BYTES = 32;
+    private static final Set<String> ALLOWED_ORIGINS = Set.of(
+            "http://127.0.0.1", "http://localhost");
 
     private final McpToolRegistry registry;
     private final ObjectMapper mapper;
     private HttpServer server;
     private ExecutorService executor;
     private int port;
+    private String bearerToken;
     private volatile Set<String> enabledTools;
 
     public McpHttpServer(McpToolRegistry registry) {
@@ -67,6 +73,9 @@ public final class McpHttpServer {
         if (server != null) {
             return;
         }
+        byte[] tokenBytes = new byte[TOKEN_BYTES];
+        new SecureRandom().nextBytes(tokenBytes);
+        bearerToken = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/mcp", new McpHandler());
         executor = Executors.newCachedThreadPool(r -> {
@@ -97,8 +106,13 @@ public final class McpHttpServer {
                 executor = null;
             }
             port = 0;
+            bearerToken = null;
             LOG.info("MCP server stopped");
         }
+    }
+
+    public synchronized String getBearerToken() {
+        return bearerToken;
     }
 
     public synchronized int getPort() {
@@ -119,6 +133,9 @@ public final class McpHttpServer {
         public void handle(HttpExchange exchange) throws IOException {
             if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
                 sendError(exchange, 405, "Method not allowed");
+                return;
+            }
+            if (!validateRequest(exchange)) {
                 return;
             }
             byte[] body;
@@ -144,6 +161,39 @@ public final class McpHttpServer {
                 LOG.log(Level.WARNING, "MCP handler error", ex);
                 sendJson(exchange, 200, errorResponse(null, -32603, "Internal error"));
             }
+        }
+
+        private boolean validateRequest(HttpExchange exchange) throws IOException {
+            String auth = exchange.getRequestHeaders().getFirst("Authorization");
+            if (auth == null || !auth.equals("Bearer " + bearerToken)) {
+                sendError(exchange, 401, "Unauthorized");
+                return false;
+            }
+            String host = exchange.getRequestHeaders().getFirst("Host");
+            if (host != null) {
+                String hostOnly = host.contains(":") ? host.substring(0, host.indexOf(':')) : host;
+                if (!"127.0.0.1".equals(hostOnly) && !"localhost".equals(hostOnly)) {
+                    LOG.log(Level.WARNING, "MCP request rejected: unexpected Host header: {0}", host);
+                    sendError(exchange, 403, "Forbidden");
+                    return false;
+                }
+            }
+            String origin = exchange.getRequestHeaders().getFirst("Origin");
+            if (origin != null) {
+                boolean allowed = ALLOWED_ORIGINS.stream()
+                        .anyMatch(o -> origin.equals(o) || origin.startsWith(o + ":"));
+                if (!allowed) {
+                    LOG.log(Level.WARNING, "MCP request rejected: unexpected Origin header: {0}", origin);
+                    sendError(exchange, 403, "Forbidden");
+                    return false;
+                }
+            }
+            String contentType = exchange.getRequestHeaders().getFirst("Content-Type");
+            if (contentType == null || !contentType.startsWith("application/json")) {
+                sendError(exchange, 415, "Unsupported Media Type");
+                return false;
+            }
+            return true;
         }
 
         private Map<String, Object> handleJsonRpc(Map<String, Object> request) throws Exception {

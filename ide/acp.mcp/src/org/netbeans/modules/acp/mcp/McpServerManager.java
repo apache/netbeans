@@ -61,10 +61,14 @@ public final class McpServerManager {
         if (!httpServer.isRunning()) {
             return null;
         }
+        String token = httpServer.getBearerToken();
+        List<AcpSchema.HttpHeader> headers = token != null
+                ? List.of(new AcpSchema.HttpHeader("Authorization", "Bearer " + token))
+                : List.of();
         return new AcpSchema.McpServerHttp(
                 "netbeans-ide",
                 httpServer.getUrl(),
-                List.of()
+                headers
         );
     }
 

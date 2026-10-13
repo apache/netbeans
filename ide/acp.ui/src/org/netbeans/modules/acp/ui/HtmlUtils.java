@@ -30,4 +30,49 @@ public final class HtmlUtils {
         return text.replace("&", "&amp;").replace("<", "&lt;")
                 .replace(">", "&gt;").replace("\"", "&quot;");
     }
+
+    public static String extractProjectName(String text) {
+        if (text == null) {
+            return null;
+        }
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("Project name[*]*:\\s*[*]*(.+?)(?:\\*|$)",
+                        java.util.regex.Pattern.MULTILINE)
+                .matcher(text);
+        if (m.find()) {
+            return m.group(1).trim();
+        }
+        return null;
+    }
+
+    public static String extractProjectDirectory(String text) {
+        if (text == null) {
+            return null;
+        }
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("Project directory[*]*:\\s*[*]*(.+?)(?:\\*|$)",
+                        java.util.regex.Pattern.MULTILINE)
+                .matcher(text);
+        if (m.find()) {
+            return m.group(1).trim();
+        }
+        return null;
+    }
+
+    public static java.util.List<String> extractSourceRoots(String text) {
+        if (text == null) {
+            return java.util.List.of();
+        }
+        java.util.List<String> roots = new java.util.ArrayList<>();
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("^\\s+-\\s+`(.+?)`(?:\\s+\\((.+?)\\))?",
+                        java.util.regex.Pattern.MULTILINE)
+                .matcher(text);
+        while (m.find()) {
+            String path = m.group(1).trim();
+            String name = m.group(2);
+            roots.add(name != null ? path + " (" + name.trim() + ")" : path);
+        }
+        return roots;
+    }
 }

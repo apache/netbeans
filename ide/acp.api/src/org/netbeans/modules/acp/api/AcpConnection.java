@@ -35,6 +35,8 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.SessionNotification;
 import com.agentclientprotocol.sdk.spec.AcpSchema.SessionUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
+import com.agentclientprotocol.sdk.spec.AcpSchema.AvailableCommandsUpdate;
+import com.agentclientprotocol.sdk.spec.AcpSchema.SessionInfoUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.UsageUpdate;
 import java.io.IOException;
 import java.net.URI;
@@ -424,6 +426,24 @@ public final class AcpConnection {
             long used = usage.used() != null ? usage.used() : 0;
             long size = usage.size() != null ? usage.size() : 0;
             notifyListeners(l -> l.onUsageUpdate(sessionId, used, size));
+        } else if (update instanceof AvailableCommandsUpdate acu) {
+            List<AcpCommand> commands = new ArrayList<>();
+            if (acu.availableCommands() != null) {
+                for (AcpSchema.AvailableCommand ac : acu.availableCommands()) {
+                    commands.add(new AcpCommand(ac.name(), ac.description()));
+                }
+            }
+            LOG.log(Level.INFO, "Agent available commands: {0}",
+                    commands.stream().map(AcpCommand::name)
+                            .collect(java.util.stream.Collectors.joining(", ")));
+            List<AcpCommand> unmodifiable = List.copyOf(commands);
+            notifyListeners(l -> l.onAvailableCommands(sessionId, unmodifiable));
+        } else if (update instanceof SessionInfoUpdate siu) {
+            LOG.log(Level.INFO, "Session info: title={0}, updatedAt={1}",
+                    new Object[]{siu.title(), siu.updatedAt()});
+            String title = siu.title();
+            String updatedAt = siu.updatedAt();
+            notifyListeners(l -> l.onSessionInfo(sessionId, title, updatedAt));
         } else {
             LOG.log(Level.INFO, "Unhandled session update type: {0}", // NOI18N
                     update != null ? update.getClass().getName() : "null"); // NOI18N

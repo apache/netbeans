@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -209,16 +210,25 @@ final class AcpAgentConfigPanel extends JPanel {
         toolsPanel.setLayout(new BoxLayout(toolsPanel, BoxLayout.Y_AXIS));
         McpToolRegistry registry = McpToolRegistry.getInstance();
         Set<String> existingEnabled = existing != null ? existing.getEnabledTools() : null;
-        for (McpToolProvider.McpToolDefinition tool : registry.getAllAvailableTools()) {
-            JCheckBox cb = new JCheckBox(tool.name());
-            cb.setToolTipText(tool.description());
-            if (existingEnabled != null) {
-                cb.setSelected(existingEnabled.contains(tool.name()));
-            } else {
-                cb.setSelected(registry.isToolEnabledByDefault(tool.name()));
+        Map<String, List<McpToolProvider.McpToolDefinition>> toolsByProvider =
+                registry.getToolsByProvider();
+        for (Map.Entry<String, List<McpToolProvider.McpToolDefinition>> group
+                : toolsByProvider.entrySet()) {
+            JLabel groupLabel = new JLabel(group.getKey());
+            groupLabel.setFont(groupLabel.getFont().deriveFont(java.awt.Font.BOLD));
+            groupLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 2, 0));
+            toolsPanel.add(groupLabel);
+            for (McpToolProvider.McpToolDefinition tool : group.getValue()) {
+                JCheckBox cb = new JCheckBox(tool.name());
+                cb.setToolTipText(tool.description());
+                if (existingEnabled != null) {
+                    cb.setSelected(existingEnabled.contains(tool.name()));
+                } else {
+                    cb.setSelected(registry.isToolEnabledByDefault(tool.name()));
+                }
+                toolCheckBoxes.add(cb);
+                toolsPanel.add(cb);
             }
-            toolCheckBoxes.add(cb);
-            toolsPanel.add(cb);
         }
         JScrollPane toolsScroll = new JScrollPane(toolsPanel);
         toolsScroll.setPreferredSize(new java.awt.Dimension(0, 120));

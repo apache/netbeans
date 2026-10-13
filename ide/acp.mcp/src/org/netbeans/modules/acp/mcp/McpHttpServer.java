@@ -118,7 +118,7 @@ public final class McpHttpServer {
                 sendJson(exchange, 200, errorResponse(null, -32700, "Parse error"));
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "MCP handler error", ex);
-                sendJson(exchange, 200, errorResponse(null, -32603, "Internal error: " + ex.getMessage()));
+                sendJson(exchange, 200, errorResponse(null, -32603, "Internal error"));
             }
         }
 
@@ -191,14 +191,15 @@ public final class McpHttpServer {
                 }
                 Map<String, Object> result = new LinkedHashMap<>();
                 result.put("content", content);
-                result.put("isError", toolResult.containsKey("error"));
+                result.put("isError", "error".equals(toolResult.get("status")));
                 return successResponse(id, result);
             } catch (IllegalArgumentException ex) {
                 return errorResponse(id, -32602, ex.getMessage());
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Tool execution failed: " + name, ex);
                 List<Map<String, Object>> content = List.of(
-                        Map.of("type", "text", "text", "Error: " + ex.getMessage()));
+                        Map.of("type", "text", "text",
+                                "Error (" + ex.getClass().getSimpleName() + "): " + ex.getMessage()));
                 Map<String, Object> result = new LinkedHashMap<>();
                 result.put("content", content);
                 result.put("isError", true);

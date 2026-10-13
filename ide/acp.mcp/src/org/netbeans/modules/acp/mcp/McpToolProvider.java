@@ -27,6 +27,16 @@ public interface McpToolProvider {
 
     Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception;
 
+    /**
+     * Whether this provider's tools are included by default.
+     * Providers returning {@code false} are skipped unless explicitly
+     * enabled. Override to {@code false} for tools that overlap with
+     * capabilities agents typically have built in (e.g. file I/O, git).
+     */
+    default boolean isEnabledByDefault() {
+        return true;
+    }
+
     record McpToolDefinition(String name, String description, Map<String, Object> inputSchema) {
     }
 }

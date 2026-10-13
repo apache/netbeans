@@ -49,7 +49,6 @@ public final class ProjectPathGuard {
     }
 
     public static Map<String, Object> outsideProjectError(String path) {
-        return Map.of("status", "error", "message",
-                "Path is outside any open project: " + path);
+        return ToolResult.error("Path is outside any open project: " + path);
     }
 }

@@ -18,10 +18,8 @@
  */
 package org.netbeans.modules.acp.mcp.tools;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -30,10 +28,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -42,6 +38,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
 import org.netbeans.modules.acp.mcp.ProjectPathGuard;
+import org.netbeans.modules.acp.mcp.ToolResult;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -49,6 +46,11 @@ import org.openide.util.lookup.ServiceProvider;
 public final class FileSystemToolProvider implements McpToolProvider {
 
     private static final Logger LOG = Logger.getLogger(FileSystemToolProvider.class.getName());
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
 
     @Override
     public List<McpToolDefinition> getTools() {
@@ -151,20 +153,6 @@ public final class FileSystemToolProvider implements McpToolProvider {
                 )
         ));
 
-        tools.add(new McpToolDefinition(
-                "run_command",
-                "Execute a shell command. Returns stdout, stderr, and exit code.",
-                Map.of(
-                        "type", "object",
-                        "properties", Map.of(
-                                "command", Map.of("type", "string", "description", "Shell command to execute"),
-                                "workingDirectory", Map.of("type", "string", "description", "Working directory for the command"),
-                                "timeoutSeconds", Map.of("type", "integer", "description", "Timeout in seconds", "default", 120)
-                        ),
-                        "required", List.of("command")
-                )
-        ));
-
         return tools;
     }
 
@@ -178,7 +166,6 @@ public final class FileSystemToolProvider implements McpToolProvider {
             case "delete_lines" -> deleteLines(arguments);
             case "search_project" -> searchProject(arguments);
             case "list_directory" -> listDirectory(arguments);
-            case "run_command" -> runCommand(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
     }
@@ -202,22 +189,19 @@ public final class FileSystemToolProvider implements McpToolProvider {
                 sb.append("\n");
             }
         }
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("status", "ok");
-        result.put("content", sb.toString());
-        result.put("totalLines", lines.size());
-        result.put("linesReturned", end - start + 1);
-        return result;
+        int linesReturned = (start > end) ? 0 : end - start + 1;
+        return ToolResult.ok("content", sb.toString(),
+                "totalLines", lines.size(), "linesReturned", linesReturned);
     }
 
     private Map<String, Object> writeToFile(Map<String, Object> args) throws Exception {
         String filePath = (String) args.get("filePath");
         String content = (String) args.get("content");
         if (filePath == null || filePath.isBlank()) {
-            return Map.of("status", "error", "message", "filePath is required");
+            return ToolResult.error("filePath is required");
         }
         if (content == null) {
-            return Map.of("status", "error", "message", "content is required");
+            return ToolResult.error("content is required");
         }
         if (!ProjectPathGuard.isInOpenProject(filePath)) {
             return ProjectPathGuard.outsideProjectError(filePath);
@@ -228,7 +212,7 @@ public final class FileSystemToolProvider implements McpToolProvider {
             parent.mkdirs();
         }
         Files.writeString(file.toPath(), content, StandardCharsets.UTF_8);
-        return Map.of("status", "ok", "bytesWritten", content.length());
+        return ToolResult.ok("bytesWritten", content.length());
     }
 
     private Map<String, Object> replaceLines(Map<String, Object> args) throws Exception {
@@ -238,11 +222,14 @@ public final class FileSystemToolProvider implements McpToolProvider {
             return err;
         }
         File file = new File(filePath);
-        List<String> lines = new ArrayList<>(Files.readAllLines(file.toPath(), StandardCharsets.UTF_8));
+        byte[] raw = Files.readAllBytes(file.toPath());
+        String rawContent = new String(raw, StandardCharsets.UTF_8);
+        String separator = rawContent.contains("\r\n") ? "\r\n" : "\n";
+        List<String> lines = new ArrayList<>(List.of(rawContent.split("\\r?\\n", -1)));
         int start = Math.max(1, ((Number) args.get("startLine")).intValue());
         int end = Math.min(lines.size(), ((Number) args.get("endLine")).intValue());
         if (start > end) {
-            return Map.of("status", "error", "message", "startLine > endLine");
+            return ToolResult.error("startLine > endLine");
         }
         String content = (String) args.get("content");
         String[] replacementLines = content.split("\n", -1);
@@ -250,8 +237,8 @@ public final class FileSystemToolProvider implements McpToolProvider {
         for (int i = replacementLines.length - 1; i >= 0; i--) {
             lines.add(start - 1, replacementLines[i]);
         }
-        Files.writeString(file.toPath(), String.join("\n", lines), StandardCharsets.UTF_8);
-        return Map.of("status", "ok", "linesReplaced", end - start + 1);
+        Files.writeString(file.toPath(), String.join(separator, lines), StandardCharsets.UTF_8);
+        return ToolResult.ok("linesReplaced", end - start + 1);
     }
 
     private Map<String, Object> insertInFile(Map<String, Object> args) throws Exception {
@@ -261,15 +248,18 @@ public final class FileSystemToolProvider implements McpToolProvider {
             return err;
         }
         File file = new File(filePath);
-        List<String> lines = new ArrayList<>(Files.readAllLines(file.toPath(), StandardCharsets.UTF_8));
+        byte[] raw = Files.readAllBytes(file.toPath());
+        String rawContent = new String(raw, StandardCharsets.UTF_8);
+        String separator = rawContent.contains("\r\n") ? "\r\n" : "\n";
+        List<String> lines = new ArrayList<>(List.of(rawContent.split("\\r?\\n", -1)));
         int line = Math.max(1, Math.min(lines.size() + 1, ((Number) args.get("line")).intValue()));
         String content = (String) args.get("content");
         String[] insertionLines = content.split("\n", -1);
         for (int i = 0; i < insertionLines.length; i++) {
             lines.add(line - 1 + i, insertionLines[i]);
         }
-        Files.writeString(file.toPath(), String.join("\n", lines), StandardCharsets.UTF_8);
-        return Map.of("status", "ok", "linesInserted", insertionLines.length);
+        Files.writeString(file.toPath(), String.join(separator, lines), StandardCharsets.UTF_8);
+        return ToolResult.ok("linesInserted", insertionLines.length);
     }
 
     private Map<String, Object> deleteLines(Map<String, Object> args) throws Exception {
@@ -282,13 +272,12 @@ public final class FileSystemToolProvider implements McpToolProvider {
         byte[] raw = Files.readAllBytes(file.toPath());
         String content = new String(raw, StandardCharsets.UTF_8);
         String separator = content.contains("\r\n") ? "\r\n" : "\n";
-        String[] lines = content.split(separator.equals("\r\n") ? "\r\n" : "\n", -1);
+        String[] lines = content.split("\\r?\\n", -1);
 
         int start = Math.max(1, ((Number) args.get("startLine")).intValue());
         int end = Math.min(lines.length, ((Number) args.get("endLine")).intValue());
         if (start > end) {
-            return Map.of("status", "error", "message",
-                    "startLine (" + start + ") > endLine (" + end + ")");
+            return ToolResult.error("startLine (" + start + ") > endLine (" + end + ")");
         }
 
         String[] result = new String[lines.length - (end - start + 1)];
@@ -296,7 +285,7 @@ public final class FileSystemToolProvider implements McpToolProvider {
         System.arraycopy(lines, end, result, start - 1, lines.length - end);
 
         Files.writeString(file.toPath(), String.join(separator, result), StandardCharsets.UTF_8);
-        return Map.of("status", "ok", "linesDeleted", end - start + 1);
+        return ToolResult.ok("linesDeleted", end - start + 1);
     }
 
     private static final java.util.Set<String> SEARCH_SKIPPED_DIRS = java.util.Set.of(
@@ -305,17 +294,17 @@ public final class FileSystemToolProvider implements McpToolProvider {
     private Map<String, Object> searchProject(Map<String, Object> args) throws Exception {
         String query = (String) args.get("query");
         if (query == null || query.isBlank()) {
-            return Map.of("status", "error", "message", "query is required");
+            return ToolResult.error("query is required");
         }
         Pattern pattern;
         try {
             pattern = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
         } catch (PatternSyntaxException e) {
-            return Map.of("status", "error", "message", "Invalid regex: " + e.getMessage());
+            return ToolResult.error("Invalid regex: " + e.getMessage());
         }
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
         if (projects.length == 0) {
-            return Map.of("status", "error", "message", "No open projects");
+            return ToolResult.error("No open projects");
         }
         String searchDir = (String) args.get("directory");
         String fileGlob = (String) args.get("filePattern");
@@ -332,8 +321,7 @@ public final class FileSystemToolProvider implements McpToolProvider {
             Path searchRoot = searchDir != null
                     ? projectDir.resolve(searchDir).normalize() : projectDir;
             if (!searchRoot.startsWith(projectDir)) {
-                return Map.of("status", "error", "message",
-                        "directory escapes the project root: " + searchDir);
+                return ToolResult.error("directory escapes the project root: " + searchDir);
             }
             if (!Files.isDirectory(searchRoot)) {
                 continue;
@@ -356,7 +344,14 @@ public final class FileSystemToolProvider implements McpToolProvider {
                         }
                     }
                     try {
-                        List<String> fileLines = Files.readAllLines(file, StandardCharsets.UTF_8);
+                        byte[] raw = Files.readAllBytes(file);
+                        for (int b = 0; b < Math.min(raw.length, 8192); b++) {
+                            if (raw[b] == 0) {
+                                return FileVisitResult.CONTINUE;
+                            }
+                        }
+                        String fileContent = new String(raw, StandardCharsets.UTF_8);
+                        List<String> fileLines = List.of(fileContent.split("\\r?\\n", -1));
                         for (int i = 0; i < fileLines.size(); i++) {
                             if (pattern.matcher(fileLines.get(i)).find()) {
                                 Map<String, Object> match = new HashMap<>();
@@ -369,6 +364,8 @@ public final class FileSystemToolProvider implements McpToolProvider {
                                 }
                             }
                         }
+                    } catch (java.nio.charset.MalformedInputException e) {
+                        // binary or non-UTF-8 file — skip silently
                     } catch (IOException e) {
                         LOG.log(Level.FINE, "Error reading file: {0}", e.getMessage());
                     }
@@ -379,11 +376,7 @@ public final class FileSystemToolProvider implements McpToolProvider {
                 break;
             }
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "ok");
-        result.put("matches", matches);
-        result.put("totalMatches", matches.size());
-        return result;
+        return ToolResult.ok("matches", matches, "totalMatches", matches.size());
     }
 
     private static final int MAX_LIST_ENTRIES = 5000;
@@ -391,17 +384,17 @@ public final class FileSystemToolProvider implements McpToolProvider {
     private Map<String, Object> listDirectory(Map<String, Object> args) throws Exception {
         String dirPath = (String) args.get("dirPath");
         if (dirPath == null || dirPath.isBlank()) {
-            return Map.of("status", "error", "message", "dirPath is required");
+            return ToolResult.error("dirPath is required");
         }
         if (!ProjectPathGuard.isInOpenProject(dirPath)) {
             return ProjectPathGuard.outsideProjectError(dirPath);
         }
         File dir = new File(dirPath);
         if (!dir.exists()) {
-            return Map.of("status", "error", "message", "Directory not found: " + dirPath);
+            return ToolResult.error("Directory not found: " + dirPath);
         }
         if (!dir.isDirectory()) {
-            return Map.of("status", "error", "message", "Not a directory: " + dirPath);
+            return ToolResult.error("Not a directory: " + dirPath);
         }
         boolean recursive = Boolean.TRUE.equals(args.get("recursive"));
         List<Map<String, Object>> entries = new ArrayList<>();
@@ -447,86 +440,27 @@ public final class FileSystemToolProvider implements McpToolProvider {
                 }
             }
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "ok");
-        result.put("entries", entries);
-        result.put("totalEntries", entries.size());
+        Map<String, Object> result = ToolResult.ok("entries", entries,
+                "totalEntries", entries.size());
         if (truncated[0]) {
             result.put("truncated", true);
         }
         return result;
     }
 
-    private Map<String, Object> runCommand(Map<String, Object> args) throws Exception {
-        String command = (String) args.get("command");
-        if (command == null || command.isBlank()) {
-            return Map.of("status", "error", "message", "command is required");
-        }
-        String workDir = (String) args.get("workingDirectory");
-        if (workDir == null || workDir.isBlank()) {
-            Project main = OpenProjects.getDefault().getMainProject();
-            if (main != null) {
-                File d = FileUtil.toFile(main.getProjectDirectory());
-                if (d != null) {
-                    workDir = d.getAbsolutePath();
-                }
-            }
-        }
-        if (workDir == null || workDir.isBlank()) {
-            return Map.of("status", "error", "message",
-                    "No working directory specified and no main project set");
-        }
-        if (!ProjectPathGuard.isInOpenProject(workDir)) {
-            return ProjectPathGuard.outsideProjectError(workDir);
-        }
-        File dir = new File(workDir);
-        if (!dir.exists() || !dir.isDirectory()) {
-            return Map.of("status", "error", "message", "Invalid working directory: " + workDir);
-        }
-        int timeout = args.containsKey("timeoutSeconds")
-                ? ((Number) args.get("timeoutSeconds")).intValue() : 120;
-
-        ProcessBuilder pb = new ProcessBuilder("bash", "-c", command);
-        pb.directory(dir);
-        pb.redirectErrorStream(true);
-        Process proc = pb.start();
-        StringBuilder output = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(proc.getInputStream(), StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (output.length() > 0) {
-                    output.append("\n");
-                }
-                output.append(line);
-            }
-        }
-        boolean finished = proc.waitFor(timeout, TimeUnit.SECONDS);
-        if (!finished) {
-            proc.destroyForcibly();
-            return Map.of("status", "error", "message", "Command timed out after " + timeout + "s");
-        }
-        int exitCode = proc.exitValue();
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "ok");
-        result.put("exitCode", exitCode);
-        result.put("output", output.toString());
-        return result;
-    }
-
     private static Map<String, Object> validateExistingFile(String filePath) {
         if (filePath == null || filePath.isBlank()) {
-            return Map.of("status", "error", "message", "filePath is required");
+            return ToolResult.error("filePath is required");
         }
         if (!ProjectPathGuard.isInOpenProject(filePath)) {
             return ProjectPathGuard.outsideProjectError(filePath);
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            return Map.of("status", "error", "message", "File not found: " + filePath);
+            return ToolResult.error("File not found: " + filePath);
         }
         if (!file.isFile()) {
-            return Map.of("status", "error", "message", "Not a file: " + filePath);
+            return ToolResult.error("Not a file: " + filePath);
         }
         return null;
     }

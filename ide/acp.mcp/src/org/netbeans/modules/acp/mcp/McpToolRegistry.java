@@ -74,6 +74,10 @@ public final class McpToolRegistry {
         Collection<? extends McpToolProvider> providers = Lookup.getDefault().lookupAll(McpToolProvider.class);
         List<McpToolProvider.McpToolDefinition> allTools = new ArrayList<>();
         for (McpToolProvider provider : providers) {
+            if (!provider.isEnabledByDefault()) {
+                LOG.log(Level.FINE, "Skipping disabled provider: {0}", provider.getClass().getSimpleName());
+                continue;
+            }
             List<McpToolProvider.McpToolDefinition> tools = provider.getTools();
             for (McpToolProvider.McpToolDefinition tool : tools) {
                 toolOwners.put(tool.name(), provider);

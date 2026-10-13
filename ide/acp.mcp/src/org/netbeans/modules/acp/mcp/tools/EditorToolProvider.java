@@ -26,11 +26,9 @@ import java.util.Map;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
 import org.netbeans.modules.acp.mcp.ProjectPathGuard;
+import org.netbeans.modules.acp.mcp.ToolResult;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -95,12 +93,12 @@ public final class EditorToolProvider implements McpToolProvider {
         SwingUtilities.invokeAndWait(() -> {
             TopComponent active = TopComponent.getRegistry().getActivated();
             if (active == null) {
-                result[0] = Map.of("status", "error", "message", "No active editor");
+                result[0] = ToolResult.error("No active editor");
                 return;
             }
             EditorCookie ec = active.getLookup().lookup(EditorCookie.class);
             if (ec == null) {
-                result[0] = Map.of("status", "error", "message", "Active component is not an editor");
+                result[0] = ToolResult.error("Active component is not an editor");
                 return;
             }
             Map<String, Object> ctx = new LinkedHashMap<>();
@@ -151,32 +149,32 @@ public final class EditorToolProvider implements McpToolProvider {
                 }
             }
         }
-        return Map.of("status", "ok", "tabs", paths);
+        return ToolResult.ok("tabs", paths);
     }
 
     private Map<String, Object> openPos(Map<String, Object> arguments) throws Exception {
         String filePath = (String) arguments.get("filePath");
         if (filePath == null || filePath.isBlank()) {
-            return Map.of("status", "error", "message", "filePath is required");
+            return ToolResult.error("filePath is required");
         }
         if (!ProjectPathGuard.isInOpenProject(filePath)) {
             return ProjectPathGuard.outsideProjectError(filePath);
         }
         Number lineNum = (Number) arguments.get("line");
         if (lineNum == null) {
-            return Map.of("status", "error", "message", "line is required");
+            return ToolResult.error("line is required");
         }
         Boolean focus = (Boolean) arguments.getOrDefault("focus", Boolean.FALSE);
 
         File requestedFile = new File(filePath).getCanonicalFile();
         FileObject fo = FileUtil.toFileObject(requestedFile);
         if (fo == null) {
-            return Map.of("status", "error", "message", "File not found: " + filePath);
+            return ToolResult.error("File not found: " + filePath);
         }
         DataObject data = DataObject.find(fo);
         LineCookie lc = data.getLookup().lookup(LineCookie.class);
         if (lc == null) {
-            return Map.of("status", "error", "message", "Cannot open file in editor: " + filePath);
+            return ToolResult.error("Cannot open file in editor: " + filePath);
         }
         Line.Set lineSet = lc.getLineSet();
         Line line = lineSet.getOriginal(Math.max(0, lineNum.intValue() - 1));
@@ -187,6 +185,6 @@ public final class EditorToolProvider implements McpToolProvider {
         SwingUtilities.invokeLater(() -> {
             line.show(Line.ShowOpenType.OPEN, visibility);
         });
-        return Map.of("status", "ok");
+        return ToolResult.ok();
     }
 }

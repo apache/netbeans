@@ -41,7 +41,7 @@ public final class McpServerManager {
         return INSTANCE;
     }
 
-    public void ensureRunning() {
+    public synchronized void ensureRunning() {
         if (!httpServer.isRunning()) {
             try {
                 httpServer.start();

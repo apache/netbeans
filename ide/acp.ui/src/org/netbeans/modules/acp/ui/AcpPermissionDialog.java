@@ -50,7 +50,8 @@ import org.openide.util.NbBundle;
     "LBL_ToolName=Tool:",
     "LBL_ToolTitle=Action:",
     "LBL_ChooseOption=Choose an option:",
-    "LBL_AllowForSession=Always allow this tool for this session"
+    "LBL_AllowForSession=Always allow this tool for this session",
+    "LBL_Details=Details"
 })
 public final class AcpPermissionDialog {
 
@@ -124,7 +125,7 @@ public final class AcpPermissionDialog {
                 inputArea.setLineWrap(true);
                 inputArea.setWrapStyleWord(true);
                 JScrollPane sp = new JScrollPane(inputArea);
-                sp.setBorder(BorderFactory.createTitledBorder("Details"));
+                sp.setBorder(BorderFactory.createTitledBorder(Bundle.LBL_Details()));
                 panel.add(sp, BorderLayout.CENTER);
             }
 

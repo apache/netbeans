@@ -389,6 +389,11 @@ public final class EmbedderFactory {
                 statics.setProperty("netbeans.execution", "true"); // NOI18N
                 EmbedderFactory.fillEnvVars(statics);
                 statics.putAll(excludeNetBeansProperties(System.getProperties()));
+                // mvn 3.10 restricts interpolation by default, see restrictExternalModelInterpolation() in AbstractStringBasedModelInterpolator
+                // enabling this adds user and system properties as value sources
+                if (!statics.containsKey("maven.model.dependencyInterpolation.full")) {
+                    statics.setProperty("maven.model.dependencyInterpolation.full", "true");
+                }
             }
             Properties toRet = new Properties();
             toRet.putAll(statics);

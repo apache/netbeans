@@ -376,7 +376,7 @@ public class ClassPathProviderImplTest extends NbTestCase {
                     <modelVersion>4.0.0</modelVersion>
                     <groupId>g</groupId>
                     <artifactId>a</artifactId>
-                    <!-- unloadable during a test: "<packaging>maven-archetype</packaging> -->"
+                    <!-- unloadable during a test: "<packaging>maven-archetype</packaging>" -->
                     <version>0</version>
                 </project>
                 """

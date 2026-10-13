@@ -105,11 +105,14 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
         }
 
         for (Pair<String, String> propertyAndParam : propertiesAndParams) {
-            String sourceLevel = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS,  //NOI18N
-                                                                  Constants.PLUGIN_COMPILER,  //NOI18N
-                                                                  propertyAndParam.second(),
-                                                                  goal,
-                                                                  propertyAndParam.first());
+            String sourceLevel = PluginPropertyUtils.getPluginProperty(
+                    project,
+                    Constants.GROUP_APACHE_PLUGINS, 
+                    Constants.PLUGIN_COMPILER,
+                    propertyAndParam.second(),
+                    goal,
+                    propertyAndParam.first()
+            );
             if (sourceLevel != null) {
                 return sourceLevel;
             }

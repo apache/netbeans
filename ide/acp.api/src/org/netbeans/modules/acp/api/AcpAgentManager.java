@@ -312,7 +312,7 @@ public final class AcpAgentManager {
         try {
             prefs.flush();
         } catch (BackingStoreException ex) {
-            LOG.log(Level.WARNING, "Error flushing agent preferences", ex);
+            LOG.log(Level.SEVERE, "Failed to persist agent configurations", ex);
         }
     }
 

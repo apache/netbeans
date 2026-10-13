@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
@@ -110,6 +111,7 @@ public final class AcpAgentDescriptor {
      *
      * @return the working directory path, or {@code null} if not set
      */
+    @CheckForNull
     public String getWorkingDirectory() {
         return workingDirectory;
     }
@@ -131,6 +133,7 @@ public final class AcpAgentDescriptor {
      *
      * @return an unmodifiable set of tool names, or {@code null} for defaults
      */
+    @CheckForNull
     public Set<String> getEnabledTools() {
         return enabledTools;
     }

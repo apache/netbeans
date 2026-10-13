@@ -728,9 +728,12 @@ public final class AcpConnection {
         if (toolCall == null) {
             return false;
         }
-        String toolId = toolCall.name() != null ? toolCall.name() : toolCall.title();
+        String toolName = toolCall.name();
+        if (toolName == null) {
+            return false;
+        }
         Set<String> allowed = sessionAllowedTools.get(request.sessionId());
-        return toolId != null && allowed != null && allowed.contains(toolId);
+        return allowed != null && allowed.contains(toolName);
     }
 
     /**

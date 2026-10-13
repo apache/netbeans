@@ -140,13 +140,20 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
 
     @Override
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
-        return switch (name) {
+        LOG.log(Level.FINE, "Executing Java refactoring tool: {0}", name);
+        Map<String, Object> result = switch (name) {
             case "rename_symbol" -> doRenameSymbol(arguments);
             case "find_symbol_usages" -> doFindSymbolUsages(arguments);
             case "inline_symbol" -> doInlineSymbol(arguments);
             case "encapsulate_field" -> doEncapsulateField(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
+        if ("error".equals(result.get("status"))) {
+            LOG.log(Level.WARNING, "Java refactoring tool {0} failed: {1}", new Object[]{name, result.get("message")});
+        } else {
+            LOG.log(Level.FINE, "Java refactoring tool {0} succeeded", name);
+        }
+        return result;
     }
 
     private Map<String, Object> doRenameSymbol(Map<String, Object> args) throws Exception {

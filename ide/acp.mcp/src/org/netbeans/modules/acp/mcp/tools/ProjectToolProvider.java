@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
@@ -31,6 +33,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = McpToolProvider.class)
 public final class ProjectToolProvider implements McpToolProvider {
+
+    private static final Logger LOG = Logger.getLogger(ProjectToolProvider.class.getName());
 
     @Override
     public List<McpToolDefinition> getTools() {
@@ -56,11 +60,14 @@ public final class ProjectToolProvider implements McpToolProvider {
 
     @Override
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
-        return switch (name) {
+        LOG.log(Level.FINE, "Executing project tool: {0}", name);
+        Map<String, Object> result = switch (name) {
             case "list_projects" -> listProjects();
             case "get_ide_info" -> getIdeInfo();
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
+        LOG.log(Level.FINE, "Project tool {0} succeeded", name);
+        return result;
     }
 
     private Map<String, Object> listProjects() {

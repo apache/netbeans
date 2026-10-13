@@ -116,6 +116,9 @@
     <taskdef name="subant-junit" classname="org.netbeans.nbbuild.SubAntJUnitReport" classpath="${nbantext.jar}"/>
     <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
     <taskdef name="checkmoduleconfigs" classname="org.netbeans.nbbuild.CheckModuleConfigs" classpath="${nbantext.jar}"/>
+    <taskdef name="sysproperty"
+             classname="org.netbeans.nbbuild.SysProperty"
+             classpath="${nbantext.jar}"/>
     <property name="tasks-already-set" value="true"/>
   </target>
 

@@ -153,8 +153,7 @@ public final class AcpPermissionDialog {
             southPanel.add(optionsPanel, BorderLayout.CENTER);
 
             JCheckBox rememberCb = new JCheckBox(Bundle.LBL_AllowForSession());
-            rememberCb.setEnabled(toolCall != null
-                    && (toolCall.name() != null || toolCall.title() != null));
+            rememberCb.setEnabled(toolCall != null && toolCall.name() != null);
             southPanel.add(rememberCb, BorderLayout.SOUTH);
 
             panel.add(southPanel, BorderLayout.SOUTH);
@@ -171,8 +170,7 @@ public final class AcpPermissionDialog {
                                         new AcpSchema.PermissionSelected(options.get(i).optionId()));
                         String allowTool = null;
                         if (rememberCb.isSelected() && toolCall != null) {
-                            allowTool = toolCall.name() != null
-                                    ? toolCall.name() : toolCall.title();
+                            allowTool = toolCall.name();
                         }
                         result.set(new PermissionResult(resp, allowTool));
                         break;

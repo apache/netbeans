@@ -58,6 +58,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.acp.api.AcpCommand;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentManager;
 import org.netbeans.modules.acp.api.AcpConnection;
@@ -100,6 +101,10 @@ import org.openide.windows.TopComponent;
     "BTN_Cancel=Cancel",
     "BTN_Send=Send",
     "BTN_Tools=Tools ({0}/{1})",
+    "BTN_Commands=Commands ({0})",
+    "LBL_TabTitle=ACP Agent Chat - {0}",
+    "HINT_ConnectedAgent=Agent: {0}\nWorking directory: {1}",
+    "HINT_SessionContext=Agent: {0}\nProject: {1}\nWorking directory: {2}\nSource roots: {3}",
     "STS_Disconnected=Disconnected",
     "STS_Connecting=Connecting...",
     "STS_Connected=Connected",
@@ -134,6 +139,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final JButton sendButton;
     private final JButton cancelButton;
     private final JButton toolsButton;
+    private final JButton commandsButton;
     private final JButton connectButton;
     private final JComboBox<String> agentSelector;
     private final JLabel statusLabel;
@@ -150,7 +156,9 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private int diffCounter;
     private final AcpFileMentionSupport mentionSupport;
     private List<AcpMcpServerProvider.ToolInfo> currentMcpTools = List.of();
+    private List<AcpCommand> currentCommands = List.of();
     private Set<String> currentEnabledTools;
+    private String currentWorkingDir;
     private AcpConnection currentConnection;
     private String currentSessionId;
 
@@ -201,6 +209,36 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             SwingUtilities.invokeLater(() ->
                 statusLabel.setText(Bundle.STS_Tokens(usedTokens, totalTokens))
             );
+        }
+
+        @Override
+        public void onAvailableCommands(String sessionId, List<AcpCommand> commands) {
+            SwingUtilities.invokeLater(() -> {
+                currentCommands = commands;
+                commandsButton.setText(Bundle.BTN_Commands(commands.size()));
+                commandsButton.setEnabled(!commands.isEmpty());
+            });
+        }
+
+        @Override
+        public void onSessionInfo(String sessionId, String title, String updatedAt) {
+            if (title == null || title.isBlank()) {
+                return;
+            }
+            String projectName = HtmlUtils.extractProjectName(title);
+            String projectDir = HtmlUtils.extractProjectDirectory(title);
+            List<String> sourceRoots = HtmlUtils.extractSourceRoots(title);
+            if (projectName != null) {
+                String agent = (String) agentSelector.getSelectedItem();
+                String workDir = projectDir != null ? projectDir
+                        : currentWorkingDir != null ? currentWorkingDir : "";
+                String roots = sourceRoots.isEmpty() ? ""
+                        : "\n  " + String.join("\n  ", sourceRoots);
+                SwingUtilities.invokeLater(() -> setToolTipText(
+                        Bundle.HINT_SessionContext(
+                                agent != null ? agent : "",
+                                projectName, workDir, roots)));
+            }
         }
 
         @Override
@@ -273,6 +311,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         toolsButton.setEnabled(false);
         toolsButton.addActionListener(e -> showToolsPopup());
         toolbar.add(toolsButton);
+        commandsButton = new JButton(Bundle.BTN_Commands(0));
+        commandsButton.setEnabled(false);
+        commandsButton.addActionListener(e -> showCommandsPopup());
+        toolbar.add(commandsButton);
         toolbar.add(Box.createHorizontalGlue());
         statusLabel = new JLabel(Bundle.STS_Disconnected());
         toolbar.add(statusLabel);
@@ -493,6 +535,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     currentConnection = null;
                     currentSessionId = null;
                     currentEnabledTools = null;
+                    currentWorkingDir = null;
+                    currentCommands = List.of();
+                    commandsButton.setText(Bundle.BTN_Commands(0));
+                    commandsButton.setEnabled(false);
+                    setDisplayName(NbBundle.getMessage(
+                            AcpChatTopComponent.class, "CTL_AcpChatTopComponent"));
+                    setToolTipText(NbBundle.getMessage(
+                            AcpChatTopComponent.class, "HINT_AcpChatTopComponent"));
                     connectButton.setText(Bundle.BTN_Connect());
                     statusLabel.setText(Bundle.STS_Disconnected());
                     updateInputState();
@@ -527,9 +577,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                         return pr.response();
                     });
                     Set<String> enabledSet = descriptor.getEnabledTools();
+                    String workDir = descriptor.getWorkingDirectory() != null
+                            ? descriptor.getWorkingDirectory()
+                            : getMainProjectDirectory() != null
+                                    ? getMainProjectDirectory() : "";
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
                         currentEnabledTools = enabledSet;
+                        currentWorkingDir = workDir;
+                        setDisplayName(Bundle.LBL_TabTitle(agentName));
+                        setToolTipText(Bundle.HINT_ConnectedAgent(agentName, workDir));
                         connectButton.setText(Bundle.BTN_Disconnect());
                         connectButton.setEnabled(true);
                         statusLabel.setText(Bundle.STS_Connected());
@@ -691,43 +748,77 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
     private void showToolsPopup() {
         McpToolRegistry registry = McpToolRegistry.getInstance();
-        List<McpToolProvider.McpToolDefinition> allTools = registry.getAllAvailableTools();
-        if (allTools.isEmpty()) {
+        Map<String, java.util.List<McpToolProvider.McpToolDefinition>> toolsByProvider =
+                registry.getToolsByProvider();
+        if (toolsByProvider.isEmpty()) {
             return;
         }
         Set<String> enabledSet = currentEnabledTools;
         JPopupMenu popup = new JPopupMenu();
-        for (McpToolProvider.McpToolDefinition tool : allTools) {
-            boolean enabled;
-            if (enabledSet != null) {
-                enabled = enabledSet.contains(tool.name());
-            } else {
-                enabled = registry.isToolEnabledByDefault(tool.name());
+        boolean first = true;
+        for (Map.Entry<String, java.util.List<McpToolProvider.McpToolDefinition>> group
+                : toolsByProvider.entrySet()) {
+            if (!first) {
+                popup.addSeparator();
             }
-            String desc = tool.description();
-            if (desc != null && desc.length() > 80) {
-                int dot = desc.indexOf(". ");
-                if (dot > 0 && dot <= 80) {
-                    desc = desc.substring(0, dot + 1);
+            first = false;
+            JMenuItem header = new JMenuItem("<html><b>" + group.getKey() + "</b></html>");
+            header.setEnabled(false);
+            popup.add(header);
+            for (McpToolProvider.McpToolDefinition tool : group.getValue()) {
+                boolean enabled;
+                if (enabledSet != null) {
+                    enabled = enabledSet.contains(tool.name());
                 } else {
-                    desc = desc.substring(0, 80) + "...";
+                    enabled = registry.isToolEnabledByDefault(tool.name());
                 }
+                String desc = tool.description();
+                if (desc != null && desc.length() > 80) {
+                    int dot = desc.indexOf(". ");
+                    if (dot > 0 && dot <= 80) {
+                        desc = desc.substring(0, dot + 1);
+                    } else {
+                        desc = desc.substring(0, 80) + "...";
+                    }
+                }
+                String label;
+                if (enabled) {
+                    label = "<html>&nbsp;&nbsp;<b>" + tool.name() + "</b>"
+                            + (desc != null ? " &ndash; " + desc : "")
+                            + "</html>";
+                } else {
+                    label = "<html>&nbsp;&nbsp;<span style='color:gray'>" + tool.name()
+                            + (desc != null ? " &ndash; " + desc : "")
+                            + "</span></html>";
+                }
+                JMenuItem item = new JMenuItem(label);
+                item.setEnabled(false);
+                popup.add(item);
             }
-            String label;
-            if (enabled) {
-                label = "<html><b>" + tool.name() + "</b>"
-                        + (desc != null ? " &ndash; " + desc : "")
-                        + "</html>";
-            } else {
-                label = "<html><span style='color:gray'>" + tool.name()
-                        + (desc != null ? " &ndash; " + desc : "")
-                        + "</span></html>";
-            }
-            JMenuItem item = new JMenuItem(label);
-            item.setEnabled(false);
-            popup.add(item);
         }
         popup.show(toolsButton, 0, toolsButton.getHeight());
+    }
+
+    private void showCommandsPopup() {
+        if (currentCommands.isEmpty()) {
+            return;
+        }
+        JPopupMenu popup = new JPopupMenu();
+        for (AcpCommand cmd : currentCommands) {
+            String desc = cmd.description() != null
+                    ? HtmlUtils.escapeHtml(cmd.description()) : "";
+            String label = "<html><div style='width:280px'><b>"
+                    + HtmlUtils.escapeHtml(cmd.name()) + "</b><br/>"
+                    + "<span style='color:gray;font-size:smaller'>"
+                    + desc + "</span></div></html>";
+            JMenuItem item = new JMenuItem(label);
+            item.addActionListener(e -> {
+                inputArea.setText(cmd.name() + " ");
+                inputArea.requestFocusInWindow();
+            });
+            popup.add(item);
+        }
+        popup.show(commandsButton, 0, commandsButton.getHeight());
     }
 
     private void flushMessageBuffers() {

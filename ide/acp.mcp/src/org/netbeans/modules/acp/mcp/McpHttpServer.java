@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -52,30 +53,37 @@ public final class McpHttpServer {
 
     private final McpToolRegistry registry;
     private final ObjectMapper mapper;
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final ConcurrentHashMap<String, Set<String>> sessionTokens = new ConcurrentHashMap<>();
     private HttpServer server;
     private ExecutorService executor;
     private int port;
-    private String bearerToken;
-    private volatile Set<String> enabledTools;
 
     public McpHttpServer(McpToolRegistry registry) {
         this.registry = registry;
         this.mapper = new ObjectMapper();
     }
 
-    public void setEnabledTools(Set<String> enabledTools) {
-        this.enabledTools = enabledTools;
-        LOG.log(Level.INFO, "MCP tools sent to agent: {0}",
-                enabledTools != null ? enabledTools : "defaults");
+    public String createSessionToken(Set<String> enabledTools) {
+        byte[] tokenBytes = new byte[TOKEN_BYTES];
+        secureRandom.nextBytes(tokenBytes);
+        String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
+        sessionTokens.put(token, enabledTools != null ? enabledTools : Set.of());
+        LOG.log(Level.INFO, "MCP session created, tools: {0}",
+                enabledTools != null ? enabledTools : "all");
+        return token;
+    }
+
+    public void removeSessionToken(String token) {
+        if (token != null) {
+            sessionTokens.remove(token);
+        }
     }
 
     public synchronized void start() throws IOException {
         if (server != null) {
             return;
         }
-        byte[] tokenBytes = new byte[TOKEN_BYTES];
-        new SecureRandom().nextBytes(tokenBytes);
-        bearerToken = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/mcp", new McpHandler());
         executor = Executors.newCachedThreadPool(r -> {
@@ -106,13 +114,9 @@ public final class McpHttpServer {
                 executor = null;
             }
             port = 0;
-            bearerToken = null;
+            sessionTokens.clear();
             LOG.info("MCP server stopped");
         }
-    }
-
-    public synchronized String getBearerToken() {
-        return bearerToken;
     }
 
     public synchronized int getPort() {
@@ -135,7 +139,8 @@ public final class McpHttpServer {
                 sendError(exchange, 405, "Method not allowed");
                 return;
             }
-            if (!validateRequest(exchange)) {
+            Set<String> sessionFilter = validateRequest(exchange);
+            if (sessionFilter == null) {
                 return;
             }
             byte[] body;
@@ -148,7 +153,7 @@ public final class McpHttpServer {
             try {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> request = mapper.readValue(requestStr, Map.class);
-                Map<String, Object> response = handleJsonRpc(request);
+                Map<String, Object> response = handleJsonRpc(request, sessionFilter);
                 if (response == null) {
                     exchange.sendResponseHeaders(204, -1);
                     exchange.close();
@@ -163,11 +168,20 @@ public final class McpHttpServer {
             }
         }
 
-        private boolean validateRequest(HttpExchange exchange) throws IOException {
+        /**
+         * @return the session's enabled tools set, or {@code null} if the request was rejected
+         */
+        private Set<String> validateRequest(HttpExchange exchange) throws IOException {
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
-            if (auth == null || !auth.equals("Bearer " + bearerToken)) {
+            if (auth == null || !auth.startsWith("Bearer ")) {
                 sendError(exchange, 401, "Unauthorized");
-                return false;
+                return null;
+            }
+            String token = auth.substring("Bearer ".length());
+            Set<String> filter = sessionTokens.get(token);
+            if (filter == null) {
+                sendError(exchange, 401, "Unauthorized");
+                return null;
             }
             String host = exchange.getRequestHeaders().getFirst("Host");
             if (host != null) {
@@ -175,7 +189,7 @@ public final class McpHttpServer {
                 if (!"127.0.0.1".equals(hostOnly) && !"localhost".equals(hostOnly)) {
                     LOG.log(Level.WARNING, "MCP request rejected: unexpected Host header: {0}", host);
                     sendError(exchange, 403, "Forbidden");
-                    return false;
+                    return null;
                 }
             }
             String origin = exchange.getRequestHeaders().getFirst("Origin");
@@ -185,18 +199,19 @@ public final class McpHttpServer {
                 if (!allowed) {
                     LOG.log(Level.WARNING, "MCP request rejected: unexpected Origin header: {0}", origin);
                     sendError(exchange, 403, "Forbidden");
-                    return false;
+                    return null;
                 }
             }
             String contentType = exchange.getRequestHeaders().getFirst("Content-Type");
             if (contentType == null || !contentType.startsWith("application/json")) {
                 sendError(exchange, 415, "Unsupported Media Type");
-                return false;
+                return null;
             }
-            return true;
+            return filter;
         }
 
-        private Map<String, Object> handleJsonRpc(Map<String, Object> request) throws Exception {
+        private Map<String, Object> handleJsonRpc(Map<String, Object> request,
+                Set<String> sessionFilter) throws Exception {
             String method = (String) request.get("method");
             Object id = request.get("id");
             @SuppressWarnings("unchecked")
@@ -211,8 +226,8 @@ public final class McpHttpServer {
             return switch (method) {
                 case "initialize" -> handleInitialize(id);
                 case "notifications/initialized" -> null;
-                case "tools/list" -> handleToolsList(id);
-                case "tools/call" -> handleToolsCall(id, params);
+                case "tools/list" -> handleToolsList(id, sessionFilter);
+                case "tools/call" -> handleToolsCall(id, params, sessionFilter);
                 case "ping" -> successResponse(id, Map.of());
                 default -> errorResponse(id, -32601, "Method not found: " + method);
             };
@@ -234,13 +249,12 @@ public final class McpHttpServer {
             return successResponse(id, result);
         }
 
-        private Map<String, Object> handleToolsList(Object id) {
-            Set<String> filter = enabledTools;
-            List<McpToolProvider.McpToolDefinition> tools = filter != null
-                    ? registry.getAllAvailableTools() : registry.getAllTools();
+        private Map<String, Object> handleToolsList(Object id, Set<String> filter) {
+            List<McpToolProvider.McpToolDefinition> tools = filter.isEmpty()
+                    ? registry.getAllTools() : registry.getAllAvailableTools();
             List<Map<String, Object>> toolList = new ArrayList<>();
             for (McpToolProvider.McpToolDefinition tool : tools) {
-                if (filter != null && !filter.contains(tool.name())) {
+                if (!filter.isEmpty() && !filter.contains(tool.name())) {
                     continue;
                 }
                 Map<String, Object> toolMap = new LinkedHashMap<>();
@@ -252,13 +266,13 @@ public final class McpHttpServer {
             return successResponse(id, Map.of("tools", toolList));
         }
 
-        private Map<String, Object> handleToolsCall(Object id, Map<String, Object> params) {
+        private Map<String, Object> handleToolsCall(Object id, Map<String, Object> params,
+                Set<String> filter) {
             String name = (String) params.get("name");
             if (name == null) {
                 return errorResponse(id, -32602, "Invalid params: missing tool name");
             }
-            Set<String> filter = enabledTools;
-            if (filter != null && !filter.contains(name)) {
+            if (!filter.isEmpty() && !filter.contains(name)) {
                 return errorResponse(id, -32602, "Tool not enabled: " + name);
             }
             @SuppressWarnings("unchecked")

@@ -117,13 +117,20 @@ public final class GitToolProvider implements McpToolProvider {
 
     @Override
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
-        return switch (name) {
+        LOG.log(Level.FINE, "Executing git tool: {0}", name);
+        Map<String, Object> result = switch (name) {
             case "git_status" -> gitStatus(arguments);
             case "git_diff" -> gitDiff(arguments);
             case "git_log" -> gitLog(arguments);
             case "file_history" -> fileHistory(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
+        if ("error".equals(result.get("status"))) {
+            LOG.log(Level.WARNING, "Git tool {0} failed: {1}", new Object[]{name, result.get("message")});
+        } else {
+            LOG.log(Level.FINE, "Git tool {0} succeeded", name);
+        }
+        return result;
     }
 
     private Map<String, Object> gitStatus(Map<String, Object> args) throws Exception {

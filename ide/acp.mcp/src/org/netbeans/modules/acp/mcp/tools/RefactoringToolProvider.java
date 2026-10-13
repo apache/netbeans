@@ -145,7 +145,8 @@ public final class RefactoringToolProvider implements McpToolProvider {
 
     @Override
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
-        return switch (name) {
+        LOG.log(Level.FINE, "Executing refactoring tool: {0}", name);
+        Map<String, Object> result = switch (name) {
             case "rename" -> doRename(arguments);
             case "move_refactor" -> doMove(arguments);
             case "safe_delete" -> doSafeDelete(arguments);
@@ -153,6 +154,12 @@ public final class RefactoringToolProvider implements McpToolProvider {
             case "copy_class" -> doCopy(arguments);
             default -> throw new IllegalArgumentException("Unknown tool: " + name);
         };
+        if ("error".equals(result.get("status"))) {
+            LOG.log(Level.WARNING, "Refactoring tool {0} failed: {1}", new Object[]{name, result.get("message")});
+        } else {
+            LOG.log(Level.FINE, "Refactoring tool {0} succeeded", name);
+        }
+        return result;
     }
 
     private Map<String, Object> doRename(Map<String, Object> args) throws Exception {

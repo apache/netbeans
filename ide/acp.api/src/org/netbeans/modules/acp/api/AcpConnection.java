@@ -77,15 +77,28 @@ public final class AcpConnection {
     private volatile java.util.function.Function<AcpSchema.RequestPermissionRequest,
             AcpSchema.RequestPermissionResponse> permissionHandler;
 
+    /**
+     * @param descriptor the agent configuration, must not be {@code null}
+     */
     public AcpConnection(AcpAgentDescriptor descriptor) {
         this.descriptor = Objects.requireNonNull(descriptor, "descriptor must not be null"); // NOI18N
     }
 
+    /**
+     * @return the agent descriptor used to create this connection
+     */
     public AcpAgentDescriptor getDescriptor() {
         return descriptor;
     }
 
-    public void connect() throws IOException {
+    /**
+     * Establishes the transport (stdio or WebSocket) and performs the
+     * ACP handshake. Must not be called from the EDT.
+     *
+     * @throws IOException if the connection cannot be established
+     * @throws IllegalStateException if already connected
+     */
+    public synchronized void connect() throws IOException {
         if (connected) {
             throw new IllegalStateException("Already connected to agent: " + descriptor.getName()); // NOI18N
         }
@@ -131,18 +144,37 @@ public final class AcpConnection {
         }
     }
 
+    /**
+     * Creates a new agent session with auto-discovered MCP servers.
+     *
+     * @param workingDirectory main project directory, or {@code null}
+     * @return the session identifier
+     * @throws IOException if session creation fails
+     */
     public String newSession(String workingDirectory) throws IOException {
         return newSession(workingDirectory, (List<String>) null);
     }
 
+    /**
+     * Creates a new agent session with auto-discovered MCP servers.
+     *
+     * @param workingDirectory main project directory, or {@code null}
+     * @param additionalDirs   additional project directories, or {@code null}
+     * @return the session identifier
+     * @throws IOException if session creation fails
+     */
     public String newSession(String workingDirectory, List<String> additionalDirs) throws IOException {
         List<AcpSchema.McpServer> mcpServers = new ArrayList<>();
-        for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
-                .lookupAll(AcpMcpServerProvider.class)) {
-            List<AcpSchema.McpServer> servers = provider.getMcpServers();
-            if (servers != null) {
-                mcpServers.addAll(servers);
+        try {
+            for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
+                    .lookupAll(AcpMcpServerProvider.class)) {
+                List<AcpSchema.McpServer> servers = provider.getMcpServers();
+                if (servers != null) {
+                    mcpServers.addAll(servers);
+                }
             }
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "MCP server discovery failed (modules may not be initialized yet)", ex);
         }
         if (!mcpServers.isEmpty()) {
             LOG.log(Level.INFO, "Discovered {0} MCP server(s) for new session", mcpServers.size());
@@ -157,6 +189,15 @@ public final class AcpConnection {
                 : new AcpSchema.NewSessionRequest(dir, mcpServers);
     }
 
+    /**
+     * Creates a new agent session with explicit MCP servers.
+     *
+     * @param workingDirectory main project directory, or {@code null}
+     * @param additionalDirs   additional project directories, or {@code null}
+     * @param mcpServers       MCP servers to expose to the agent
+     * @return the session identifier
+     * @throws IOException if session creation fails
+     */
     public String newSession(String workingDirectory, List<String> additionalDirs,
             List<AcpSchema.McpServer> mcpServers) throws IOException {
         ensureConnected();
@@ -217,6 +258,14 @@ public final class AcpConnection {
         }
     }
 
+    /**
+     * Sends a text prompt to the agent in the given session. Blocks until
+     * the agent completes the turn.
+     *
+     * @param sessionId the session identifier
+     * @param text      the prompt text
+     * @throws IOException if the prompt cannot be sent
+     */
     public void sendPrompt(String sessionId, String text) throws IOException {
         ensureConnected();
         try {
@@ -229,6 +278,12 @@ public final class AcpConnection {
         }
     }
 
+    /**
+     * Requests cancellation of the current prompt in the given session.
+     *
+     * @param sessionId the session identifier
+     * @throws IOException if the cancellation fails
+     */
     public void cancel(String sessionId) throws IOException {
         ensureConnected();
         try {
@@ -238,11 +293,13 @@ public final class AcpConnection {
         }
     }
 
-    public void close() {
+    /** Closes the connection and releases all resources. */
+    public synchronized void close() {
         connected = false;
         sessionAllowedTools.clear();
         fileSnapshots.clear();
         storedLocations.clear();
+        trustedDirectories.clear();
         if (client != null) {
             try {
                 client.close();
@@ -254,15 +311,22 @@ public final class AcpConnection {
         LOG.log(Level.INFO, "Disconnected from ACP agent: {0}", descriptor.getName()); // NOI18N
     }
 
+    /** @return {@code true} if the connection is established */
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * @param listener the listener to add, must not be {@code null}
+     */
     public void addSessionListener(AcpSessionListener listener) {
         Objects.requireNonNull(listener, "listener must not be null"); // NOI18N
         listeners.add(listener);
     }
 
+    /**
+     * @param listener the listener to remove
+     */
     public void removeSessionListener(AcpSessionListener listener) {
         listeners.remove(listener);
     }
@@ -632,6 +696,12 @@ public final class AcpConnection {
         return toolId != null && allowed != null && allowed.contains(toolId);
     }
 
+    /**
+     * Auto-approves a tool for the remainder of the session.
+     *
+     * @param sessionId the session identifier
+     * @param toolName  the tool to auto-approve
+     */
     public void allowToolForSession(String sessionId, String toolName) {
         Objects.requireNonNull(sessionId);
         sessionAllowedTools.computeIfAbsent(sessionId, k -> ConcurrentHashMap.newKeySet())
@@ -645,7 +715,10 @@ public final class AcpConnection {
             return false;
         }
         AcpSchema.ToolKind kind = toolCall.kind();
-        if (kind == null || kind == AcpSchema.ToolKind.EXECUTE) {
+        // Only auto-approve READ operations in trusted directories.
+        // All other kinds (EDIT, EXECUTE, DELETE, MOVE, OTHER, null)
+        // must go through the permission UI.
+        if (kind != AcpSchema.ToolKind.READ) {
             return false;
         }
         List<AcpSchema.ToolCallLocation> locations = toolCall.locations();
@@ -661,6 +734,12 @@ public final class AcpConnection {
         return true;
     }
 
+    /**
+     * Sets a handler invoked when the agent requests permission for a
+     * tool call that is not auto-approved.
+     *
+     * @param handler the permission handler, or {@code null} to clear
+     */
     public void setPermissionHandler(
             java.util.function.Function<AcpSchema.RequestPermissionRequest,
                     AcpSchema.RequestPermissionResponse> handler) {

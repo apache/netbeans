@@ -22,8 +22,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
+import org.netbeans.modules.acp.mcp.ToolResult;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -41,6 +42,11 @@ public final class GitToolProvider implements McpToolProvider {
 
     private static final Logger LOG = Logger.getLogger(GitToolProvider.class.getName());
     private static final Pattern SAFE_REV = Pattern.compile("^[A-Za-z0-9._/~^:-]+$");
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
 
     @Override
     public List<McpToolDefinition> getTools() {
@@ -123,7 +129,7 @@ public final class GitToolProvider implements McpToolProvider {
     private Map<String, Object> gitStatus(Map<String, Object> args) throws Exception {
         File repoDir = resolveRepoDir((String) args.get("repoDir"));
         if (repoDir == null) {
-            return Map.of("status", "error", "message", "No git repository found in open projects");
+            return ToolResult.error("No git repository found in open projects");
         }
         return runGit(repoDir, "git", "status", "--short");
     }
@@ -131,7 +137,7 @@ public final class GitToolProvider implements McpToolProvider {
     private Map<String, Object> gitDiff(Map<String, Object> args) throws Exception {
         File repoDir = resolveRepoDir((String) args.get("repoDir"));
         if (repoDir == null) {
-            return Map.of("status", "error", "message", "No git repository found in open projects");
+            return ToolResult.error("No git repository found in open projects");
         }
         String target = (String) args.get("target");
         if ("staged".equalsIgnoreCase(target)) {
@@ -141,8 +147,7 @@ public final class GitToolProvider implements McpToolProvider {
             return runGit(repoDir, "git", "diff");
         }
         if (!SAFE_REV.matcher(target).matches()) {
-            return Map.of("status", "error", "message",
-                    "Invalid revision: " + target);
+            return ToolResult.error("Invalid revision: " + target);
         }
         return runGit(repoDir, "git", "diff", target);
     }
@@ -150,7 +155,7 @@ public final class GitToolProvider implements McpToolProvider {
     private Map<String, Object> gitLog(Map<String, Object> args) throws Exception {
         File repoDir = resolveRepoDir((String) args.get("repoDir"));
         if (repoDir == null) {
-            return Map.of("status", "error", "message", "No git repository found in open projects");
+            return ToolResult.error("No git repository found in open projects");
         }
         int maxCount = 20;
         if (args.containsKey("maxCount")) {
@@ -164,7 +169,7 @@ public final class GitToolProvider implements McpToolProvider {
                 "--max-count=" + maxCount));
         if (since != null && !since.isBlank()) {
             if (!Pattern.matches("^[A-Za-z0-9 .:/_+~-]+$", since)) {
-                return Map.of("status", "error", "message", "Invalid since value: " + since);
+                return ToolResult.error("Invalid since value: " + since);
             }
             command.add("--since=" + since);
         }
@@ -174,11 +179,11 @@ public final class GitToolProvider implements McpToolProvider {
     private Map<String, Object> fileHistory(Map<String, Object> args) throws Exception {
         File repoDir = resolveRepoDir((String) args.get("repoDir"));
         if (repoDir == null) {
-            return Map.of("status", "error", "message", "No git repository found in open projects");
+            return ToolResult.error("No git repository found in open projects");
         }
         String filePath = (String) args.get("path");
         if (filePath == null || filePath.isBlank()) {
-            return Map.of("status", "error", "message", "path is required");
+            return ToolResult.error("path is required");
         }
         int maxCount = 10;
         if (args.containsKey("maxCount")) {
@@ -187,8 +192,16 @@ public final class GitToolProvider implements McpToolProvider {
         File file = new File(filePath);
         String relative;
         if (file.isAbsolute()) {
-            relative = repoDir.toPath().relativize(file.toPath()).toString();
+            Path normalized = file.toPath().normalize();
+            if (!normalized.startsWith(repoDir.toPath().normalize())) {
+                return ToolResult.error("File path is outside the repository");
+            }
+            relative = repoDir.toPath().normalize().relativize(normalized).toString();
         } else {
+            Path resolved = repoDir.toPath().resolve(filePath).normalize();
+            if (!resolved.startsWith(repoDir.toPath().normalize())) {
+                return ToolResult.error("File path is outside the repository");
+            }
             relative = filePath;
         }
         return runGit(repoDir, "git", "log", "--follow", "-p", "--no-color",
@@ -232,12 +245,8 @@ public final class GitToolProvider implements McpToolProvider {
         boolean finished = proc.waitFor(30, TimeUnit.SECONDS);
         if (!finished) {
             proc.destroyForcibly();
-            return Map.of("status", "error", "message", "Git command timed out");
+            return ToolResult.error("Git command timed out");
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "ok");
-        result.put("output", output.toString());
-        result.put("exitCode", proc.exitValue());
-        return result;
+        return ToolResult.ok("output", output.toString(), "exitCode", proc.exitValue());
     }
 }

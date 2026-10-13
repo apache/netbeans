@@ -89,6 +89,35 @@ import org.openide.windows.TopComponent;
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_AcpChatAction",
         preferredID = "AcpChatTopComponent")
+@NbBundle.Messages({
+    "LBL_Agent=Agent:",
+    "BTN_Connect=Connect",
+    "BTN_Disconnect=Disconnect",
+    "BTN_NewSession=New Session",
+    "BTN_Cancel=Cancel",
+    "BTN_Send=Send",
+    "BTN_Tools=Tools ({0})",
+    "STS_Disconnected=Disconnected",
+    "STS_Connecting=Connecting...",
+    "STS_Connected=Connected",
+    "STS_CreatingSession=Creating session...",
+    "STS_Ready=Ready",
+    "STS_Thinking=Thinking...",
+    "STS_Cancelled=Cancelled",
+    "STS_Error=Error",
+    "STS_ErrorDetail=Error: {0}",
+    "STS_Tokens=Tokens: {0} / {1}",
+    "MSG_ErrorCreatingSession=Error creating session: {0}",
+    "MSG_ProjectContextSent=Project context sent to agent.",
+    "MSG_PromptCancelled=Prompt cancelled.",
+    "LBL_FileCreated=Created",
+    "LBL_FileModified=Modified",
+    "LBL_Completed=completed",
+    "LBL_ViewFullDiff=View Full Diff",
+    "LBL_You=You:",
+    "LBL_AgentSays=Agent:",
+    "LBL_Plan=Plan:"
+})
 public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
     private static final Logger LOG = Logger.getLogger(AcpChatTopComponent.class.getName());
@@ -159,14 +188,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 flushMessageBuffers();
                 promptInProgress.set(false);
                 updateInputState();
-                statusLabel.setText("Ready");
+                statusLabel.setText(Bundle.STS_Ready());
             });
         }
 
         @Override
         public void onUsageUpdate(String sessionId, long usedTokens, long totalTokens) {
             SwingUtilities.invokeLater(() ->
-                statusLabel.setText(String.format("Tokens: %d / %d", usedTokens, totalTokens))
+                statusLabel.setText(Bundle.STS_Tokens(usedTokens, totalTokens))
             );
         }
 
@@ -185,16 +214,17 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 if (sep >= 0) {
                     fileName = path.substring(sep + 1);
                 }
-                String label = oldContent == null ? "Created" : "Modified";
+                String label = oldContent == null ? Bundle.LBL_FileCreated() : Bundle.LBL_FileModified();
                 chatHtml.append("<div class='tool-call'>")
                         .append("&#x270F; <b>").append(label).append(": ")
                         .append(HtmlUtils.escapeHtml(fileName)).append("</b>")
-                        .append(" <span class='tc-status-completed'>&#x2705; completed</span>")
+                        .append(" <span class='tc-status-completed'>&#x2705; ")
+                        .append(Bundle.LBL_Completed()).append("</span>")
                         .append("<br/><span class='tc-location'>")
                         .append(HtmlUtils.escapeHtml(path)).append("</span>");
                 appendDiffPreview(diff);
                 chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
-                        .append(diffId).append("'>View Full Diff</a>")
+                        .append(diffId).append("'>").append(Bundle.LBL_ViewFullDiff()).append("</a>")
                         .append("</div>");
                 updateChatDisplay();
             });
@@ -210,7 +240,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         toolbar.setFloatable(false);
         agentSelector = new JComboBox<>();
         agentSelector.setMaximumSize(new Dimension(200, 28));
-        toolbar.add(new JLabel("Agent: "));
+        toolbar.add(new JLabel(Bundle.LBL_Agent() + " "));
         toolbar.add(agentSelector);
         JButton addAgentButton = new JButton("+");
         addAgentButton.setToolTipText(NbBundle.getMessage(AcpChatTopComponent.class, "HINT_AddAgent"));
@@ -225,22 +255,22 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         removeAgentButton.addActionListener(e -> removeSelectedAgent());
         toolbar.add(removeAgentButton);
         toolbar.addSeparator();
-        connectButton = new JButton("Connect");
+        connectButton = new JButton(Bundle.BTN_Connect());
         connectButton.addActionListener(e -> toggleConnection());
         toolbar.add(connectButton);
-        JButton newSessionButton = new JButton("New Session");
+        JButton newSessionButton = new JButton(Bundle.BTN_NewSession());
         newSessionButton.addActionListener(e -> startNewSession());
         toolbar.add(newSessionButton);
-        cancelButton = new JButton("Cancel");
+        cancelButton = new JButton(Bundle.BTN_Cancel());
         cancelButton.setEnabled(false);
         cancelButton.addActionListener(e -> cancelPrompt());
         toolbar.add(cancelButton);
-        toolsButton = new JButton("Tools (0)");
+        toolsButton = new JButton(Bundle.BTN_Tools(0));
         toolsButton.setEnabled(false);
         toolsButton.addActionListener(e -> showToolsPopup());
         toolbar.add(toolsButton);
         toolbar.add(Box.createHorizontalGlue());
-        statusLabel = new JLabel("Disconnected");
+        statusLabel = new JLabel(Bundle.STS_Disconnected());
         toolbar.add(statusLabel);
         add(toolbar, BorderLayout.NORTH);
 
@@ -304,7 +334,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             }
         });
 
-        sendButton = new JButton("Send");
+        sendButton = new JButton(Bundle.BTN_Send());
         sendButton.addActionListener(e -> sendMessage());
         sendButton.setEnabled(false);
 
@@ -427,8 +457,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                         if (currentConnection == connectionToClose) {
                             currentConnection = null;
                             currentSessionId = null;
-                            connectButton.setText("Connect");
-                            statusLabel.setText("Disconnected");
+                            connectButton.setText(Bundle.BTN_Connect());
+                            statusLabel.setText(Bundle.STS_Disconnected());
                             updateInputState();
                         }
                     });
@@ -458,8 +488,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 SwingUtilities.invokeLater(() -> {
                     currentConnection = null;
                     currentSessionId = null;
-                    connectButton.setText("Connect");
-                    statusLabel.setText("Disconnected");
+                    connectButton.setText(Bundle.BTN_Connect());
+                    statusLabel.setText(Bundle.STS_Disconnected());
                     updateInputState();
                 });
             });
@@ -475,7 +505,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             if (descriptor == null) {
                 return;
             }
-            statusLabel.setText("Connecting...");
+            statusLabel.setText(Bundle.STS_Connecting());
             connectButton.setEnabled(false);
             RP.post(() -> {
                 try {
@@ -491,14 +521,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     });
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
-                        connectButton.setText("Disconnect");
+                        connectButton.setText(Bundle.BTN_Disconnect());
                         connectButton.setEnabled(true);
-                        statusLabel.setText("Connected");
+                        statusLabel.setText(Bundle.STS_Connected());
                         updateInputState();
                     });
                 } catch (Exception ex) {
                     SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("Error: " + ex.getMessage());
+                        statusLabel.setText(Bundle.STS_ErrorDetail(ex.getMessage()));
                         connectButton.setEnabled(true);
                     });
                 }
@@ -510,7 +540,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         if (currentConnection == null || !currentConnection.isConnected()) {
             return;
         }
-        statusLabel.setText("Creating session...");
+        statusLabel.setText(Bundle.STS_CreatingSession());
         RP.post(() -> {
             try {
                 String sessionId = currentConnection.newSession(
@@ -522,18 +552,18 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
                     currentMcpTools = mcpTools;
-                    toolsButton.setText("Tools (" + mcpTools.size() + ")");
+                    toolsButton.setText(Bundle.BTN_Tools(mcpTools.size()));
                     toolsButton.setEnabled(!mcpTools.isEmpty());
-                    statusLabel.setText("Ready");
+                    statusLabel.setText(Bundle.STS_Ready());
                     updateInputState();
                 });
                 CONTEXT_RP.post(() -> sendProjectContext(sessionId));
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Failed to create new session", ex);
                 SwingUtilities.invokeLater(() -> {
-                    appendSystemMessage("Error creating session: "
-                            + HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())));
-                    statusLabel.setText("Error");
+                    appendSystemMessage(Bundle.MSG_ErrorCreatingSession(
+                            HtmlUtils.escapeHtml(String.valueOf(ex.getMessage()))));
+                    statusLabel.setText(Bundle.STS_Error());
                 });
             }
         });
@@ -544,7 +574,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         if (projectContext != null && !projectContext.isEmpty() && currentConnection != null) {
             try {
                 SwingUtilities.invokeLater(() -> appendSystemMessage(
-                        "<i>Project context sent to agent.</i>"));
+                        "<i>" + Bundle.MSG_ProjectContextSent() + "</i>"));
                 currentConnection.sendPrompt(sessionId,
                         "[System context - do not respond to this, just acknowledge silently]\n\n"
                         + projectContext);
@@ -567,17 +597,17 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         inputArea.setText("");
         promptInProgress.set(true);
         updateInputState();
-        statusLabel.setText("Thinking...");
+        statusLabel.setText(Bundle.STS_Thinking());
 
         RP.post(() -> {
             try {
                 currentConnection.sendPrompt(currentSessionId, fullPrompt);
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
-                    appendSystemMessage("Error: " + HtmlUtils.escapeHtml(ex.getMessage()));
+                    appendSystemMessage(Bundle.STS_ErrorDetail(HtmlUtils.escapeHtml(ex.getMessage())));
                     promptInProgress.set(false);
                     updateInputState();
-                    statusLabel.setText("Error");
+                    statusLabel.setText(Bundle.STS_Error());
                 });
             }
         });
@@ -589,10 +619,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 try {
                     currentConnection.cancel(currentSessionId);
                     SwingUtilities.invokeLater(() -> {
-                        appendSystemMessage("<i>Prompt cancelled.</i>");
+                        appendSystemMessage("<i>" + Bundle.MSG_PromptCancelled() + "</i>");
                         promptInProgress.set(false);
                         updateInputState();
-                        statusLabel.setText("Cancelled");
+                        statusLabel.setText(Bundle.STS_Cancelled());
                     });
                 } catch (Exception ex) {
                     LOG.log(Level.WARNING, "Failed to cancel prompt", ex);
@@ -612,7 +642,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void appendUserMessage(String text) {
-        chatHtml.append("<div class='user-msg'><span class='user-label'>You:</span><br/>")
+        chatHtml.append("<div class='user-msg'><span class='user-label'>").append(Bundle.LBL_You()).append("</span><br/>")
                 .append(HtmlUtils.escapeHtml(text).replace("\n", "<br/>"))
                 .append("</div>");
         updateChatDisplay();
@@ -680,7 +710,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             changed = true;
         }
         if (!message.isEmpty()) {
-            chatHtml.append("<div class='agent-msg'><span class='agent-label'>Agent:</span><br/>")
+            chatHtml.append("<div class='agent-msg'><span class='agent-label'>").append(Bundle.LBL_AgentSays()).append("</span><br/>")
                     .append(HtmlUtils.escapeHtml(message).replace("\n", "<br/>"))
                     .append("</div>");
             changed = true;
@@ -755,7 +785,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 }
                 appendDiffPreview(diff);
                 chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
-                        .append(diffId).append("'>View Full Diff</a>");
+                        .append(diffId).append("'>").append(Bundle.LBL_ViewFullDiff()).append("</a>");
             }
         }
 
@@ -800,7 +830,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void appendPlan(List<AcpPlanEntry> entries) {
-        chatHtml.append("<div class='plan'><b>Plan:</b><ul>");
+        chatHtml.append("<div class='plan'><b>").append(Bundle.LBL_Plan()).append("</b><ul>");
         for (AcpPlanEntry entry : entries) {
             String icon = switch (entry.status()) {
                 case "completed" -> "&#x2705;";

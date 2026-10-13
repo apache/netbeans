@@ -25,6 +25,7 @@ import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
+import org.netbeans.modules.acp.mcp.ToolResult;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -71,19 +72,18 @@ public final class ProjectToolProvider implements McpToolProvider {
                 paths.add(dir.getAbsolutePath());
             }
         }
-        return Map.of("status", "ok", "projects", paths);
+        return ToolResult.ok("projects", paths);
     }
 
     private Map<String, Object> getIdeInfo() {
-        return Map.of(
-                "status", "ok",
+        Map<String, Object> result = ToolResult.ok(
                 "productVersion", System.getProperty("netbeans.productversion", "unknown"),
                 "java", System.getProperty("java.version"),
                 "javaVm", System.getProperty("java.vm.name"),
-                "javaHome", System.getProperty("java.home"),
-                "os", System.getProperty("os.name") + " " + System.getProperty("os.version"),
-                "userDir", System.getProperty("netbeans.user", "unknown"),
-                "encoding", System.getProperty("file.encoding")
-        );
+                "javaHome", System.getProperty("java.home"));
+        result.put("os", System.getProperty("os.name") + " " + System.getProperty("os.version"));
+        result.put("userDir", System.getProperty("netbeans.user", "unknown"));
+        result.put("encoding", System.getProperty("file.encoding"));
+        return result;
     }
 }

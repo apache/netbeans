@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,6 +66,8 @@ import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionListener;
 import org.netbeans.modules.acp.api.AcpToolCall;
+import org.netbeans.modules.acp.mcp.McpToolProvider;
+import org.netbeans.modules.acp.mcp.McpToolRegistry;
 import org.netbeans.modules.acp.ui.AcpContextReceiver;
 import org.netbeans.modules.acp.ui.AcpDiffViewer;
 import org.netbeans.modules.acp.ui.AcpPermissionDialog;
@@ -96,7 +99,7 @@ import org.openide.windows.TopComponent;
     "BTN_NewSession=New Session",
     "BTN_Cancel=Cancel",
     "BTN_Send=Send",
-    "BTN_Tools=Tools ({0})",
+    "BTN_Tools=Tools ({0}/{1})",
     "STS_Disconnected=Disconnected",
     "STS_Connecting=Connecting...",
     "STS_Connected=Connected",
@@ -147,6 +150,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private int diffCounter;
     private final AcpFileMentionSupport mentionSupport;
     private List<AcpMcpServerProvider.ToolInfo> currentMcpTools = List.of();
+    private Set<String> currentEnabledTools;
     private AcpConnection currentConnection;
     private String currentSessionId;
 
@@ -265,7 +269,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         cancelButton.setEnabled(false);
         cancelButton.addActionListener(e -> cancelPrompt());
         toolbar.add(cancelButton);
-        toolsButton = new JButton(Bundle.BTN_Tools(0));
+        toolsButton = new JButton(Bundle.BTN_Tools(0, 0));
         toolsButton.setEnabled(false);
         toolsButton.addActionListener(e -> showToolsPopup());
         toolbar.add(toolsButton);
@@ -488,6 +492,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 SwingUtilities.invokeLater(() -> {
                     currentConnection = null;
                     currentSessionId = null;
+                    currentEnabledTools = null;
                     connectButton.setText(Bundle.BTN_Connect());
                     statusLabel.setText(Bundle.STS_Disconnected());
                     updateInputState();
@@ -509,6 +514,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             connectButton.setEnabled(false);
             RP.post(() -> {
                 try {
+                    org.netbeans.modules.acp.mcp.McpServerManager.getInstance()
+                            .setEnabledTools(descriptor.getEnabledTools());
                     AcpConnection connection = AcpConnectionManager.getDefault().connect(descriptor);
                     connection.addSessionListener(sessionListener);
                     connection.setPermissionHandler(req -> {
@@ -519,8 +526,10 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                         }
                         return pr.response();
                     });
+                    Set<String> enabledSet = descriptor.getEnabledTools();
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
+                        currentEnabledTools = enabledSet;
                         connectButton.setText(Bundle.BTN_Disconnect());
                         connectButton.setEnabled(true);
                         statusLabel.setText(Bundle.STS_Connected());
@@ -546,14 +555,26 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 String sessionId = currentConnection.newSession(
                         getMainProjectDirectory(), getOpenProjectDirectories());
                 List<AcpMcpServerProvider.ToolInfo> mcpTools = gatherMcpToolInfo();
+                McpToolRegistry registry = McpToolRegistry.getInstance();
+                List<McpToolProvider.McpToolDefinition> allAvailable = registry.getAllAvailableTools();
+                int totalCount = allAvailable.size();
+                Set<String> enabledSet = currentEnabledTools;
+                int enabledCount;
+                if (enabledSet != null) {
+                    enabledCount = enabledSet.size();
+                } else {
+                    enabledCount = (int) allAvailable.stream()
+                            .filter(t -> registry.isToolEnabledByDefault(t.name()))
+                            .count();
+                }
                 SwingUtilities.invokeLater(() -> {
                     currentSessionId = sessionId;
                     chatHtml.setLength(0);
                     renderedLength = 0;
                     chatPane.setText("<html><body></body></html>");
                     currentMcpTools = mcpTools;
-                    toolsButton.setText(Bundle.BTN_Tools(mcpTools.size()));
-                    toolsButton.setEnabled(!mcpTools.isEmpty());
+                    toolsButton.setText(Bundle.BTN_Tools(enabledCount, totalCount));
+                    toolsButton.setEnabled(totalCount > 0);
                     statusLabel.setText(Bundle.STS_Ready());
                     updateInputState();
                 });
@@ -669,11 +690,20 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void showToolsPopup() {
-        if (currentMcpTools.isEmpty()) {
+        McpToolRegistry registry = McpToolRegistry.getInstance();
+        List<McpToolProvider.McpToolDefinition> allTools = registry.getAllAvailableTools();
+        if (allTools.isEmpty()) {
             return;
         }
+        Set<String> enabledSet = currentEnabledTools;
         JPopupMenu popup = new JPopupMenu();
-        for (AcpMcpServerProvider.ToolInfo tool : currentMcpTools) {
+        for (McpToolProvider.McpToolDefinition tool : allTools) {
+            boolean enabled;
+            if (enabledSet != null) {
+                enabled = enabledSet.contains(tool.name());
+            } else {
+                enabled = registry.isToolEnabledByDefault(tool.name());
+            }
             String desc = tool.description();
             if (desc != null && desc.length() > 80) {
                 int dot = desc.indexOf(". ");
@@ -683,9 +713,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     desc = desc.substring(0, 80) + "...";
                 }
             }
-            String label = "<html><b>" + tool.name() + "</b>"
-                    + (desc != null ? " &ndash; " + desc : "")
-                    + "</html>";
+            String label;
+            if (enabled) {
+                label = "<html><b>" + tool.name() + "</b>"
+                        + (desc != null ? " &ndash; " + desc : "")
+                        + "</html>";
+            } else {
+                label = "<html><span style='color:gray'>" + tool.name()
+                        + (desc != null ? " &ndash; " + desc : "")
+                        + "</span></html>";
+            }
             JMenuItem item = new JMenuItem(label);
             item.setEnabled(false);
             popup.add(item);

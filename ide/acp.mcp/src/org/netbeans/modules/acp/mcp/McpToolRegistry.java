@@ -35,6 +35,7 @@ public final class McpToolRegistry {
 
     private final Map<String, McpToolProvider> toolOwners = new LinkedHashMap<>();
     private List<McpToolProvider.McpToolDefinition> cachedTools;
+    private List<McpToolProvider.McpToolDefinition> cachedAllTools;
 
     private McpToolRegistry() {
     }
@@ -50,8 +51,16 @@ public final class McpToolRegistry {
         return cachedTools;
     }
 
+    public synchronized List<McpToolProvider.McpToolDefinition> getAllAvailableTools() {
+        if (cachedAllTools == null) {
+            cachedAllTools = loadAllTools();
+        }
+        return cachedAllTools;
+    }
+
     public synchronized void refresh() {
         cachedTools = null;
+        cachedAllTools = null;
         toolOwners.clear();
     }
 
@@ -70,6 +79,17 @@ public final class McpToolRegistry {
         return provider.executeTool(name, arguments);
     }
 
+    public boolean isToolEnabledByDefault(String toolName) {
+        McpToolProvider provider;
+        synchronized (this) {
+            if (cachedAllTools == null) {
+                cachedAllTools = loadAllTools();
+            }
+            provider = toolOwners.get(toolName);
+        }
+        return provider != null && provider.isEnabledByDefault();
+    }
+
     private List<McpToolProvider.McpToolDefinition> loadTools() {
         Collection<? extends McpToolProvider> providers = Lookup.getDefault().lookupAll(McpToolProvider.class);
         List<McpToolProvider.McpToolDefinition> allTools = new ArrayList<>();
@@ -84,6 +104,19 @@ public final class McpToolRegistry {
                 allTools.add(tool);
             }
             LOG.log(Level.INFO, "Loaded {0} tools from {1}", new Object[]{tools.size(), provider.getClass().getSimpleName()});
+        }
+        return Collections.unmodifiableList(allTools);
+    }
+
+    private List<McpToolProvider.McpToolDefinition> loadAllTools() {
+        Collection<? extends McpToolProvider> providers = Lookup.getDefault().lookupAll(McpToolProvider.class);
+        List<McpToolProvider.McpToolDefinition> allTools = new ArrayList<>();
+        for (McpToolProvider provider : providers) {
+            List<McpToolProvider.McpToolDefinition> tools = provider.getTools();
+            for (McpToolProvider.McpToolDefinition tool : tools) {
+                toolOwners.put(tool.name(), provider);
+                allTools.add(tool);
+            }
         }
         return Collections.unmodifiableList(allTools);
     }

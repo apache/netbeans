@@ -23,10 +23,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -36,6 +42,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor;
 import org.netbeans.modules.acp.api.AcpAgentDescriptor.TransportType;
+import org.netbeans.modules.acp.mcp.McpToolProvider;
+import org.netbeans.modules.acp.mcp.McpToolRegistry;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
@@ -46,7 +54,8 @@ import org.openide.util.NbBundle;
     "LBL_WorkingDir=Working Directory:",
     "LBL_EnvVars=Environment Variables:",
     "LBL_EnvVarsHint=(one KEY=VALUE per line)",
-    "LBL_Browse=Browse..."
+    "LBL_Browse=Browse...",
+    "LBL_Tools=Exposed Tools:"
 })
 final class AcpAgentConfigPanel extends JPanel {
 
@@ -61,6 +70,7 @@ final class AcpAgentConfigPanel extends JPanel {
     private final JButton browseButton;
     private final JTextArea envVarsArea;
     private final JLabel envVarsLabel;
+    private final List<JCheckBox> toolCheckBoxes = new ArrayList<>();
 
     AcpAgentConfigPanel() {
         this(null);
@@ -186,6 +196,39 @@ final class AcpAgentConfigPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         add(new JLabel(Bundle.LBL_EnvVarsHint()), gbc);
 
+        // Tools
+        row++;
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        add(new JLabel(Bundle.LBL_Tools()), gbc);
+        JPanel toolsPanel = new JPanel();
+        toolsPanel.setLayout(new BoxLayout(toolsPanel, BoxLayout.Y_AXIS));
+        McpToolRegistry registry = McpToolRegistry.getInstance();
+        Set<String> existingEnabled = existing != null ? existing.getEnabledTools() : null;
+        for (McpToolProvider.McpToolDefinition tool : registry.getAllAvailableTools()) {
+            JCheckBox cb = new JCheckBox(tool.name());
+            cb.setToolTipText(tool.description());
+            if (existingEnabled != null) {
+                cb.setSelected(existingEnabled.contains(tool.name()));
+            } else {
+                cb.setSelected(registry.isToolEnabledByDefault(tool.name()));
+            }
+            toolCheckBoxes.add(cb);
+            toolsPanel.add(cb);
+        }
+        JScrollPane toolsScroll = new JScrollPane(toolsPanel);
+        toolsScroll.setPreferredSize(new java.awt.Dimension(0, 120));
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        add(toolsScroll, gbc);
+
         transportCombo.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 updateTransportVisibility();
@@ -280,6 +323,14 @@ final class AcpAgentConfigPanel extends JPanel {
                 builder.environmentVariables(envVars);
             }
         }
+
+        Set<String> enabledTools = new LinkedHashSet<>();
+        for (JCheckBox cb : toolCheckBoxes) {
+            if (cb.isSelected()) {
+                enabledTools.add(cb.getText());
+            }
+        }
+        builder.enabledTools(enabledTools);
 
         return builder.build();
     }

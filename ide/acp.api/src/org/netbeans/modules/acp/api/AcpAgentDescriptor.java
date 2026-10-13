@@ -20,9 +20,11 @@ package org.netbeans.modules.acp.api;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
@@ -50,16 +52,18 @@ public final class AcpAgentDescriptor {
     private final String url;
     private final String workingDirectory;
     private final Map<String, String> environmentVariables;
+    private final Set<String> enabledTools;
 
     private AcpAgentDescriptor(String name, TransportType transportType,
             List<String> command, String url, String workingDirectory,
-            Map<String, String> environmentVariables) {
+            Map<String, String> environmentVariables, Set<String> enabledTools) {
         this.name = name;
         this.transportType = transportType;
         this.command = command;
         this.url = url;
         this.workingDirectory = workingDirectory;
         this.environmentVariables = environmentVariables;
+        this.enabledTools = enabledTools;
     }
 
     /**
@@ -120,6 +124,17 @@ public final class AcpAgentDescriptor {
         return environmentVariables;
     }
 
+    /**
+     * Returns the set of MCP tool names enabled for this agent.
+     * {@code null} means use the default tool set (tools where
+     * the provider's {@code isEnabledByDefault()} returns {@code true}).
+     *
+     * @return an unmodifiable set of tool names, or {@code null} for defaults
+     */
+    public Set<String> getEnabledTools() {
+        return enabledTools;
+    }
+
     @Override
     public String toString() {
         return "AcpAgentDescriptor{" + "name=" + name + ", transport=" + transportType + '}'; // NOI18N
@@ -152,6 +167,7 @@ public final class AcpAgentDescriptor {
         private String url;
         private String workingDirectory;
         private Map<String, String> environmentVariables = Map.of();
+        private Set<String> enabledTools;
 
         /**
          * Creates a new builder with the required name and transport type.
@@ -210,6 +226,19 @@ public final class AcpAgentDescriptor {
         }
 
         /**
+         * Sets the MCP tools enabled for this agent. Pass {@code null} to
+         * use the default tool set.
+         *
+         * @param enabledTools the set of tool names, or {@code null}
+         * @return this builder
+         */
+        public Builder enabledTools(@NullAllowed Set<String> enabledTools) {
+            this.enabledTools = enabledTools == null ? null
+                    : Collections.unmodifiableSet(new LinkedHashSet<>(enabledTools));
+            return this;
+        }
+
+        /**
          * Builds an immutable {@link AcpAgentDescriptor} from the current state.
          *
          * @return the new descriptor instance
@@ -223,7 +252,7 @@ public final class AcpAgentDescriptor {
             if (transportType == TransportType.WEBSOCKET && (url == null || url.isBlank())) {
                 throw new IllegalStateException("WEBSOCKET transport requires a URL");
             }
-            return new AcpAgentDescriptor(name, transportType, command, url, workingDirectory, environmentVariables);
+            return new AcpAgentDescriptor(name, transportType, command, url, workingDirectory, environmentVariables, enabledTools);
         }
     }
 }

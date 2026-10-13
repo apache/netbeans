@@ -102,6 +102,27 @@ public interface AcpSessionListener {
     }
 
     /**
+     * Called when the agent reports the slash commands it supports
+     * (e.g. {@code /help}, {@code /compact}).
+     *
+     * @param sessionId the session identifier
+     * @param commands  the available commands
+     */
+    default void onAvailableCommands(String sessionId, List<AcpCommand> commands) {
+    }
+
+    /**
+     * Called when the agent sends session metadata such as a title or
+     * timestamp.
+     *
+     * @param sessionId the session identifier
+     * @param title     the session title, or {@code null}
+     * @param updatedAt the last-updated timestamp, or {@code null}
+     */
+    default void onSessionInfo(String sessionId, String title, String updatedAt) {
+    }
+
+    /**
      * Called when the agent writes a text file through the ACP file handler.
      * The old and new content are provided so that listeners can display
      * or review the changes.

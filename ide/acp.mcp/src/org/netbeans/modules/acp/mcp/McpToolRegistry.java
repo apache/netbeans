@@ -108,6 +108,42 @@ public final class McpToolRegistry {
         return Collections.unmodifiableList(allTools);
     }
 
+    public Map<String, List<McpToolProvider.McpToolDefinition>> getToolsByProvider() {
+        Collection<? extends McpToolProvider> providers = Lookup.getDefault().lookupAll(McpToolProvider.class);
+        Map<String, List<McpToolProvider.McpToolDefinition>> result = new LinkedHashMap<>();
+        for (McpToolProvider provider : providers) {
+            List<McpToolProvider.McpToolDefinition> tools = provider.getTools();
+            if (!tools.isEmpty()) {
+                String label = providerLabel(provider);
+                synchronized (this) {
+                    for (McpToolProvider.McpToolDefinition tool : tools) {
+                        toolOwners.put(tool.name(), provider);
+                    }
+                }
+                result.put(label, Collections.unmodifiableList(tools));
+            }
+        }
+        return result;
+    }
+
+    private static String providerLabel(McpToolProvider provider) {
+        String name = provider.getClass().getSimpleName();
+        if (name.endsWith("ToolProvider")) {
+            name = name.substring(0, name.length() - "ToolProvider".length());
+        } else if (name.endsWith("Provider")) {
+            name = name.substring(0, name.length() - "Provider".length());
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (i > 0 && Character.isUpperCase(c)) {
+                sb.append(' ');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
     private List<McpToolProvider.McpToolDefinition> loadAllTools() {
         Collection<? extends McpToolProvider> providers = Lookup.getDefault().lookupAll(McpToolProvider.class);
         List<McpToolProvider.McpToolDefinition> allTools = new ArrayList<>();

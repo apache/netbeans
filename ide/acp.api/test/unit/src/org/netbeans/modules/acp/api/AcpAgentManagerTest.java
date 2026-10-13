@@ -23,8 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import org.netbeans.junit.NbTestCase;
 
 public class AcpAgentManagerTest extends NbTestCase {

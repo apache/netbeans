@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
+import org.netbeans.modules.acp.mcp.ProjectPathGuard;
 import org.netbeans.modules.acp.mcp.ToolResult;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
@@ -218,6 +219,9 @@ public final class GitToolProvider implements McpToolProvider {
 
     private File resolveRepoDir(String repoDir) {
         if (repoDir != null && !repoDir.isBlank()) {
+            if (!ProjectPathGuard.isInOpenProject(repoDir.trim())) {
+                return null;
+            }
             File dir = new File(repoDir.trim());
             if (dir.isDirectory() && new File(dir, ".git").exists()) {
                 return dir;

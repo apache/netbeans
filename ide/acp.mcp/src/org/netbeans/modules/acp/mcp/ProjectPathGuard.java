@@ -48,6 +48,19 @@ public final class ProjectPathGuard {
         return false;
     }
 
+    /**
+     * Validates that all given paths are inside an open project.
+     * @return an error result for the first path that fails, or {@code null} if all pass
+     */
+    public static Map<String, Object> requireInOpenProject(String... paths) {
+        for (String path : paths) {
+            if (path != null && !path.isBlank() && !isInOpenProject(path)) {
+                return outsideProjectError(path);
+            }
+        }
+        return null;
+    }
+
     public static Map<String, Object> outsideProjectError(String path) {
         return ToolResult.error("Path is outside any open project: " + path);
     }

@@ -33,7 +33,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +48,7 @@ public final class McpHttpServer {
     private final McpToolRegistry registry;
     private final ObjectMapper mapper;
     private HttpServer server;
+    private ExecutorService executor;
     private int port;
     private volatile Set<String> enabledTools;
 
@@ -66,11 +69,12 @@ public final class McpHttpServer {
         }
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/mcp", new McpHandler());
-        server.setExecutor(Executors.newCachedThreadPool(r -> {
+        executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r, "MCP-Server-Worker");
             t.setDaemon(true);
             return t;
-        }));
+        });
+        server.setExecutor(executor);
         server.start();
         port = server.getAddress().getPort();
         LOG.log(Level.INFO, "MCP server started on 127.0.0.1:{0}", port);
@@ -80,6 +84,18 @@ public final class McpHttpServer {
         if (server != null) {
             server.stop(1);
             server = null;
+            if (executor != null) {
+                executor.shutdown();
+                try {
+                    if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                        executor.shutdownNow();
+                    }
+                } catch (InterruptedException ex) {
+                    executor.shutdownNow();
+                    Thread.currentThread().interrupt();
+                }
+                executor = null;
+            }
             port = 0;
             LOG.info("MCP server stopped");
         }
@@ -140,7 +156,7 @@ public final class McpHttpServer {
                 return errorResponse(id, -32600, "Invalid request: missing method");
             }
 
-            LOG.log(Level.INFO, "MCP method: {0}, id: {1}", new Object[]{method, id});
+            LOG.log(Level.FINE, "MCP method: {0}, id: {1}", new Object[]{method, id});
 
             return switch (method) {
                 case "initialize" -> handleInitialize(id);

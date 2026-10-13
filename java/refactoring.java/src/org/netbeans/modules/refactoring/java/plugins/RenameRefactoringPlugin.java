@@ -53,7 +53,7 @@ import org.openide.util.Utilities;
  */
 public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
     
-    private Set<ElementHandle<ExecutableElement>> allMethods = new HashSet<ElementHandle<ExecutableElement>>();
+    private Set<ElementHandle<ExecutableElement>> allMethods = new HashSet<>();
     private Set<TreePathHandle> recordLinkedDeclarations = new HashSet<>();
     private boolean doCheckName = true;
     private Integer overriddenByMethodsCount = null;
@@ -92,9 +92,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                         }
                     }
                 }, false);
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
+            } catch (IllegalArgumentException | IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -610,7 +608,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
         Set<FileObject> a = getRelevantFiles();
         fireProgressListenerStart(AbstractRefactoring.PREPARE, a.size());
         TransformTask transform = new TransformTask(new RenameTransformer(treePathHandle, docTreePathHandle, refactoring, allMethods, recordLinkedDeclarations, refactoring.isSearchInComments()), treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT ? null : treePathHandle);
-        Problem problem = createAndAddElements(a, transform, elements, null);
+        Problem problem = createAndAddElements(a, transform, elements, refactoring);
         fireProgressListenerStop();
         return problem;
     }
@@ -618,9 +616,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
     private Problem willOverride(ExecutableElement method, String name, Problem problem, CompilationInfo info) {
         boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
         TypeElement jc = (TypeElement) method.getEnclosingElement();
-        LinkedList supertypes = new LinkedList();
         
-        ElementUtilities ut = info.getElementUtilities();
         Elements elements = info.getElements();
         ExecutableElement m = null;
         

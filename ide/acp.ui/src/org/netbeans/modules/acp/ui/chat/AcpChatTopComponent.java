@@ -18,8 +18,11 @@
  */
 package org.netbeans.modules.acp.ui.chat;
 
+import com.agentclientprotocol.sdk.error.AcpCapabilityException;
 import org.netbeans.modules.acp.ui.HtmlUtils;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -36,10 +39,13 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -49,6 +55,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
@@ -65,6 +72,7 @@ import org.netbeans.modules.acp.api.AcpConnection;
 import org.netbeans.modules.acp.api.AcpMcpServerProvider;
 import org.netbeans.modules.acp.api.AcpConnectionManager;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
+import org.netbeans.modules.acp.api.AcpSessionInfo;
 import org.netbeans.modules.acp.api.AcpSessionListener;
 import org.netbeans.modules.acp.api.AcpToolCall;
 import org.netbeans.modules.acp.mcp.McpToolProvider;
@@ -125,7 +133,16 @@ import org.openide.windows.TopComponent;
     "LBL_ViewFullDiff=View Full Diff",
     "LBL_You=You:",
     "LBL_AgentSays=Agent:",
-    "LBL_Plan=Plan:"
+    "LBL_Plan=Plan:",
+    "BTN_Sessions=Sessions",
+    "TTL_SessionBrowser=Past Sessions",
+    "LBL_NoSessions=No past sessions found.",
+    "BTN_ResumeSession=Resume",
+    "BTN_DeleteSession=Delete",
+    "STS_ResumingSession=Resuming session...",
+    "MSG_SessionResumed=Session resumed.",
+    "MSG_SessionDeleted=Session deleted.",
+    "MSG_NoSessionCapability=This agent does not support session management."
 })
 public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
@@ -134,6 +151,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private static final RequestProcessor CONTEXT_RP = new RequestProcessor("ACP-Context-RP", 1);
     private static final int DISPLAY_DELAY_MS = 50;
     private static final int RENDER_DELAY_MS = 200;
+    private static final int SESSION_BROWSER_WIDTH = 450;
+    private static final int SESSION_BROWSER_HEIGHT = 250;
 
     private final JEditorPane chatPane;
     private final JTextArea inputArea;
@@ -310,6 +329,9 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         JButton newSessionButton = new JButton(Bundle.BTN_NewSession());
         newSessionButton.addActionListener(e -> startNewSession());
         toolbar.add(newSessionButton);
+        JButton sessionsButton = new JButton(Bundle.BTN_Sessions());
+        sessionsButton.addActionListener(e -> showSessionBrowser());
+        toolbar.add(sessionsButton);
         cancelButton = new JButton(Bundle.BTN_Cancel());
         cancelButton.setEnabled(false);
         cancelButton.addActionListener(e -> cancelPrompt());
@@ -571,6 +593,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             }
             statusLabel.setText(Bundle.STS_Connecting());
             connectButton.setEnabled(false);
+            String fallbackDir = getMainProjectDirectory();
             RP.post(() -> {
                 try {
                     org.netbeans.modules.acp.mcp.McpServerManager.getInstance()
@@ -588,8 +611,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     Set<String> enabledSet = descriptor.getEnabledTools();
                     String workDir = descriptor.getWorkingDirectory() != null
                             ? descriptor.getWorkingDirectory()
-                            : getMainProjectDirectory() != null
-                                    ? getMainProjectDirectory() : "";
+                            : fallbackDir != null ? fallbackDir : "";
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
                         currentEnabledTools = enabledSet;
@@ -616,10 +638,11 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             return;
         }
         statusLabel.setText(Bundle.STS_CreatingSession());
+        String mainDir = getMainProjectDirectory();
+        List<String> openDirs = getOpenProjectDirectories();
         RP.post(() -> {
             try {
-                String sessionId = currentConnection.newSession(
-                        getMainProjectDirectory(), getOpenProjectDirectories());
+                String sessionId = currentConnection.newSession(mainDir, openDirs);
                 List<AcpMcpServerProvider.ToolInfo> mcpTools = gatherMcpToolInfo();
                 McpToolRegistry registry = McpToolRegistry.getInstance();
                 List<McpToolProvider.McpToolDefinition> allAvailable = registry.getAllAvailableTools();
@@ -828,6 +851,166 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             popup.add(item);
         }
         popup.show(commandsButton, 0, commandsButton.getHeight());
+    }
+
+    private void showSessionBrowser() {
+        if (currentConnection == null || !currentConnection.isConnected()) {
+            return;
+        }
+        String mainDir = getMainProjectDirectory();
+        RP.post(() -> {
+            List<AcpSessionInfo> sessions;
+            try {
+                sessions = currentConnection.listSessions(mainDir);
+            } catch (IOException ex) {
+                handleSessionListError(ex);
+                return;
+            }
+            SwingUtilities.invokeLater(() -> {
+                if (sessions.isEmpty()) {
+                    appendSystemMessage(Bundle.LBL_NoSessions());
+                    return;
+                }
+                showSessionBrowserDialog(sessions);
+            });
+        });
+    }
+
+    private void handleSessionListError(IOException ex) {
+        Throwable cause = ex.getCause();
+        if (cause instanceof AcpCapabilityException) {
+            SwingUtilities.invokeLater(() ->
+                    appendSystemMessage(Bundle.MSG_NoSessionCapability()));
+        } else {
+            LOG.log(Level.WARNING, "Failed to list sessions", ex);
+            SwingUtilities.invokeLater(() ->
+                    appendSystemMessage(Bundle.STS_ErrorDetail(
+                            HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())))));
+        }
+    }
+
+    private void showSessionBrowserDialog(List<AcpSessionInfo> sessions) {
+        AcpConnection connection = currentConnection;
+        DefaultListModel<AcpSessionInfo> listModel = new DefaultListModel<>();
+        JList<AcpSessionInfo> sessionList = buildSessionList(sessions, listModel);
+
+        JPanel browserPanel = new JPanel(new BorderLayout(4, 4));
+        browserPanel.setPreferredSize(new Dimension(SESSION_BROWSER_WIDTH, SESSION_BROWSER_HEIGHT));
+        browserPanel.add(new JScrollPane(sessionList), BorderLayout.CENTER);
+
+        JButton resumeBtn = new JButton(Bundle.BTN_ResumeSession());
+        JButton deleteBtn = new JButton(Bundle.BTN_DeleteSession());
+        browserPanel.add(buildButtonRow(resumeBtn, deleteBtn), BorderLayout.SOUTH);
+
+        DialogDescriptor dd = new DialogDescriptor(browserPanel, Bundle.TTL_SessionBrowser(),
+                true, new Object[]{NotifyDescriptor.CANCEL_OPTION}, NotifyDescriptor.CANCEL_OPTION,
+                DialogDescriptor.DEFAULT_ALIGN, null, null);
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+
+        resumeBtn.addActionListener(ev -> {
+            AcpSessionInfo selected = sessionList.getSelectedValue();
+            if (selected != null) {
+                dialog.dispose();
+                onResumeSession(selected, connection);
+            }
+        });
+
+        deleteBtn.addActionListener(ev -> {
+            AcpSessionInfo selected = sessionList.getSelectedValue();
+            if (selected != null) {
+                onDeleteSession(selected, listModel, connection);
+            }
+        });
+
+        dialog.setVisible(true);
+    }
+
+    private JList<AcpSessionInfo> buildSessionList(List<AcpSessionInfo> sessions,
+            DefaultListModel<AcpSessionInfo> listModel) {
+        for (AcpSessionInfo si : sessions) {
+            listModel.addElement(si);
+        }
+        JList<AcpSessionInfo> sessionList = new JList<>(listModel);
+        sessionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sessionList.setCellRenderer(new SessionListCellRenderer());
+        sessionList.setSelectedIndex(0);
+        return sessionList;
+    }
+
+    private void onResumeSession(AcpSessionInfo session, AcpConnection connection) {
+        statusLabel.setText(Bundle.STS_ResumingSession());
+        String mainDir = getMainProjectDirectory();
+        List<String> openDirs = getOpenProjectDirectories();
+        RP.post(() -> {
+            try {
+                String sid = connection.resumeSession(
+                        session.sessionId(), mainDir, openDirs);
+                SwingUtilities.invokeLater(() -> {
+                    currentSessionId = sid;
+                    chatHtml.setLength(0);
+                    renderedLength = 0;
+                    chatPane.setText("<html><body></body></html>");
+                    appendSystemMessage(Bundle.MSG_SessionResumed());
+                    statusLabel.setText(Bundle.STS_Ready());
+                    updateInputState();
+                });
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "Failed to resume session", ex);
+                SwingUtilities.invokeLater(() -> {
+                    appendSystemMessage(Bundle.STS_ErrorDetail(
+                            HtmlUtils.escapeHtml(String.valueOf(ex.getMessage()))));
+                    statusLabel.setText(Bundle.STS_Error());
+                });
+            }
+        });
+    }
+
+    private void onDeleteSession(AcpSessionInfo session,
+            DefaultListModel<AcpSessionInfo> listModel, AcpConnection connection) {
+        RP.post(() -> {
+            try {
+                connection.deleteSession(session.sessionId());
+                SwingUtilities.invokeLater(() -> {
+                    listModel.removeElement(session);
+                    appendSystemMessage(Bundle.MSG_SessionDeleted());
+                });
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "Failed to delete session", ex);
+                SwingUtilities.invokeLater(() ->
+                        appendSystemMessage(Bundle.STS_ErrorDetail(
+                                HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())))));
+            }
+        });
+    }
+
+    private static JPanel buildButtonRow(JButton... buttons) {
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
+        for (int i = 0; i < buttons.length; i++) {
+            if (i > 0) {
+                row.add(Box.createHorizontalStrut(8));
+            }
+            row.add(buttons[i]);
+        }
+        return row;
+    }
+
+    private static final class SessionListCellRenderer extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList<?> list, Object value, int index,
+                boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof AcpSessionInfo si) {
+                String label = si.title() != null ? si.title() : si.sessionId();
+                if (si.updatedAt() != null) {
+                    label += "  (" + si.updatedAt() + ")";
+                }
+                setText(label);
+            }
+            return this;
+        }
     }
 
     private void flushMessageBuffers() {

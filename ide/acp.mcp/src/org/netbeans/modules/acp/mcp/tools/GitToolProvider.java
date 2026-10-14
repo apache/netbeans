@@ -222,13 +222,17 @@ public final class GitToolProvider implements McpToolProvider {
             if (!ProjectPathGuard.isInOpenProject(repoDir.trim())) {
                 return null;
             }
-            return findGitRoot(new File(repoDir.trim()));
+            File gitRoot = findGitRoot(new File(repoDir.trim()));
+            if (gitRoot != null && !isGitRootAllowed(gitRoot)) {
+                return null;
+            }
+            return gitRoot;
         }
         for (Project p : OpenProjects.getDefault().getOpenProjects()) {
             File projectDir = FileUtil.toFile(p.getProjectDirectory());
             if (projectDir != null) {
                 File gitRoot = findGitRoot(projectDir);
-                if (gitRoot != null) {
+                if (gitRoot != null && isGitRootAllowed(gitRoot)) {
                     return gitRoot;
                 }
             }
@@ -236,7 +240,19 @@ public final class GitToolProvider implements McpToolProvider {
         return null;
     }
 
+    private static boolean isGitRootAllowed(File gitRoot) {
+        java.nio.file.Path gitRootNorm = gitRoot.toPath().normalize();
+        for (Project p : OpenProjects.getDefault().getOpenProjects()) {
+            File projectDir = FileUtil.toFile(p.getProjectDirectory());
+            if (projectDir != null && projectDir.toPath().normalize().startsWith(gitRootNorm)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static final int MAX_PARENT_DEPTH = 10;
+    private static final int MAX_OUTPUT_CHARS = 500_000;
 
     private static File findGitRoot(File dir) {
         File current = dir;
@@ -258,11 +274,19 @@ public final class GitToolProvider implements McpToolProvider {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(proc.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
+            boolean truncated = false;
             while ((line = reader.readLine()) != null) {
+                if (output.length() > MAX_OUTPUT_CHARS) {
+                    truncated = true;
+                    break;
+                }
                 if (output.length() > 0) {
                     output.append("\n");
                 }
                 output.append(line);
+            }
+            if (truncated) {
+                output.append("\n[...output truncated...]");
             }
         }
         boolean finished = proc.waitFor(30, TimeUnit.SECONDS);

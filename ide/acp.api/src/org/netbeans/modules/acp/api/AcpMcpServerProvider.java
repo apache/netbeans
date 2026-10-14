@@ -31,6 +31,19 @@ public interface AcpMcpServerProvider {
     List<AcpSchema.McpServer> getMcpServers();
 
     /**
+     * Revokes a bearer token that was previously issued by this provider.
+     * Called when the ACP connection that used the token closes, so that the
+     * token does not accumulate indefinitely in memory.
+     * <p>
+     * The default implementation is a no-op; providers that issue tokens (e.g.
+     * the MCP HTTP server) must override this to perform the actual revocation.
+     *
+     * @param bearerToken the raw token value (without the {@code Bearer } prefix)
+     */
+    default void releaseBearerToken(String bearerToken) {
+    }
+
+    /**
      * Returns a human-readable summary of the tools provided by this
      * MCP server. Each entry is a pair of [name, description].
      * Used by the UI to display available tools after session creation.

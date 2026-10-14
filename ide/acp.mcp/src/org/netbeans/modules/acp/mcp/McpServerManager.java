@@ -22,7 +22,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +32,7 @@ public final class McpServerManager {
 
     private final McpToolRegistry registry;
     private final McpHttpServer httpServer;
-    private final AtomicReference<Set<String>> pendingEnabledTools = new AtomicReference<>();
+    private final ThreadLocal<Set<String>> pendingEnabledTools = new ThreadLocal<>();
 
     private McpServerManager() {
         this.registry = McpToolRegistry.getInstance();
@@ -69,7 +68,8 @@ public final class McpServerManager {
         if (!httpServer.isRunning()) {
             return null;
         }
-        Set<String> tools = pendingEnabledTools.getAndSet(null);
+        Set<String> tools = pendingEnabledTools.get();
+        pendingEnabledTools.remove();
         String token = httpServer.createSessionToken(tools);
         List<AcpSchema.HttpHeader> headers = List.of(
                 new AcpSchema.HttpHeader("Authorization", "Bearer " + token));

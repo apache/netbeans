@@ -67,13 +67,14 @@ public final class AcpAgentManager {
     private static final String KEY_ENV_VALUE = ".envValue."; // NOI18N
     private static final String KEY_TOOL_COUNT = ".toolCount"; // NOI18N
     private static final String KEY_TOOL_NAME = ".toolName."; // NOI18N
+    private static final String KEY_COMMAND_PREFIX = ".commandPrefix"; // NOI18N
     private static final String KEY_AGENT_COUNT = "agentCount"; // NOI18N
 
     private static final String COMMAND_DELIMITER = "\u001F"; // unit separator // NOI18N
     private static final String KEYRING_SENTINEL = "@@KEYRING@@"; // NOI18N
-    // Heuristic: env var names containing these substrings likely hold API secrets
+    private static final String LEGACY_KEYRING_SENTINEL = "\u0000KEYRING\u0000"; // NOI18N
     private static final Pattern SECRET_KEY_PATTERN =
-            Pattern.compile("(?i).*(KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL).*");
+            Pattern.compile("(?i).*(_KEY|_TOKEN|_SECRET|_PASSWORD|_CREDENTIAL|API_KEY|AUTH_TOKEN)$");
 
     private final Object lock = new Object();
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
@@ -281,14 +282,16 @@ public final class AcpAgentManager {
                 String key = prefs.get(prefix + KEY_ENV_KEY + j, null);
                 String value = prefs.get(prefix + KEY_ENV_VALUE + j, ""); // NOI18N
                 if (key != null) {
-                    if (KEYRING_SENTINEL.equals(value)) {
-                        char[] secret = Keyring.read(keyringKey(name, key));
+                    if (KEYRING_SENTINEL.equals(value)
+                            || LEGACY_KEYRING_SENTINEL.equals(value)) {
+                        char[] secret = readKeyringSecret(name, key);
                         if (secret != null) {
                             value = new String(secret);
                             Arrays.fill(secret, '\0');
                         } else {
-                            LOG.log(Level.WARNING, "Keyring entry missing for {0}", key);
-                            continue;
+                            LOG.log(Level.WARNING, "Keyring entry missing for {0},"
+                                    + " agent may fail to authenticate", key);
+                            value = "";
                         }
                     }
                     envVars.put(key, value);
@@ -307,6 +310,11 @@ public final class AcpAgentManager {
                 }
             }
             builder.enabledTools(enabledTools);
+        }
+
+        String cmdPrefix = prefs.get(prefix + KEY_COMMAND_PREFIX, null);
+        if (cmdPrefix != null) {
+            builder.commandPrefix(cmdPrefix);
         }
 
         try {
@@ -331,6 +339,7 @@ public final class AcpAgentManager {
                 String oldEnvKey = prefs.get(PREFIX_AGENT + i + KEY_ENV_KEY + j, null);
                 if (oldEnvKey != null) {
                     Keyring.delete(keyringKey(oldName, oldEnvKey));
+                    Keyring.delete(legacyKeyringKey(oldName, oldEnvKey));
                 }
             }
         }
@@ -408,6 +417,11 @@ public final class AcpAgentManager {
                 t++;
             }
         }
+
+        String cmdPrefix = agent.getCommandPrefix();
+        if (!AcpAgentDescriptor.DEFAULT_COMMAND_PREFIX.equals(cmdPrefix)) {
+            entries.put(prefix + KEY_COMMAND_PREFIX, cmdPrefix);
+        }
     }
 
     // Name-based (not index-based) so keys remain stable when agents are reordered.
@@ -415,6 +429,18 @@ public final class AcpAgentManager {
     private static String keyringKey(String agentName, String envKey) {
         return "acp.agent" + COMMAND_DELIMITER + agentName // NOI18N
                 + COMMAND_DELIMITER + envKey; // NOI18N
+    }
+
+    private static String legacyKeyringKey(String agentName, String envKey) {
+        return "acp.agent." + agentName + ".env." + envKey; // NOI18N
+    }
+
+    private static char[] readKeyringSecret(String agentName, String envKey) {
+        char[] secret = Keyring.read(keyringKey(agentName, envKey));
+        if (secret == null) {
+            secret = Keyring.read(legacyKeyringKey(agentName, envKey));
+        }
+        return secret;
     }
 
     private Preferences getPreferences() {

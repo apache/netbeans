@@ -58,7 +58,7 @@ import org.openide.util.NbBundle;
     "LBL_Browse=Browse...",
     "LBL_Tools=Exposed Tools:"
 })
-final class AcpAgentConfigPanel extends JPanel {
+public final class AcpAgentConfigPanel extends JPanel {
 
     private final JTextField nameField;
     private final JComboBox<TransportType> transportCombo;
@@ -73,11 +73,11 @@ final class AcpAgentConfigPanel extends JPanel {
     private final JLabel envVarsLabel;
     private final List<JCheckBox> toolCheckBoxes = new ArrayList<>();
 
-    AcpAgentConfigPanel() {
+    public AcpAgentConfigPanel() {
         this(null);
     }
 
-    AcpAgentConfigPanel(AcpAgentDescriptor existing) {
+    public AcpAgentConfigPanel(AcpAgentDescriptor existing) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -290,7 +290,7 @@ final class AcpAgentConfigPanel extends JPanel {
         }
     }
 
-    AcpAgentDescriptor buildDescriptor() {
+    public AcpAgentDescriptor buildDescriptor() {
         String name = nameField.getText().trim();
         if (name.isEmpty()) {
             return null;

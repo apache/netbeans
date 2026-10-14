@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+import org.netbeans.api.keyring.Keyring;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
@@ -69,6 +70,10 @@ public final class AcpAgentManager {
     private static final String KEY_AGENT_COUNT = "agentCount"; // NOI18N
 
     private static final String COMMAND_DELIMITER = "\u001F"; // unit separator // NOI18N
+    private static final String KEYRING_SENTINEL = "@@KEYRING@@"; // NOI18N
+    // Heuristic: env var names containing these substrings likely hold API secrets
+    private static final Pattern SECRET_KEY_PATTERN =
+            Pattern.compile("(?i).*(KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL).*");
 
     private final Object lock = new Object();
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
@@ -202,6 +207,27 @@ public final class AcpAgentManager {
     }
 
     /**
+     * Replaces the entire agent list atomically. More efficient than
+     * calling {@link #addAgent}, {@link #removeAgent} and
+     * {@link #updateAgent} individually when multiple changes must be
+     * persisted, because it writes to preferences and Keyring only once.
+     *
+     * @param agents the new list of agent descriptors
+     */
+    public void setAgents(List<AcpAgentDescriptor> agents) {
+        Objects.requireNonNull(agents, "agents must not be null");
+
+        List<AcpAgentDescriptor> oldAgents;
+        List<AcpAgentDescriptor> newAgents;
+        synchronized (lock) {
+            oldAgents = loadAgents();
+            newAgents = List.copyOf(agents);
+            saveAllAgents(new ArrayList<>(agents));
+        }
+        changeSupport.firePropertyChange(PROP_AGENTS, oldAgents, newAgents);
+    }
+
+    /**
      * Adds a property change listener.
      *
      * @param listener the listener to add
@@ -255,6 +281,16 @@ public final class AcpAgentManager {
                 String key = prefs.get(prefix + KEY_ENV_KEY + j, null);
                 String value = prefs.get(prefix + KEY_ENV_VALUE + j, ""); // NOI18N
                 if (key != null) {
+                    if (KEYRING_SENTINEL.equals(value)) {
+                        char[] secret = Keyring.read(keyringKey(name, key));
+                        if (secret != null) {
+                            value = new String(secret);
+                            Arrays.fill(secret, '\0');
+                        } else {
+                            LOG.log(Level.WARNING, "Keyring entry missing for {0}", key);
+                            continue;
+                        }
+                    }
                     envVars.put(key, value);
                 }
             }
@@ -283,6 +319,21 @@ public final class AcpAgentManager {
 
     private void saveAllAgents(List<AcpAgentDescriptor> agents) {
         Preferences prefs = getPreferences();
+
+        int oldCount = prefs.getInt(KEY_AGENT_COUNT, 0);
+        for (int i = 0; i < oldCount; i++) {
+            String oldName = prefs.get(PREFIX_AGENT + i + KEY_NAME, null);
+            if (oldName == null) {
+                continue;
+            }
+            int oldEnvCount = prefs.getInt(PREFIX_AGENT + i + KEY_ENV_COUNT, 0);
+            for (int j = 0; j < oldEnvCount; j++) {
+                String oldEnvKey = prefs.get(PREFIX_AGENT + i + KEY_ENV_KEY + j, null);
+                if (oldEnvKey != null) {
+                    Keyring.delete(keyringKey(oldName, oldEnvKey));
+                }
+            }
+        }
 
         Map<String, String> entries = new LinkedHashMap<>();
         entries.put(KEY_AGENT_COUNT, Integer.toString(agents.size()));
@@ -337,7 +388,14 @@ public final class AcpAgentManager {
         int j = 0;
         for (Map.Entry<String, String> entry : envVars.entrySet()) {
             entries.put(prefix + KEY_ENV_KEY + j, entry.getKey());
-            entries.put(prefix + KEY_ENV_VALUE + j, entry.getValue());
+            if (SECRET_KEY_PATTERN.matcher(entry.getKey()).matches()) {
+                Keyring.save(keyringKey(agent.getName(), entry.getKey()),
+                        entry.getValue().toCharArray(),
+                        "ACP agent env var: " + entry.getKey()); // NOI18N
+                entries.put(prefix + KEY_ENV_VALUE + j, KEYRING_SENTINEL);
+            } else {
+                entries.put(prefix + KEY_ENV_VALUE + j, entry.getValue());
+            }
             j++;
         }
 
@@ -350,6 +408,13 @@ public final class AcpAgentManager {
                 t++;
             }
         }
+    }
+
+    // Name-based (not index-based) so keys remain stable when agents are reordered.
+    // Uses COMMAND_DELIMITER to avoid ambiguity when names contain dots.
+    private static String keyringKey(String agentName, String envKey) {
+        return "acp.agent" + COMMAND_DELIMITER + agentName // NOI18N
+                + COMMAND_DELIMITER + envKey; // NOI18N
     }
 
     private Preferences getPreferences() {

@@ -66,6 +66,7 @@ import java.util.logging.Logger;
 public final class AcpConnection {
 
     private static final Logger LOG = Logger.getLogger(AcpConnection.class.getName());
+    private static final String BEARER_PREFIX = "Bearer "; // NOI18N
 
     private final AcpAgentDescriptor descriptor;
     private final List<AcpSessionListener> listeners = new CopyOnWriteArrayList<>();
@@ -175,18 +176,7 @@ public final class AcpConnection {
      * @throws IOException if session creation fails
      */
     public String newSession(String workingDirectory, List<String> additionalDirs) throws IOException {
-        List<AcpSchema.McpServer> mcpServers = new ArrayList<>();
-        try {
-            for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
-                    .lookupAll(AcpMcpServerProvider.class)) {
-                List<AcpSchema.McpServer> servers = provider.getMcpServers();
-                if (servers != null) {
-                    mcpServers.addAll(servers);
-                }
-            }
-        } catch (Exception ex) {
-            LOG.log(Level.WARNING, "MCP server discovery failed (modules may not be initialized yet)", ex);
-        }
+        List<AcpSchema.McpServer> mcpServers = discoverMcpServers();
         if (!mcpServers.isEmpty()) {
             LOG.log(Level.INFO, "Discovered {0} MCP server(s) for new session", mcpServers.size());
         }
@@ -198,6 +188,40 @@ public final class AcpConnection {
         return mcpServers.isEmpty()
                 ? new AcpSchema.NewSessionRequest(dir)
                 : new AcpSchema.NewSessionRequest(dir, mcpServers);
+    }
+
+    private static List<AcpSchema.McpServer> discoverMcpServers() {
+        List<AcpSchema.McpServer> mcpServers = new ArrayList<>();
+        try {
+            for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
+                    .lookupAll(AcpMcpServerProvider.class)) {
+                List<AcpSchema.McpServer> servers = provider.getMcpServers();
+                if (servers != null) {
+                    mcpServers.addAll(servers);
+                }
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "MCP server discovery failed", ex); // NOI18N
+        }
+        return mcpServers;
+    }
+
+    private static List<String> collectBearerTokens(List<AcpSchema.McpServer> servers) {
+        List<String> tokens = new ArrayList<>();
+        for (AcpSchema.McpServer server : servers) {
+            if (server instanceof AcpSchema.McpServerHttp httpServer
+                    && httpServer.headers() != null) {
+                for (AcpSchema.HttpHeader header : httpServer.headers()) {
+                    if ("Authorization".equalsIgnoreCase(header.name()) // NOI18N
+                            && header.value() != null
+                            && header.value().startsWith(BEARER_PREFIX)) {
+                        tokens.add(
+                                header.value().substring(BEARER_PREFIX.length()));
+                    }
+                }
+            }
+        }
+        return tokens;
     }
 
     /**
@@ -219,19 +243,7 @@ public final class AcpConnection {
             }
             List<AcpSchema.McpServer> effectiveMcpServers =
                     mcpServers != null ? mcpServers : List.of();
-            for (AcpSchema.McpServer server : effectiveMcpServers) {
-                if (server instanceof AcpSchema.McpServerHttp httpServer
-                        && httpServer.headers() != null) {
-                    for (AcpSchema.HttpHeader header : httpServer.headers()) {
-                        if ("Authorization".equalsIgnoreCase(header.name())
-                                && header.value() != null
-                                && header.value().startsWith("Bearer ")) { // NOI18N
-                            issuedBearerTokens.add(
-                                    header.value().substring("Bearer ".length())); // NOI18N
-                        }
-                    }
-                }
-            }
+            List<String> collectedTokens = collectBearerTokens(effectiveMcpServers);
 
             String sessionId;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
@@ -275,10 +287,139 @@ public final class AcpConnection {
                     resolved.add(r);
                 }
             }
+            issuedBearerTokens.addAll(collectedTokens);
             trustedDirectories.put(sessionId, List.copyOf(resolved));
             return sessionId;
         } catch (Exception ex) {
             throw new IOException("Failed to create new session", ex); // NOI18N
+        }
+    }
+
+    /**
+     * Lists past sessions known by the agent for the given working directory.
+     *
+     * @param workingDirectory the project directory, or {@code null}
+     * @return a list of session summaries (never {@code null})
+     * @throws IOException if the operation fails
+     */
+    public List<AcpSessionInfo> listSessions(String workingDirectory) throws IOException {
+        ensureConnected();
+        try {
+            String cwd = workingDirectory;
+            if (cwd == null || cwd.isBlank()) {
+                cwd = descriptor.getWorkingDirectory();
+            }
+            AcpSchema.ListSessionsResponse response =
+                    client.listSessions(new AcpSchema.ListSessionsRequest(cwd));
+            List<AcpSessionInfo> result = new ArrayList<>();
+            if (response.sessions() != null) {
+                for (AcpSchema.SessionInfo si : response.sessions()) {
+                    result.add(new AcpSessionInfo(si.sessionId(), si.title(), si.updatedAt()));
+                }
+            }
+            return result;
+        } catch (AcpCapabilityException ex) {
+            throw new IOException("Agent does not support session listing", ex); // NOI18N
+        } catch (RuntimeException ex) {
+            throw new IOException("Failed to list sessions", ex); // NOI18N
+        }
+    }
+
+    /**
+     * Resumes an existing session. Sets up MCP servers, bearer tokens,
+     * and trusted directories the same way as {@link #newSession}.
+     *
+     * @param sessionId        the session to resume
+     * @param workingDirectory main project directory, or {@code null}
+     * @return the session identifier (same as input)
+     * @throws IOException if the resume fails
+     */
+    public String resumeSession(String sessionId, String workingDirectory) throws IOException {
+        return resumeSession(sessionId, workingDirectory, null);
+    }
+
+    /**
+     * Resumes an existing session with additional directories.
+     *
+     * @param sessionId        the session to resume
+     * @param workingDirectory main project directory, or {@code null}
+     * @param additionalDirs   additional project directories, or {@code null}
+     * @return the session identifier (same as input)
+     * @throws IOException if the resume fails
+     */
+    public String resumeSession(String sessionId, String workingDirectory,
+            List<String> additionalDirs) throws IOException {
+        ensureConnected();
+        try {
+            String effectiveDir = workingDirectory;
+            if (effectiveDir == null || effectiveDir.isBlank()) {
+                effectiveDir = descriptor.getWorkingDirectory();
+            }
+
+            List<AcpSchema.McpServer> mcpServers = discoverMcpServers();
+            List<String> collectedTokens = collectBearerTokens(mcpServers);
+
+            if (additionalDirs != null && !additionalDirs.isEmpty()) {
+                try {
+                    client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                            sessionId, effectiveDir, mcpServers, additionalDirs));
+                } catch (AcpCapabilityException ex) {
+                    LOG.log(Level.INFO, "Agent does not support additionalDirectories on resume, " // NOI18N
+                            + "falling back without additionalDirectories"); // NOI18N
+                    client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                            sessionId, effectiveDir, mcpServers));
+                }
+            } else {
+                client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                        sessionId, effectiveDir, mcpServers));
+            }
+
+            List<Path> trusted = new ArrayList<>();
+            if (effectiveDir != null) {
+                trusted.add(Path.of(effectiveDir).toAbsolutePath().normalize());
+            }
+            String descriptorDir = descriptor.getWorkingDirectory();
+            if (descriptorDir != null && !descriptorDir.isBlank()) {
+                Path dp = Path.of(descriptorDir).toAbsolutePath().normalize();
+                if (!trusted.contains(dp)) {
+                    trusted.add(dp);
+                }
+            }
+            if (additionalDirs != null) {
+                for (String dir : additionalDirs) {
+                    Path dp = Path.of(dir).toAbsolutePath().normalize();
+                    if (!trusted.contains(dp)) {
+                        trusted.add(dp);
+                    }
+                }
+            }
+            List<Path> resolved = new ArrayList<>();
+            for (Path t : trusted) {
+                Path r = resolveReal(t);
+                if (!resolved.contains(r)) {
+                    resolved.add(r);
+                }
+            }
+            issuedBearerTokens.addAll(collectedTokens);
+            trustedDirectories.put(sessionId, List.copyOf(resolved));
+            return sessionId;
+        } catch (RuntimeException ex) {
+            throw new IOException("Failed to resume session", ex); // NOI18N
+        }
+    }
+
+    /**
+     * Deletes a past session from the agent's history.
+     *
+     * @param sessionId the session to delete
+     * @throws IOException if the deletion fails
+     */
+    public void deleteSession(String sessionId) throws IOException {
+        ensureConnected();
+        try {
+            client.deleteSession(new AcpSchema.DeleteSessionRequest(sessionId));
+        } catch (RuntimeException ex) {
+            throw new IOException("Failed to delete session", ex); // NOI18N
         }
     }
 

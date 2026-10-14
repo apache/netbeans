@@ -75,6 +75,8 @@ public final class AcpConnection {
     private final Map<String, Map<String, String>> fileSnapshots = new ConcurrentHashMap<>();
     private final Map<String, List<AcpSchema.ToolCallLocation>> storedLocations = new ConcurrentHashMap<>();
     private final AcpTerminalHandler terminalHandler = new AcpTerminalHandler();
+    private final java.util.concurrent.CopyOnWriteArrayList<String> issuedBearerTokens =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
 
     private volatile AcpSyncClient client;
     private volatile boolean connected;
@@ -217,6 +219,19 @@ public final class AcpConnection {
             }
             List<AcpSchema.McpServer> effectiveMcpServers =
                     mcpServers != null ? mcpServers : List.of();
+            for (AcpSchema.McpServer server : effectiveMcpServers) {
+                if (server instanceof AcpSchema.McpServerHttp httpServer
+                        && httpServer.headers() != null) {
+                    for (AcpSchema.HttpHeader header : httpServer.headers()) {
+                        if ("Authorization".equalsIgnoreCase(header.name())
+                                && header.value() != null
+                                && header.value().startsWith("Bearer ")) { // NOI18N
+                            issuedBearerTokens.add(
+                                    header.value().substring("Bearer ".length())); // NOI18N
+                        }
+                    }
+                }
+            }
 
             String sessionId;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
@@ -310,6 +325,17 @@ public final class AcpConnection {
         storedLocations.clear();
         trustedDirectories.clear();
         terminalHandler.releaseAll();
+        for (String token : issuedBearerTokens) {
+            for (AcpMcpServerProvider provider : org.openide.util.Lookup.getDefault()
+                    .lookupAll(AcpMcpServerProvider.class)) {
+                try {
+                    provider.releaseBearerToken(token);
+                } catch (Exception ex) {
+                    LOG.log(Level.WARNING, "Failed to revoke bearer token", ex); // NOI18N
+                }
+            }
+        }
+        issuedBearerTokens.clear();
         if (client != null) {
             try {
                 client.close();

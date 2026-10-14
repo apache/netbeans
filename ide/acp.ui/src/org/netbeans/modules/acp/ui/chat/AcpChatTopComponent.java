@@ -150,6 +150,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final StringBuilder currentMessageBuffer = new StringBuilder();
     private final StringBuilder currentThoughtBuffer = new StringBuilder();
     private final AtomicBoolean promptInProgress = new AtomicBoolean(false);
+    private boolean inAgentMessage;
+    private int agentMsgDivEndPos = -1;
     private final Timer renderTimer;
     private final Timer displayTimer;
 
@@ -199,6 +201,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         public void onPromptComplete(String sessionId, String stopReason) {
             SwingUtilities.invokeLater(() -> {
                 flushMessageBuffers();
+                inAgentMessage = false;
+                agentMsgDivEndPos = -1;
                 promptInProgress.set(false);
                 updateInputState();
                 statusLabel.setText(Bundle.STS_Ready());
@@ -843,9 +847,18 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             changed = true;
         }
         if (!message.isEmpty()) {
-            chatHtml.append("<div class='agent-msg'><span class='agent-label'>").append(Bundle.LBL_AgentSays()).append("</span><br/>")
-                    .append(HtmlUtils.escapeHtml(message).replace("\n", "<br/>"))
-                    .append("</div>");
+            String escaped = HtmlUtils.escapeHtml(message).replace("\n", "<br/>");
+            if (inAgentMessage && agentMsgDivEndPos >= 0
+                    && chatHtml.length() == agentMsgDivEndPos + "</div>".length()) {
+                chatHtml.setLength(agentMsgDivEndPos);
+                chatHtml.append(escaped).append("</div>");
+            } else {
+                chatHtml.append("<div class='agent-msg'><span class='agent-label'>")
+                        .append(Bundle.LBL_AgentSays()).append("</span><br/>")
+                        .append(escaped).append("</div>");
+                inAgentMessage = true;
+            }
+            agentMsgDivEndPos = chatHtml.length() - "</div>".length();
             changed = true;
         }
         if (changed) {

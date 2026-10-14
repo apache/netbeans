@@ -44,6 +44,11 @@ public final class McpServerProviderImpl implements AcpMcpServerProvider {
     }
 
     @Override
+    public void releaseBearerToken(String bearerToken) {
+        McpServerManager.getInstance().removeSession(bearerToken);
+    }
+
+    @Override
     public List<ToolInfo> getAvailableTools() {
         LOG.log(Level.INFO, "getAvailableTools called");
         McpToolRegistry registry = McpToolRegistry.getInstance();

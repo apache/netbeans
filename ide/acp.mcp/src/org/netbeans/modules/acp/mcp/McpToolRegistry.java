@@ -67,8 +67,8 @@ public final class McpToolRegistry {
     public Map<String, Object> executeTool(String name, Map<String, Object> arguments) throws Exception {
         McpToolProvider provider;
         synchronized (this) {
-            if (cachedTools == null) {
-                cachedTools = loadTools();
+            if (cachedAllTools == null) {
+                cachedAllTools = loadAllTools();
             }
             provider = toolOwners.get(name);
         }
@@ -114,13 +114,7 @@ public final class McpToolRegistry {
         for (McpToolProvider provider : providers) {
             List<McpToolProvider.McpToolDefinition> tools = provider.getTools();
             if (!tools.isEmpty()) {
-                String label = providerLabel(provider);
-                synchronized (this) {
-                    for (McpToolProvider.McpToolDefinition tool : tools) {
-                        toolOwners.put(tool.name(), provider);
-                    }
-                }
-                result.put(label, Collections.unmodifiableList(tools));
+                result.put(providerLabel(provider), Collections.unmodifiableList(tools));
             }
         }
         return result;

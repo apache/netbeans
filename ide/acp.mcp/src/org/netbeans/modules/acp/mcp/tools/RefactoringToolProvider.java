@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -268,22 +269,27 @@ public final class RefactoringToolProvider implements McpToolProvider {
         }
 
         Collection<RefactoringElement> elements = session.getRefactoringElements();
-        List<String> usages = collectAffectedFiles(elements);
+        File targetFile = FileUtil.toFile(fo);
+        String targetPath = targetFile != null ? targetFile.getAbsolutePath() : fo.getPath();
 
-        if (!usages.isEmpty()) {
-            List<Map<String, Object>> usageDetails = new ArrayList<>();
-            for (RefactoringElement elem : elements) {
-                Map<String, Object> detail = new LinkedHashMap<>();
-                FileObject parent = elem.getParentFile();
-                if (parent != null) {
-                    detail.put("file", FileUtil.toFile(parent) != null
-                            ? FileUtil.toFile(parent).getAbsolutePath()
-                            : parent.getPath());
-                }
-                detail.put("description", elem.getDisplayText()
-                        .replaceAll("<[^>]+>", ""));
-                usageDetails.add(detail);
+        List<Map<String, Object>> usageDetails = new ArrayList<>();
+        for (RefactoringElement elem : elements) {
+            FileObject parent = elem.getParentFile();
+            if (parent == null) {
+                continue;
             }
+            File f = FileUtil.toFile(parent);
+            String elemPath = f != null ? f.getAbsolutePath() : parent.getPath();
+            if (elemPath.equals(targetPath)) {
+                continue;
+            }
+            Map<String, Object> detail = new LinkedHashMap<>();
+            detail.put("file", elemPath);
+            detail.put("description", elem.getDisplayText().replaceAll("<[^>]+>", ""));
+            usageDetails.add(detail);
+        }
+
+        if (!usageDetails.isEmpty()) {
             return ToolResult.ok("deleted", false,
                     "usages", usageDetails, "usageCount", usageDetails.size());
         }
@@ -522,18 +528,15 @@ public final class RefactoringToolProvider implements McpToolProvider {
     }
 
     private static List<String> collectAffectedFiles(Collection<RefactoringElement> elements) {
-        List<String> files = new ArrayList<>();
+        LinkedHashSet<String> seen = new LinkedHashSet<>();
         for (RefactoringElement elem : elements) {
             FileObject parent = elem.getParentFile();
             if (parent != null) {
                 File f = FileUtil.toFile(parent);
-                String path = f != null ? f.getAbsolutePath() : parent.getPath();
-                if (!files.contains(path)) {
-                    files.add(path);
-                }
+                seen.add(f != null ? f.getAbsolutePath() : parent.getPath());
             }
         }
-        return files;
+        return new ArrayList<>(seen);
     }
 
     private static List<String> collectWarnings(String... messages) {

@@ -22,6 +22,7 @@ package org.netbeans.modules.debugger.jpda;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.io.InputOutput;
 import org.netbeans.modules.debugger.jpda.console.DebuggerOutput;
@@ -53,7 +54,18 @@ public final class DebuggerConsoleIO {
     public void println(String text, Line line, boolean important) {
         output.getIOManager().println(text, line, important);
     }
-    
+
+    /** Prints a hyperlinked text and associates it with an action.
+     *
+     * @param text the text to print
+     * @param run action or {@code null} to invoke when the hyperlink is clicked
+     * @param newLine add a new line after the text
+     * @since 1.144
+     */
+    public void printWithAction(@NonNull String text, Runnable run, boolean newLine) {
+        output.getIOManager().print(text, run, newLine, false);
+    }
+
     public static final class Line {
         
         private final String url;

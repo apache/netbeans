@@ -80,7 +80,7 @@ CLSS public java.util.EventObject
 cons public init(java.lang.Object)
 fld protected java.lang.Object source
 intf java.io.Serializable
-meth public java.lang.Object getSource()
+meth public org.netbeans.api.debugger.jpda.JPDABreakpoint getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
 

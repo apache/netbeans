@@ -69,16 +69,19 @@ import org.openide.windows.WindowManager;
 })
 public class HeapActionsFilter implements NodeActionsProviderFilter {
     
-    private JPDADebugger debugger;
-    private RequestProcessor rp;
+    private final JPDADebugger debugger;
+    private final RequestProcessor rp;
+    private final ShowObjectVariableInHeap show;
     
     /** Creates a new instance of HeapActionsFilter */
     public HeapActionsFilter(ContextProvider contextProvider) {
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
-        rp = contextProvider.lookupFirst(null, RequestProcessor.class);
-        if (rp == null) {
-            rp = new RequestProcessor(HeapActionsFilter.class);
+        RequestProcessor tmp = contextProvider.lookupFirst(null, RequestProcessor.class);
+        if (tmp == null) {
+            tmp = new RequestProcessor(HeapActionsFilter.class);
         }
+        this.rp = tmp;
+        this.show = new ShowObjectVariableInHeap(debugger, rp);
     }
     
     @Override
@@ -126,55 +129,7 @@ public class HeapActionsFilter implements NodeActionsProviderFilter {
             public void perform (Object[] nodes) {
                 ObjectVariable var = (ObjectVariable) nodes[0];
                 if (var.getUniqueID() == 0L) return ;
-                final InstancesView instances = openInstances(true);
-                final Reference<ObjectVariable> varRef = new WeakReference<ObjectVariable>(var);
-                final Reference<JPDADebugger> debuggerRef = new WeakReference<JPDADebugger>(debugger);
-                InstancesView.HeapFragmentWalkerProvider provider =
-                        new InstancesView.HeapFragmentWalkerProvider() {
-                    @Override
-                    public synchronized HeapFragmentWalker getHeapFragmentWalker() {
-                        HeapFragmentWalker hfw = instances.getCurrentFragmentWalker();
-                        HeapImpl heap = (hfw != null) ? (HeapImpl) hfw.getHeapFragment() : null;
-                        JPDADebugger debugger = debuggerRef.get();
-                        if (heap == null || debugger != null && heap.getDebugger() != debugger) {
-                            heap = new HeapImpl(debugger);
-                            hfw = new DebuggerHeapFragmentWalker(heap);
-                        }
-                        final ObjectVariable var = varRef.get();
-                        final HeapFragmentWalker fhfw = hfw;
-                        if (var != null) {
-                            final HeapImpl fheap = heap;
-                            rp.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    final Instance instance = InstanceImpl.createInstance(fheap, var);
-                                    SwingUtilities.invokeLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            fhfw.getInstancesController().showInstance(instance);
-                                        }
-                                    });
-                                }
-                            });
-                            //Instance instance = InstanceImpl.createInstance(heap, var);
-                            //hfw.getInstancesController().showInstance(instance);
-                        }
-                        return hfw;
-                    }
-                };
-                instances.setHeapFragmentWalkerProvider(provider);
-            }
-            
-            private InstancesView openInstances (boolean activate) {
-                TopComponent view = WindowManager.getDefault().findTopComponent("dbgInstances");
-                if (view == null) {
-                    throw new IllegalArgumentException("dbgInstances");
-                }
-                view.open();
-                if (activate) {
-                    view.requestActive();
-                }
-                return (InstancesView) view;
+                show.showObjectVariable(var);
             }
     
         },

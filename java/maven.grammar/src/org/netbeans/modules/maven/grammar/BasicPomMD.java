@@ -43,7 +43,6 @@ import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import static org.netbeans.modules.maven.grammar.Bundle.*;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryUtil;
 import org.netbeans.modules.maven.indexer.spi.ui.ArtifactViewerPanelProvider;
@@ -51,6 +50,7 @@ import org.openide.awt.Actions;
 import org.openide.awt.UndoRedo;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -58,6 +58,8 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
+
+import static org.netbeans.modules.maven.grammar.Bundle.*;
 
 public class BasicPomMD implements MultiViewDescription, Serializable {
 
@@ -202,23 +204,21 @@ public class BasicPomMD implements MultiViewDescription, Serializable {
                     throw new FileNotFoundException(pom.getAbsolutePath());
                 }
                 final String text = FileEncodingQuery.getEncoding(pomFO).decode(ByteBuffer.wrap(pomFO.asBytes())).toString();
-                EventQueue.invokeLater(new Runnable() {
-                    @Override public void run() {
-                        JEditorPane pane = new JEditorPane("text/xml", text);
-                        pane.setEditable(false);
-                        pane.setCaretPosition(0);
-                        panel.removeAll();
-                        panel.add(new JScrollPane(pane), BorderLayout.CENTER);
-                        panel.revalidate();
-                    }
+                EventQueue.invokeLater(() -> {
+                    JEditorPane pane = new JEditorPane();
+                    pane.setEditorKit(CloneableEditorSupport.getEditorKit("text/xml"));
+                    pane.setText(text);
+                    pane.setEditable(false);
+                    pane.setCaretPosition(0);
+                    panel.removeAll();
+                    panel.add(new JScrollPane(pane), BorderLayout.CENTER);
+                    panel.revalidate();
                 });
             } catch (final Exception x) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override public void run() {
-                        panel.removeAll();
-                        panel.add(new JLabel(LBL_failed_to_load(x.getLocalizedMessage()), SwingConstants.CENTER), BorderLayout.CENTER);
-                        panel.revalidate();
-                    }
+                EventQueue.invokeLater(() -> {
+                    panel.removeAll();
+                    panel.add(new JLabel(LBL_failed_to_load(x.getLocalizedMessage()), SwingConstants.CENTER), BorderLayout.CENTER);
+                    panel.revalidate();
                 });
             }
         }

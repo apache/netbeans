@@ -289,7 +289,9 @@
       <SubComponents>
         <Component class="javax.swing.JEditorPane" name="epProperties">
           <Properties>
-            <Property name="contentType" type="java.lang.String" value="text/x-properties" noResource="true"/>
+            <Property name="editorKit" type="javax.swing.text.EditorKit" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="CloneableEditorSupport.getEditorKit(&quot;text/x-properties&quot;)" type="code"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

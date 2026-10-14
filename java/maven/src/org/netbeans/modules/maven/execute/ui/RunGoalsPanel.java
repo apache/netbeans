@@ -37,6 +37,7 @@ import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.spi.grammar.GoalsProvider;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -288,7 +289,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(btnAddProps, "&Add >");
         btnAddProps.addActionListener(this::btnAddPropsActionPerformed);
 
-        epProperties.setContentType("text/x-properties"); // NOI18N
+        epProperties.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"));
         jScrollPane2.setViewportView(epProperties);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

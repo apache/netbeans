@@ -32,6 +32,7 @@ import org.netbeans.modules.maven.api.MavenConfiguration;
 import org.netbeans.modules.maven.spi.customizer.TextToValueConversions;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.openide.text.CloneableEditorSupport;
 
 /**
  *
@@ -56,7 +57,7 @@ class ShowEffPomDiffPanel extends javax.swing.JPanel {
         });
         comConfiguration.setSelectedItem(configs.getActiveConfiguration());
         enableFields();
-        epProperties.setContentType("text/x-properties");
+        epProperties.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"));
     }
     
     MavenConfiguration getSelectedConfig() {

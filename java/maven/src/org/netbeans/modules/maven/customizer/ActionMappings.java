@@ -89,6 +89,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -508,7 +509,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         add(cbBuildWithDeps, gridBagConstraints);
         cbBuildWithDeps.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.cbBuildWithDeps.AccessibleContext.accessibleDescription")); // NOI18N
 
-        epProperties.setContentType("text/x-properties"); // NOI18N
+        epProperties.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"));
         jScrollPane5.setViewportView(epProperties);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

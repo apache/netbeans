@@ -143,23 +143,25 @@ public final class EditorToolProvider implements McpToolProvider {
         return result[0];
     }
 
-    private Map<String, Object> getTabs() {
+    private Map<String, Object> getTabs() throws Exception {
         List<String> paths = new ArrayList<>();
-        for (TopComponent tc : TopComponent.getRegistry().getOpened()) {
-            EditorCookie ec = tc.getLookup().lookup(EditorCookie.class);
-            if (ec != null) {
-                FileObject fo = tc.getLookup().lookup(FileObject.class);
-                if (fo != null) {
-                    File file = FileUtil.toFile(fo);
-                    if (file != null) {
-                        String filePath = file.getAbsolutePath();
-                        if (ProjectPathGuard.isInOpenProject(filePath)) {
-                            paths.add(filePath);
+        SwingUtilities.invokeAndWait(() -> {
+            for (TopComponent tc : TopComponent.getRegistry().getOpened()) {
+                EditorCookie ec = tc.getLookup().lookup(EditorCookie.class);
+                if (ec != null) {
+                    FileObject fo = tc.getLookup().lookup(FileObject.class);
+                    if (fo != null) {
+                        File file = FileUtil.toFile(fo);
+                        if (file != null) {
+                            String filePath = file.getAbsolutePath();
+                            if (ProjectPathGuard.isInOpenProject(filePath)) {
+                                paths.add(filePath);
+                            }
                         }
                     }
                 }
             }
-        }
+        });
         return ToolResult.ok("tabs", paths);
     }
 

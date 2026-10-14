@@ -159,7 +159,11 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
     private Map<String, Object> doRenameSymbol(Map<String, Object> args) throws Exception {
         String filePath = (String) args.get("filePath");
         String newName = (String) args.get("newName");
-        int offset = ((Number) args.get("offset")).intValue();
+        Object offsetArg = args.get("offset");
+        if (offsetArg == null) {
+            return ToolResult.error("offset is required");
+        }
+        int offset = ((Number) offsetArg).intValue();
         if (newName == null || newName.isBlank()) {
             return ToolResult.error("newName is required");
         }
@@ -180,7 +184,11 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
 
     private Map<String, Object> doFindSymbolUsages(Map<String, Object> args) throws Exception {
         String filePath = (String) args.get("filePath");
-        int offset = ((Number) args.get("offset")).intValue();
+        Object offsetArg = args.get("offset");
+        if (offsetArg == null) {
+            return ToolResult.error("offset is required");
+        }
+        int offset = ((Number) offsetArg).intValue();
 
         TreePathHandle handle = resolveHandle(filePath, offset);
         if (handle == null) {
@@ -231,7 +239,11 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
 
     private Map<String, Object> doInlineSymbol(Map<String, Object> args) throws Exception {
         String filePath = (String) args.get("filePath");
-        int offset = ((Number) args.get("offset")).intValue();
+        Object offsetArg = args.get("offset");
+        if (offsetArg == null) {
+            return ToolResult.error("offset is required");
+        }
+        int offset = ((Number) offsetArg).intValue();
 
         FileObject fo = resolveJavaFile(filePath);
         if (fo == null) {
@@ -263,7 +275,12 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
                 typeHolder[0] = switch (el.getKind()) {
                     case METHOD, CONSTRUCTOR -> InlineRefactoring.Type.METHOD;
                     case LOCAL_VARIABLE -> InlineRefactoring.Type.TEMP;
-                    case FIELD -> InlineRefactoring.Type.CONSTANT;
+                    case FIELD -> {
+                        Set<Modifier> mods = el.getModifiers();
+                        yield (mods.contains(Modifier.STATIC) && mods.contains(Modifier.FINAL))
+                                ? InlineRefactoring.Type.CONSTANT
+                                : InlineRefactoring.Type.UNSUPPORTED;
+                    }
                     default -> InlineRefactoring.Type.UNSUPPORTED;
                 };
             }
@@ -282,7 +299,11 @@ public final class JavaRefactoringToolProvider implements McpToolProvider {
 
     private Map<String, Object> doEncapsulateField(Map<String, Object> args) throws Exception {
         String filePath = (String) args.get("filePath");
-        int offset = ((Number) args.get("offset")).intValue();
+        Object offsetArg = args.get("offset");
+        if (offsetArg == null) {
+            return ToolResult.error("offset is required");
+        }
+        int offset = ((Number) offsetArg).intValue();
 
         FileObject fo = resolveJavaFile(filePath);
         if (fo == null) {

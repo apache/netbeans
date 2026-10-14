@@ -96,10 +96,9 @@ final class AcpFileDropHandler extends TransferHandler {
             if (!fo.isData()) {
                 continue;
             }
-            String name = fo.getNameExt();
             String path = fo.getPath();
-            sb.append("@").append(name).append(" ");
-            mentionSupport.addAttachment(path, name);
+            sb.append("@").append(path).append(" ");
+            mentionSupport.addAttachment(path, path);
         }
         if (sb.length() > 0) {
             int pos = inputArea.getCaretPosition();

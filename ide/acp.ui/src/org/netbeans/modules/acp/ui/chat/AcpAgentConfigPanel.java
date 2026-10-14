@@ -56,6 +56,7 @@ import org.openide.util.NbBundle;
     "LBL_EnvVars=Environment Variables:",
     "LBL_EnvVarsHint=(one KEY=VALUE per line)",
     "LBL_Browse=Browse...",
+    "LBL_CommandPrefix=Command Prefix:",
     "LBL_Tools=Exposed Tools:"
 })
 public final class AcpAgentConfigPanel extends JPanel {
@@ -71,6 +72,7 @@ public final class AcpAgentConfigPanel extends JPanel {
     private final JButton browseButton;
     private final JTextArea envVarsArea;
     private final JLabel envVarsLabel;
+    private final JTextField commandPrefixField;
     private final List<JCheckBox> toolCheckBoxes = new ArrayList<>();
 
     public AcpAgentConfigPanel() {
@@ -112,6 +114,22 @@ public final class AcpAgentConfigPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
         add(transportCombo, gbc);
+
+        // Command Prefix
+        row++;
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        add(new JLabel(Bundle.LBL_CommandPrefix()), gbc);
+        commandPrefixField = new JTextField(3);
+        commandPrefixField.setText(AcpAgentDescriptor.DEFAULT_COMMAND_PREFIX);
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        add(commandPrefixField, gbc);
 
         // Command (for STDIO)
         row++;
@@ -259,6 +277,7 @@ public final class AcpAgentConfigPanel extends JPanel {
                 envText.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
             }
             envVarsArea.setText(envText.toString().trim());
+            commandPrefixField.setText(existing.getCommandPrefix());
         }
 
         updateTransportVisibility();
@@ -341,6 +360,11 @@ public final class AcpAgentConfigPanel extends JPanel {
             }
         }
         builder.enabledTools(enabledTools);
+
+        String prefix = commandPrefixField.getText().trim();
+        if (!prefix.isEmpty()) {
+            builder.commandPrefix(prefix);
+        }
 
         return builder.build();
     }

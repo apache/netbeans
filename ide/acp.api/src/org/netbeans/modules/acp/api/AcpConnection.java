@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.openide.filesystems.FileUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ public final class AcpConnection {
     private final Map<String, Set<String>> sessionAllowedTools = new ConcurrentHashMap<>();
     private final Map<String, Map<String, String>> fileSnapshots = new ConcurrentHashMap<>();
     private final Map<String, List<AcpSchema.ToolCallLocation>> storedLocations = new ConcurrentHashMap<>();
+    private final AcpTerminalHandler terminalHandler = new AcpTerminalHandler();
 
     private volatile AcpSyncClient client;
     private volatile boolean connected;
@@ -133,6 +135,11 @@ public final class AcpConnection {
             spec.readTextFileHandler(this::handleReadTextFile);
             spec.writeTextFileHandler(this::handleWriteTextFile);
             spec.requestPermissionHandler(this::handleRequestPermission);
+            spec.createTerminalHandler(terminalHandler::handleCreateTerminal);
+            spec.terminalOutputHandler(terminalHandler::handleTerminalOutput);
+            spec.waitForTerminalExitHandler(terminalHandler::handleWaitForTerminalExit);
+            spec.killTerminalHandler(terminalHandler::handleKillTerminal);
+            spec.releaseTerminalHandler(terminalHandler::handleReleaseTerminal);
             spec.clientInfo(new AcpSchema.Implementation("Apache NetBeans ACP Plugin", "1.0")); // NOI18N
 
             client = spec.build();
@@ -302,6 +309,7 @@ public final class AcpConnection {
         fileSnapshots.clear();
         storedLocations.clear();
         trustedDirectories.clear();
+        terminalHandler.releaseAll();
         if (client != null) {
             try {
                 client.close();
@@ -674,6 +682,12 @@ public final class AcpConnection {
                     Files.createDirectories(parent);
                 }
                 Files.writeString(filePath, request.content());
+                // Notify the NetBeans VFS so open editors pick up the change.
+                org.openide.filesystems.FileObject fo = FileUtil.toFileObject(
+                        FileUtil.normalizeFile(filePath.toFile()));
+                if (fo != null) {
+                    fo.refresh();
+                }
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Failed to write file requested by agent: " + request.path(), ex); // NOI18N
                 throw new AcpProtocolException(AcpErrorCodes.INTERNAL_ERROR,

@@ -71,6 +71,7 @@ import org.netbeans.modules.acp.mcp.McpToolProvider;
 import org.netbeans.modules.acp.mcp.McpToolRegistry;
 import org.netbeans.modules.acp.ui.AcpContextReceiver;
 import org.netbeans.modules.acp.ui.AcpDiffViewer;
+import org.netbeans.modules.acp.ui.AcpLocationNavigator;
 import org.netbeans.modules.acp.ui.AcpPermissionDialog;
 import org.netbeans.modules.acp.ui.AcpProjectContextProvider;
 import org.openide.DialogDescriptor;
@@ -263,8 +264,9 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                         .append(HtmlUtils.escapeHtml(fileName)).append("</b>")
                         .append(" <span class='tc-status-completed'>&#x2705; ")
                         .append(Bundle.LBL_Completed()).append("</span>")
-                        .append("<br/><span class='tc-location'>")
-                        .append(HtmlUtils.escapeHtml(path)).append("</span>");
+                        .append("<br/><a class='tc-location' href='acp-nav:")
+                        .append(path).append("'>")
+                        .append(HtmlUtils.escapeHtml(path)).append("</a>");
                 appendDiffPreview(diff);
                 chatHtml.append("<br/><a class='diff-link' href='acp-diff:")
                         .append(diffId).append("'>").append(Bundle.LBL_ViewFullDiff()).append("</a>")
@@ -357,6 +359,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     if (diff != null) {
                         AcpDiffViewer.showDiff(diff);
                     }
+                } else if (url != null && url.startsWith("acp-nav:")) {
+                    AcpLocationNavigator.handleNavUrl(url);
                 }
             }
         });
@@ -894,12 +898,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         if (!toolCall.getLocations().isEmpty()) {
             chatHtml.append("<br/>");
             for (AcpToolCall.Location loc : toolCall.getLocations()) {
-                chatHtml.append("<span class='tc-location'>")
-                        .append(HtmlUtils.escapeHtml(loc.path()));
-                if (loc.line() != null) {
-                    chatHtml.append(":").append(loc.line());
-                }
-                chatHtml.append("</span> ");
+                String navUrl = "acp-nav:" + loc.path()
+                        + (loc.line() != null ? ":" + loc.line() : "");
+                String display = HtmlUtils.escapeHtml(loc.path())
+                        + (loc.line() != null ? ":" + loc.line() : "");
+                chatHtml.append("<a class='tc-location' href='")
+                        .append(navUrl).append("'>")
+                        .append(display)
+                        .append("</a> ");
             }
         }
 

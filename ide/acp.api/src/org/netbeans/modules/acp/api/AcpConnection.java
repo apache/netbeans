@@ -67,6 +67,7 @@ public final class AcpConnection {
 
     private static final Logger LOG = Logger.getLogger(AcpConnection.class.getName());
     private static final String BEARER_PREFIX = "Bearer "; // NOI18N
+    private static final String AUTHORIZATION_HEADER = "Authorization"; // NOI18N
 
     private final AcpAgentDescriptor descriptor;
     private final List<AcpSessionListener> listeners = new CopyOnWriteArrayList<>();
@@ -83,6 +84,10 @@ public final class AcpConnection {
     private volatile boolean connected;
     private volatile java.util.function.Function<AcpSchema.RequestPermissionRequest,
             AcpSchema.RequestPermissionResponse> permissionHandler;
+    private volatile java.util.function.Function<AcpSchema.CreateElicitationRequest,
+            AcpSchema.CreateElicitationResponse> elicitationHandler;
+    private volatile List<AcpModeInfo> availableModes = List.of();
+    private volatile String currentModeId;
 
     /**
      * @param descriptor the agent configuration, must not be {@code null}
@@ -143,6 +148,7 @@ public final class AcpConnection {
             spec.waitForTerminalExitHandler(terminalHandler::handleWaitForTerminalExit);
             spec.killTerminalHandler(terminalHandler::handleKillTerminal);
             spec.releaseTerminalHandler(terminalHandler::handleReleaseTerminal);
+            spec.createElicitationHandler(this::handleElicitation);
             spec.clientInfo(new AcpSchema.Implementation("Apache NetBeans ACP Plugin", "1.0")); // NOI18N
 
             client = spec.build();
@@ -212,7 +218,7 @@ public final class AcpConnection {
             if (server instanceof AcpSchema.McpServerHttp httpServer
                     && httpServer.headers() != null) {
                 for (AcpSchema.HttpHeader header : httpServer.headers()) {
-                    if ("Authorization".equalsIgnoreCase(header.name()) // NOI18N
+                    if (AUTHORIZATION_HEADER.equalsIgnoreCase(header.name())
                             && header.value() != null
                             && header.value().startsWith(BEARER_PREFIX)) {
                         tokens.add(
@@ -245,50 +251,27 @@ public final class AcpConnection {
                     mcpServers != null ? mcpServers : List.of();
             List<String> collectedTokens = collectBearerTokens(effectiveMcpServers);
 
-            String sessionId;
+            AcpSchema.NewSessionResponse newResp;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
                 try {
-                    sessionId = client.newSession(new AcpSchema.NewSessionRequest(
-                            effectiveDir, effectiveMcpServers, additionalDirs)).sessionId();
+                    newResp = client.newSession(new AcpSchema.NewSessionRequest(
+                            effectiveDir, effectiveMcpServers, additionalDirs));
                 } catch (AcpCapabilityException ex) {
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
-                    sessionId = client.newSession(
-                            basicSessionRequest(effectiveDir, effectiveMcpServers)).sessionId();
+                    newResp = client.newSession(
+                            basicSessionRequest(effectiveDir, effectiveMcpServers));
                 }
             } else {
-                sessionId = client.newSession(
-                        basicSessionRequest(effectiveDir, effectiveMcpServers)).sessionId();
+                newResp = client.newSession(
+                        basicSessionRequest(effectiveDir, effectiveMcpServers));
             }
+            String sessionId = newResp.sessionId();
+            captureModes(newResp.modes());
 
-            List<Path> trusted = new ArrayList<>();
-            if (effectiveDir != null) {
-                trusted.add(Path.of(effectiveDir).toAbsolutePath().normalize());
-            }
-            String descriptorDir = descriptor.getWorkingDirectory();
-            if (descriptorDir != null && !descriptorDir.isBlank()) {
-                Path dp = Path.of(descriptorDir).toAbsolutePath().normalize();
-                if (!trusted.contains(dp)) {
-                    trusted.add(dp);
-                }
-            }
-            if (additionalDirs != null) {
-                for (String dir : additionalDirs) {
-                    Path dp = Path.of(dir).toAbsolutePath().normalize();
-                    if (!trusted.contains(dp)) {
-                        trusted.add(dp);
-                    }
-                }
-            }
-            List<Path> resolved = new ArrayList<>();
-            for (Path t : trusted) {
-                Path r = resolveReal(t);
-                if (!resolved.contains(r)) {
-                    resolved.add(r);
-                }
-            }
+            List<Path> resolved = buildTrustedDirectories(effectiveDir, additionalDirs);
             issuedBearerTokens.addAll(collectedTokens);
-            trustedDirectories.put(sessionId, List.copyOf(resolved));
+            trustedDirectories.put(sessionId, resolved);
             return sessionId;
         } catch (Exception ex) {
             throw new IOException("Failed to create new session", ex); // NOI18N
@@ -359,53 +342,50 @@ public final class AcpConnection {
             List<AcpSchema.McpServer> mcpServers = discoverMcpServers();
             List<String> collectedTokens = collectBearerTokens(mcpServers);
 
+            AcpSchema.ResumeSessionResponse resumeResp;
             if (additionalDirs != null && !additionalDirs.isEmpty()) {
                 try {
-                    client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                    resumeResp = client.resumeSession(new AcpSchema.ResumeSessionRequest(
                             sessionId, effectiveDir, mcpServers, additionalDirs));
                 } catch (AcpCapabilityException ex) {
                     LOG.log(Level.INFO, "Agent does not support additionalDirectories on resume, " // NOI18N
                             + "falling back without additionalDirectories"); // NOI18N
-                    client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                    resumeResp = client.resumeSession(new AcpSchema.ResumeSessionRequest(
                             sessionId, effectiveDir, mcpServers));
                 }
             } else {
-                client.resumeSession(new AcpSchema.ResumeSessionRequest(
+                resumeResp = client.resumeSession(new AcpSchema.ResumeSessionRequest(
                         sessionId, effectiveDir, mcpServers));
             }
+            captureModes(resumeResp.modes());
 
-            List<Path> trusted = new ArrayList<>();
-            if (effectiveDir != null) {
-                trusted.add(Path.of(effectiveDir).toAbsolutePath().normalize());
-            }
-            String descriptorDir = descriptor.getWorkingDirectory();
-            if (descriptorDir != null && !descriptorDir.isBlank()) {
-                Path dp = Path.of(descriptorDir).toAbsolutePath().normalize();
-                if (!trusted.contains(dp)) {
-                    trusted.add(dp);
-                }
-            }
-            if (additionalDirs != null) {
-                for (String dir : additionalDirs) {
-                    Path dp = Path.of(dir).toAbsolutePath().normalize();
-                    if (!trusted.contains(dp)) {
-                        trusted.add(dp);
-                    }
-                }
-            }
-            List<Path> resolved = new ArrayList<>();
-            for (Path t : trusted) {
-                Path r = resolveReal(t);
-                if (!resolved.contains(r)) {
-                    resolved.add(r);
-                }
-            }
+            List<Path> resolved = buildTrustedDirectories(effectiveDir, additionalDirs);
             issuedBearerTokens.addAll(collectedTokens);
-            trustedDirectories.put(sessionId, List.copyOf(resolved));
+            trustedDirectories.put(sessionId, resolved);
             return sessionId;
         } catch (RuntimeException ex) {
             throw new IOException("Failed to resume session", ex); // NOI18N
         }
+    }
+
+    /**
+     * Returns whether the agent supports resuming sessions.
+     *
+     * @return {@code true} if the agent advertises the resume capability
+     */
+    public boolean supportsResumeSession() {
+        return client != null
+                && client.getAgentCapabilities().supportsResumeSession();
+    }
+
+    /**
+     * Returns whether the agent supports deleting sessions.
+     *
+     * @return {@code true} if the agent advertises the delete capability
+     */
+    public boolean supportsDeleteSession() {
+        return client != null
+                && client.getAgentCapabilities().supportsDeleteSession();
     }
 
     /**
@@ -529,8 +509,18 @@ public final class AcpConnection {
         SessionUpdate update = notification.update();
 
         if (update instanceof AgentMessageChunk chunk) {
-            String text = extractText(chunk.content());
-            notifyListeners(l -> l.onAgentMessage(sessionId, text));
+            ContentBlock content = chunk.content();
+            if (content instanceof AcpSchema.ImageContent img) {
+                String data = img.data();
+                String mimeType = img.mimeType();
+                if (data != null && !data.isEmpty()) {
+                    notifyListeners(l -> l.onAgentImage(sessionId, data,
+                            mimeType != null ? mimeType : "image/png")); // NOI18N
+                }
+            } else {
+                String text = extractText(content);
+                notifyListeners(l -> l.onAgentMessage(sessionId, text));
+            }
         } else if (update instanceof AgentThoughtChunk chunk) {
             String text = extractText(chunk.content());
             notifyListeners(l -> l.onAgentThought(sessionId, text));
@@ -619,6 +609,11 @@ public final class AcpConnection {
             String title = siu.title();
             String updatedAt = siu.updatedAt();
             notifyListeners(l -> l.onSessionInfo(sessionId, title, updatedAt));
+        } else if (update instanceof AcpSchema.CurrentModeUpdate modeUpdate) {
+            String modeId = modeUpdate.currentModeId();
+            currentModeId = modeId;
+            LOG.log(Level.INFO, "Session mode changed to: {0}", modeId); // NOI18N
+            notifyListeners(l -> l.onModeUpdate(sessionId, modeId));
         } else {
             LOG.log(Level.FINE, "Unhandled session update type: {0}", // NOI18N
                     update != null ? update.getClass().getName() : "null"); // NOI18N
@@ -793,6 +788,37 @@ public final class AcpConnection {
     }
 
     /** Resolves symlinks of the deepest existing ancestor, then re-appends the non-existing remainder. */
+    private List<Path> buildTrustedDirectories(String effectiveDir,
+            List<String> additionalDirs) {
+        List<Path> trusted = new ArrayList<>();
+        if (effectiveDir != null) {
+            trusted.add(Path.of(effectiveDir).toAbsolutePath().normalize());
+        }
+        String descriptorDir = descriptor.getWorkingDirectory();
+        if (descriptorDir != null && !descriptorDir.isBlank()) {
+            Path dp = Path.of(descriptorDir).toAbsolutePath().normalize();
+            if (!trusted.contains(dp)) {
+                trusted.add(dp);
+            }
+        }
+        if (additionalDirs != null) {
+            for (String dir : additionalDirs) {
+                Path dp = Path.of(dir).toAbsolutePath().normalize();
+                if (!trusted.contains(dp)) {
+                    trusted.add(dp);
+                }
+            }
+        }
+        List<Path> resolved = new ArrayList<>();
+        for (Path t : trusted) {
+            Path r = resolveReal(t);
+            if (!resolved.contains(r)) {
+                resolved.add(r);
+            }
+        }
+        return List.copyOf(resolved);
+    }
+
     private static Path resolveReal(Path path) {
         Path abs = path.toAbsolutePath().normalize();
         Path existing = abs;
@@ -965,5 +991,65 @@ public final class AcpConnection {
             java.util.function.Function<AcpSchema.RequestPermissionRequest,
                     AcpSchema.RequestPermissionResponse> handler) {
         this.permissionHandler = handler;
+    }
+
+    /**
+     * Sets a handler invoked when the agent requests structured input
+     * via an elicitation form.
+     *
+     * @param handler the elicitation handler, or {@code null} to decline all
+     */
+    public void setElicitationHandler(
+            java.util.function.Function<AcpSchema.CreateElicitationRequest,
+                    AcpSchema.CreateElicitationResponse> handler) {
+        this.elicitationHandler = handler;
+    }
+
+    /**
+     * Switches the session to the specified mode.
+     *
+     * @param sessionId the session identifier
+     * @param modeId    the mode to activate
+     * @throws IOException if the mode switch fails
+     */
+    public void setSessionMode(String sessionId, String modeId) throws IOException {
+        ensureConnected();
+        try {
+            client.setSessionMode(new AcpSchema.SetSessionModeRequest(sessionId, modeId));
+        } catch (Exception ex) {
+            throw new IOException("Failed to set session mode", ex); // NOI18N
+        }
+    }
+
+    /** @return the available session modes, or an empty list */
+    public List<AcpModeInfo> getAvailableModes() {
+        return availableModes;
+    }
+
+    /** @return the current mode identifier, or {@code null} */
+    public String getCurrentModeId() {
+        return currentModeId;
+    }
+
+    private AcpSchema.CreateElicitationResponse handleElicitation(
+            AcpSchema.CreateElicitationRequest request) {
+        if (elicitationHandler != null) {
+            return elicitationHandler.apply(request);
+        }
+        LOG.log(Level.WARNING, "No elicitation handler registered, declining"); // NOI18N
+        return AcpSchema.CreateElicitationResponse.decline();
+    }
+
+    private void captureModes(AcpSchema.SessionModeState modeState) {
+        if (modeState != null) {
+            currentModeId = modeState.currentModeId();
+            if (modeState.availableModes() != null) {
+                List<AcpModeInfo> modes = new ArrayList<>();
+                for (AcpSchema.SessionMode sm : modeState.availableModes()) {
+                    modes.add(new AcpModeInfo(sm.id(), sm.name(), sm.description()));
+                }
+                availableModes = List.copyOf(modes);
+            }
+        }
     }
 }

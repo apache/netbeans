@@ -136,4 +136,23 @@ public interface AcpSessionListener {
     default void onFileWritten(String sessionId, String path,
             String oldContent, String newContent) {
     }
+
+    /**
+     * Called when the agent sends an image content block.
+     *
+     * @param sessionId the session identifier
+     * @param data      base64-encoded image data
+     * @param mimeType  the image MIME type (e.g. "image/png")
+     */
+    default void onAgentImage(String sessionId, String data, String mimeType) {
+    }
+
+    /**
+     * Called when the agent's current mode changes.
+     *
+     * @param sessionId     the session identifier
+     * @param currentModeId the active mode identifier
+     */
+    default void onModeUpdate(String sessionId, String currentModeId) {
+    }
 }

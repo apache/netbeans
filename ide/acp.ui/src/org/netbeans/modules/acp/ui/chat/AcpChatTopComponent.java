@@ -42,6 +42,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -51,6 +52,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -71,6 +73,7 @@ import org.netbeans.modules.acp.api.AcpAgentManager;
 import org.netbeans.modules.acp.api.AcpConnection;
 import org.netbeans.modules.acp.api.AcpMcpServerProvider;
 import org.netbeans.modules.acp.api.AcpConnectionManager;
+import org.netbeans.modules.acp.api.AcpModeInfo;
 import org.netbeans.modules.acp.api.AcpPlanEntry;
 import org.netbeans.modules.acp.api.AcpSessionInfo;
 import org.netbeans.modules.acp.api.AcpSessionListener;
@@ -80,6 +83,7 @@ import org.netbeans.modules.acp.mcp.McpToolRegistry;
 import org.netbeans.modules.acp.ui.AcpContextReceiver;
 import org.netbeans.modules.acp.ui.AcpDiffViewer;
 import org.netbeans.modules.acp.ui.AcpLocationNavigator;
+import org.netbeans.modules.acp.ui.AcpMarkdownRenderer;
 import org.netbeans.modules.acp.ui.AcpPermissionDialog;
 import org.netbeans.modules.acp.ui.AcpProjectContextProvider;
 import org.openide.DialogDescriptor;
@@ -142,7 +146,13 @@ import org.openide.windows.TopComponent;
     "STS_ResumingSession=Resuming session...",
     "MSG_SessionResumed=Session resumed.",
     "MSG_SessionDeleted=Session deleted.",
-    "MSG_NoSessionCapability=This agent does not support session management."
+    "MSG_NoSessionCapability=This agent does not support session management.",
+    "LBL_AgentImage=[Image]",
+    "BTN_Mode=Mode: {0}",
+    "LBL_NoModes=No modes available.",
+    "TTL_Elicitation=Agent Input Request",
+    "BTN_Accept=Accept",
+    "BTN_Decline=Decline"
 })
 public final class AcpChatTopComponent extends TopComponent implements AcpContextReceiver {
 
@@ -161,6 +171,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final JButton toolsButton;
     private final JButton commandsButton;
     private final JButton connectButton;
+    private final JButton newSessionButton;
     private final JComboBox<String> agentSelector;
     private final JLabel statusLabel;
     private final StringBuilder chatHtml = new StringBuilder();
@@ -179,10 +190,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     private final AcpFileMentionSupport mentionSupport;
     private List<AcpMcpServerProvider.ToolInfo> currentMcpTools = List.of();
     private List<AcpCommand> currentCommands = List.of();
+    private String commandPrefix = "/"; // NOI18N
+    private String currentModeId;
+    private JButton modeButton;
     private Set<String> currentEnabledTools;
     private String currentWorkingDir;
     private AcpConnection currentConnection;
     private String currentSessionId;
+    private long lastUsedTokens;
+    private long lastTotalTokens;
+    private JPopupMenu slashPopup;
 
     private final AcpSessionListener sessionListener = new AcpSessionListener() {
         @Override
@@ -224,15 +241,21 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 agentMsgDivEndPos = -1;
                 promptInProgress.set(false);
                 updateInputState();
-                statusLabel.setText(Bundle.STS_Ready());
+                if (lastTotalTokens > 0) {
+                    statusLabel.setText(Bundle.STS_Tokens(lastUsedTokens, lastTotalTokens));
+                } else {
+                    statusLabel.setText(Bundle.STS_Ready());
+                }
             });
         }
 
         @Override
         public void onUsageUpdate(String sessionId, long usedTokens, long totalTokens) {
-            SwingUtilities.invokeLater(() ->
-                statusLabel.setText(Bundle.STS_Tokens(usedTokens, totalTokens))
-            );
+            SwingUtilities.invokeLater(() -> {
+                lastUsedTokens = usedTokens;
+                lastTotalTokens = totalTokens;
+                statusLabel.setText(Bundle.STS_Tokens(usedTokens, totalTokens));
+            });
         }
 
         @Override
@@ -264,6 +287,30 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                                 agent != null ? agent : "",
                                 effectiveName, workDir, roots)));
             }
+        }
+
+        @Override
+        public void onAgentImage(String sessionId, String data, String mimeType) {
+            SwingUtilities.invokeLater(() -> {
+                chatHtml.append("<div class='agent-msg'>")
+                        .append("<img src='data:").append(mimeType != null ? mimeType : "image/png")
+                        .append(";base64,").append(data)
+                        .append("' style='max-width:400px; max-height:300px;' />")
+                        .append("</div>");
+                inAgentMessage = false;
+                agentMsgDivEndPos = -1;
+                updateChatDisplay();
+            });
+        }
+
+        @Override
+        public void onModeUpdate(String sessionId, String newModeId) {
+            SwingUtilities.invokeLater(() -> {
+                currentModeId = newModeId;
+                if (modeButton != null) {
+                    modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(newModeId)));
+                }
+            });
         }
 
         @Override
@@ -326,7 +373,8 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         connectButton = new JButton(Bundle.BTN_Connect());
         connectButton.addActionListener(e -> toggleConnection());
         toolbar.add(connectButton);
-        JButton newSessionButton = new JButton(Bundle.BTN_NewSession());
+        newSessionButton = new JButton(Bundle.BTN_NewSession());
+        newSessionButton.setEnabled(false);
         newSessionButton.addActionListener(e -> startNewSession());
         toolbar.add(newSessionButton);
         JButton sessionsButton = new JButton(Bundle.BTN_Sessions());
@@ -344,12 +392,38 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         commandsButton.setEnabled(false);
         commandsButton.addActionListener(e -> showCommandsPopup());
         toolbar.add(commandsButton);
+        modeButton = new JButton(Bundle.BTN_Mode("default"));
+        modeButton.setEnabled(false);
+        modeButton.addActionListener(e -> showModePopup());
+        toolbar.add(modeButton);
         toolbar.add(Box.createHorizontalGlue());
         statusLabel = new JLabel(Bundle.STS_Disconnected());
         toolbar.add(statusLabel);
         add(toolbar, BorderLayout.NORTH);
 
-        HTMLEditorKit kit = new HTMLEditorKit();
+        HTMLEditorKit kit = new HTMLEditorKit() {
+            @Override
+            public void install(JEditorPane c) {
+                super.install(c);
+                for (java.awt.event.MouseMotionListener mml : c.getMouseMotionListeners()) {
+                    if (mml instanceof LinkController) {
+                        final java.awt.event.MouseMotionListener delegate = mml;
+                        c.removeMouseMotionListener(mml);
+                        c.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+                            @Override
+                            public void mouseMoved(java.awt.event.MouseEvent e) {
+                                try { delegate.mouseMoved(e); } catch (ArrayIndexOutOfBoundsException ignored) {}
+                            }
+                            @Override
+                            public void mouseDragged(java.awt.event.MouseEvent e) {
+                                try { delegate.mouseDragged(e); } catch (ArrayIndexOutOfBoundsException ignored) {}
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        };
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule("body { font-family: sans-serif; font-size: 12px; margin: 8px; }");
         styleSheet.addRule(".user-msg { background-color: #BBDEFB; padding: 8px; margin: 6px 40px 6px 0; border-left: 4px solid #1976D2; }");
@@ -370,6 +444,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         styleSheet.addRule(".tc-location { color: #5C6BC0; font-size: 11px; }");
         styleSheet.addRule("pre { background-color: #263238; color: #EEFFFF; padding: 8px; overflow-x: auto; }");
         styleSheet.addRule("code { font-family: monospace; }");
+        styleSheet.addRule("h1 { font-size: 16px; margin: 8px 0 4px; }");
+        styleSheet.addRule("h2 { font-size: 14px; margin: 6px 0 4px; }");
+        styleSheet.addRule("h3 { font-size: 13px; margin: 4px 0 2px; }");
+        styleSheet.addRule("table { border-collapse: collapse; margin: 4px 0; }");
+        styleSheet.addRule("th, td { border: 1px solid #ccc; padding: 4px 8px; }");
+        styleSheet.addRule("th { background-color: #f0f0f0; font-weight: bold; }");
+        styleSheet.addRule("blockquote { border-left: 3px solid #ccc; padding-left: 8px; color: #666; margin: 4px 0; }");
+        styleSheet.addRule("ul, ol { margin: 4px 0 4px 20px; }");
 
         chatPane = new JEditorPane();
         chatPane.setEditorKit(kit);
@@ -436,6 +518,19 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
 
         mentionSupport = new AcpFileMentionSupport(inputArea);
         inputArea.setTransferHandler(new AcpFileDropHandler(inputArea, mentionSupport));
+        inputArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                checkSlashCommand();
+            }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                checkSlashCommand();
+            }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
+        });
         refreshAgentList();
     }
 
@@ -568,8 +663,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     currentEnabledTools = null;
                     currentWorkingDir = null;
                     currentCommands = List.of();
+                    commandPrefix = "/"; // NOI18N
+                    currentModeId = null;
+                    lastUsedTokens = 0;
+                    lastTotalTokens = 0;
                     commandsButton.setText(Bundle.BTN_Commands(0));
                     commandsButton.setEnabled(false);
+                    modeButton.setText(Bundle.BTN_Mode("—"));
+                    modeButton.setEnabled(false);
                     setDisplayName(NbBundle.getMessage(
                             AcpChatTopComponent.class, "CTL_AcpChatTopComponent"));
                     setToolTipText(NbBundle.getMessage(
@@ -608,14 +709,17 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                         }
                         return pr.response();
                     });
+                    connection.setElicitationHandler(this::handleElicitation);
                     Set<String> enabledSet = descriptor.getEnabledTools();
                     String workDir = descriptor.getWorkingDirectory() != null
                             ? descriptor.getWorkingDirectory()
                             : fallbackDir != null ? fallbackDir : "";
+                    String agentPrefix = descriptor.getCommandPrefix();
                     SwingUtilities.invokeLater(() -> {
                         currentConnection = connection;
                         currentEnabledTools = enabledSet;
                         currentWorkingDir = workDir;
+                        commandPrefix = agentPrefix;
                         setDisplayName(Bundle.LBL_TabTitle(agentName));
                         setToolTipText(Bundle.HINT_ConnectedAgent(agentName, workDir));
                         connectButton.setText(Bundle.BTN_Disconnect());
@@ -665,6 +769,12 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     toolsButton.setText(Bundle.BTN_Tools(enabledCount, totalCount));
                     toolsButton.setEnabled(totalCount > 0);
                     statusLabel.setText(Bundle.STS_Ready());
+                    List<AcpModeInfo> modes = currentConnection.getAvailableModes();
+                    modeButton.setEnabled(!modes.isEmpty());
+                    if (currentConnection.getCurrentModeId() != null) {
+                        currentModeId = currentConnection.getCurrentModeId();
+                        modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(currentModeId)));
+                    }
                     updateInputState();
                 });
                 CONTEXT_RP.post(() -> sendProjectContext(sessionId));
@@ -742,13 +852,14 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void updateInputState() {
-        boolean canSend = currentConnection != null
-                && currentConnection.isConnected()
-                && currentSessionId != null
-                && !promptInProgress.get();
+        boolean connected = currentConnection != null
+                && currentConnection.isConnected();
+        boolean hasSession = connected && currentSessionId != null;
+        boolean canSend = hasSession && !promptInProgress.get();
         sendButton.setEnabled(canSend);
         inputArea.setEnabled(canSend);
-        cancelButton.setEnabled(promptInProgress.get() && currentSessionId != null);
+        cancelButton.setEnabled(promptInProgress.get() && hasSession);
+        newSessionButton.setEnabled(connected && !hasSession);
     }
 
     private void appendUserMessage(String text) {
@@ -853,6 +964,123 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         popup.show(commandsButton, 0, commandsButton.getHeight());
     }
 
+    private String getModeDisplayName(String modeId) {
+        if (modeId == null) {
+            return "default";
+        }
+        if (currentConnection != null) {
+            for (AcpModeInfo mode : currentConnection.getAvailableModes()) {
+                if (modeId.equals(mode.id()) && mode.name() != null) {
+                    return mode.name();
+                }
+            }
+        }
+        int fragment = modeId.lastIndexOf('#');
+        if (fragment >= 0 && fragment < modeId.length() - 1) {
+            return modeId.substring(fragment + 1);
+        }
+        return modeId;
+    }
+
+    private void showModePopup() {
+        if (currentConnection == null || !currentConnection.isConnected()) {
+            return;
+        }
+        List<AcpModeInfo> modes = currentConnection.getAvailableModes();
+        if (modes.isEmpty()) {
+            return;
+        }
+        JPopupMenu popup = new JPopupMenu();
+        for (AcpModeInfo mode : modes) {
+            String label = "<html><b>" + HtmlUtils.escapeHtml(mode.name()) + "</b>"
+                    + (mode.id().equals(currentModeId) ? " &#x2713;" : "")
+                    + (mode.description() != null
+                            ? "<br/><span style='color:gray;font-size:smaller'>"
+                            + HtmlUtils.escapeHtml(mode.description()) + "</span>"
+                            : "")
+                    + "</html>";
+            JMenuItem item = new JMenuItem(label);
+            item.addActionListener(ev -> {
+                if (currentSessionId != null) {
+                    RP.post(() -> {
+                        try {
+                            currentConnection.setSessionMode(currentSessionId, mode.id());
+                        } catch (Exception ex) {
+                            LOG.log(Level.WARNING, "Failed to set mode", ex);
+                        }
+                    });
+                }
+            });
+            popup.add(item);
+        }
+        popup.show(modeButton, 0, modeButton.getHeight());
+    }
+
+    private void checkSlashCommand() {
+        SwingUtilities.invokeLater(() -> {
+            dismissSlashPopup();
+            if (currentCommands.isEmpty()) {
+                return;
+            }
+            String text = inputArea.getText();
+            if (text.isEmpty() || !text.startsWith(commandPrefix)
+                    || text.contains(" ") || text.contains("\n")) {
+                return;
+            }
+            String typed = text.substring(commandPrefix.length()).toLowerCase();
+            List<AcpCommand> matches = new ArrayList<>();
+            for (AcpCommand cmd : currentCommands) {
+                if (cmd.name().toLowerCase().startsWith(typed)) {
+                    matches.add(cmd);
+                }
+            }
+            if (matches.isEmpty()) {
+                return;
+            }
+            matches.sort((a, b) -> a.name().compareToIgnoreCase(b.name()));
+            LOG.log(Level.FINE, "checkSlashCommand: {0} matches for ''{1}''",
+                    new Object[]{matches.size(), typed});
+            JPopupMenu popup = new JPopupMenu();
+            popup.setFocusable(false);
+            for (AcpCommand cmd : matches) {
+                StringBuilder label = new StringBuilder("<html><b>")
+                        .append(HtmlUtils.escapeHtml(cmd.name())).append("</b>");
+                if (cmd.description() != null && !cmd.description().isEmpty()) {
+                    String escaped = HtmlUtils.escapeHtml(cmd.description()).replace("\n", "<br>");
+                    label.append("<br><span style='color:#666; font-size:small'>")
+                            .append(escaped).append("</span>");
+                }
+                label.append("</html>");
+                JMenuItem item = new JMenuItem(label.toString());
+                item.addActionListener(ev -> {
+                    inputArea.setText(commandPrefix + cmd.name() + " ");
+                    inputArea.setCaretPosition(inputArea.getText().length());
+                });
+                popup.add(item);
+            }
+            slashPopup = popup;
+            try {
+                java.awt.Rectangle caret = inputArea.modelToView(
+                        inputArea.getCaretPosition());
+                if (caret != null) {
+                    popup.show(inputArea, caret.x, caret.y + caret.height);
+                } else {
+                    popup.show(inputArea, 0, inputArea.getHeight());
+                }
+            } catch (BadLocationException ex) {
+                popup.show(inputArea, 0, inputArea.getHeight());
+            }
+        });
+    }
+
+
+    private void dismissSlashPopup() {
+        if (slashPopup != null) {
+            slashPopup.setVisible(false);
+            slashPopup = null;
+        }
+    }
+
     private void showSessionBrowser() {
         if (currentConnection == null || !currentConnection.isConnected()) {
             return;
@@ -899,8 +1127,15 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         browserPanel.add(new JScrollPane(sessionList), BorderLayout.CENTER);
 
         JButton resumeBtn = new JButton(Bundle.BTN_ResumeSession());
+        resumeBtn.setEnabled(connection.supportsResumeSession());
         JButton deleteBtn = new JButton(Bundle.BTN_DeleteSession());
-        browserPanel.add(buildButtonRow(resumeBtn, deleteBtn), BorderLayout.SOUTH);
+        deleteBtn.setEnabled(connection.supportsDeleteSession());
+        JPanel buttonRow = new JPanel();
+        buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
+        buttonRow.add(resumeBtn);
+        buttonRow.add(Box.createHorizontalStrut(8));
+        buttonRow.add(deleteBtn);
+        browserPanel.add(buttonRow, BorderLayout.SOUTH);
 
         DialogDescriptor dd = new DialogDescriptor(browserPanel, Bundle.TTL_SessionBrowser(),
                 true, new Object[]{NotifyDescriptor.CANCEL_OPTION}, NotifyDescriptor.CANCEL_OPTION,
@@ -918,7 +1153,7 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
         deleteBtn.addActionListener(ev -> {
             AcpSessionInfo selected = sessionList.getSelectedValue();
             if (selected != null) {
-                onDeleteSession(selected, listModel, connection);
+                onDeleteSession(selected, listModel, connection, dialog);
             }
         });
 
@@ -952,50 +1187,55 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                     chatPane.setText("<html><body></body></html>");
                     appendSystemMessage(Bundle.MSG_SessionResumed());
                     statusLabel.setText(Bundle.STS_Ready());
+                    List<AcpModeInfo> modes = connection.getAvailableModes();
+                    modeButton.setEnabled(!modes.isEmpty());
+                    if (connection.getCurrentModeId() != null) {
+                        currentModeId = connection.getCurrentModeId();
+                        modeButton.setText(Bundle.BTN_Mode(getModeDisplayName(currentModeId)));
+                    }
                     updateInputState();
                 });
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Failed to resume session", ex);
                 SwingUtilities.invokeLater(() -> {
-                    appendSystemMessage(Bundle.STS_ErrorDetail(
-                            HtmlUtils.escapeHtml(String.valueOf(ex.getMessage()))));
                     statusLabel.setText(Bundle.STS_Error());
+                    DialogDisplayer.getDefault().notifyLater(
+                            new NotifyDescriptor.Message(ex.getMessage(),
+                                    NotifyDescriptor.ERROR_MESSAGE));
                 });
             }
         });
     }
 
     private void onDeleteSession(AcpSessionInfo session,
-            DefaultListModel<AcpSessionInfo> listModel, AcpConnection connection) {
+            DefaultListModel<AcpSessionInfo> listModel,
+            AcpConnection connection, Dialog dialog) {
         RP.post(() -> {
             try {
                 connection.deleteSession(session.sessionId());
                 SwingUtilities.invokeLater(() -> {
                     listModel.removeElement(session);
+                    if (listModel.isEmpty()) {
+                        dialog.dispose();
+                    }
                     appendSystemMessage(Bundle.MSG_SessionDeleted());
                 });
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Failed to delete session", ex);
-                SwingUtilities.invokeLater(() ->
-                        appendSystemMessage(Bundle.STS_ErrorDetail(
-                                HtmlUtils.escapeHtml(String.valueOf(ex.getMessage())))));
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText(Bundle.STS_Error());
+                    DialogDisplayer.getDefault().notifyLater(
+                            new NotifyDescriptor.Message(ex.getMessage(),
+                                    NotifyDescriptor.ERROR_MESSAGE));
+                });
             }
         });
     }
 
-    private static JPanel buildButtonRow(JButton... buttons) {
-        JPanel row = new JPanel();
-        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-        for (int i = 0; i < buttons.length; i++) {
-            if (i > 0) {
-                row.add(Box.createHorizontalStrut(8));
-            }
-            row.add(buttons[i]);
-        }
-        return row;
-    }
-
     private static final class SessionListCellRenderer extends DefaultListCellRenderer {
+
+        private static final java.time.format.DateTimeFormatter DISPLAY_FORMAT =
+                java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm");
 
         @Override
         public Component getListCellRendererComponent(
@@ -1005,11 +1245,25 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             if (value instanceof AcpSessionInfo si) {
                 String label = si.title() != null ? si.title() : si.sessionId();
                 if (si.updatedAt() != null) {
-                    label += "  (" + si.updatedAt() + ")";
+                    label += "  (" + formatDate(si.updatedAt()) + ")";
                 }
                 setText(label);
             }
             return this;
+        }
+
+        private static String formatDate(String iso) {
+            try {
+                return java.time.ZonedDateTime.parse(iso)
+                        .withZoneSameInstant(java.time.ZoneId.systemDefault())
+                        .format(DISPLAY_FORMAT);
+            } catch (java.time.format.DateTimeParseException ex) {
+                try {
+                    return java.time.LocalDateTime.parse(iso).format(DISPLAY_FORMAT);
+                } catch (java.time.format.DateTimeParseException ex2) {
+                    return iso;
+                }
+            }
         }
     }
 
@@ -1030,15 +1284,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
             changed = true;
         }
         if (!message.isEmpty()) {
-            String escaped = HtmlUtils.escapeHtml(message).replace("\n", "<br/>");
+            String rendered = AcpMarkdownRenderer.renderToHtml(message);
             if (inAgentMessage && agentMsgDivEndPos >= 0
                     && chatHtml.length() == agentMsgDivEndPos + "</div>".length()) {
                 chatHtml.setLength(agentMsgDivEndPos);
-                chatHtml.append(escaped).append("</div>");
+                chatHtml.append(rendered).append("</div>");
+                renderedLength = 0;
             } else {
                 chatHtml.append("<div class='agent-msg'><span class='agent-label'>")
                         .append(Bundle.LBL_AgentSays()).append("</span><br/>")
-                        .append(escaped).append("</div>");
+                        .append(rendered).append("</div>");
                 inAgentMessage = true;
             }
             agentMsgDivEndPos = chatHtml.length() - "</div>".length();
@@ -1050,10 +1305,16 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
     }
 
     private void appendToolCall(AcpToolCall toolCall) {
+        flushMessageBuffers();
+        inAgentMessage = false;
+        agentMsgDivEndPos = -1;
         renderToolCallCard(toolCall);
     }
 
     private void appendToolCallUpdate(AcpToolCall toolCall) {
+        flushMessageBuffers();
+        inAgentMessage = false;
+        agentMsgDivEndPos = -1;
         renderToolCallCard(toolCall);
     }
 
@@ -1215,6 +1476,113 @@ public final class AcpChatTopComponent extends TopComponent implements AcpContex
                 vertical.setValue(vertical.getMaximum());
             }
         });
+    }
+
+    private com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse handleElicitation(
+            com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationRequest request) {
+        java.util.concurrent.atomic.AtomicReference<com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse> result =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                JPanel formPanel = new JPanel();
+                formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+                formPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+
+                if (request.message() != null && !request.message().isEmpty()) {
+                    JLabel msgLabel = new JLabel("<html><p style='width:350px'>"
+                            + HtmlUtils.escapeHtml(request.message()) + "</p></html>");
+                    formPanel.add(msgLabel);
+                    formPanel.add(Box.createVerticalStrut(8));
+                }
+
+                Map<String, javax.swing.JComponent> fieldComponents = new java.util.LinkedHashMap<>();
+                com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationSchema schema = request.requestedSchema();
+                if (schema != null && schema.properties() != null) {
+                    for (Map.Entry<String, com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema> entry
+                            : schema.properties().entrySet()) {
+                        String fieldName = entry.getKey();
+                        com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema prop = entry.getValue();
+
+                        if (prop instanceof com.agentclientprotocol.sdk.spec.AcpSchema.StringPropertySchema sp) {
+                            String label = sp.title() != null ? sp.title() : fieldName;
+                            formPanel.add(new JLabel(label + ":"));
+                            if (sp.enumValues() != null && !sp.enumValues().isEmpty()) {
+                                JComboBox<String> combo = new JComboBox<>(sp.enumValues().toArray(new String[0]));
+                                if (sp.defaultValue() != null) {
+                                    combo.setSelectedItem(sp.defaultValue());
+                                }
+                                fieldComponents.put(fieldName, combo);
+                                formPanel.add(combo);
+                            } else if (sp.oneOf() != null && !sp.oneOf().isEmpty()) {
+                                List<String> values = new ArrayList<>();
+                                for (com.agentclientprotocol.sdk.spec.AcpSchema.EnumOption eo : sp.oneOf()) {
+                                    values.add(eo.constValue());
+                                }
+                                JComboBox<String> combo = new JComboBox<>(values.toArray(new String[0]));
+                                if (sp.defaultValue() != null) {
+                                    combo.setSelectedItem(sp.defaultValue());
+                                }
+                                fieldComponents.put(fieldName, combo);
+                                formPanel.add(combo);
+                            } else {
+                                JTextField tf = new JTextField(25);
+                                if (sp.defaultValue() != null) {
+                                    tf.setText(sp.defaultValue());
+                                }
+                                fieldComponents.put(fieldName, tf);
+                                formPanel.add(tf);
+                            }
+                        } else if (prop instanceof com.agentclientprotocol.sdk.spec.AcpSchema.BooleanPropertySchema bp) {
+                            String label = bp.title() != null ? bp.title() : fieldName;
+                            JCheckBox cb = new JCheckBox(label);
+                            if (bp.defaultValue() != null) {
+                                cb.setSelected(bp.defaultValue());
+                            }
+                            fieldComponents.put(fieldName, cb);
+                            formPanel.add(cb);
+                        } else {
+                            formPanel.add(new JLabel(fieldName + ":"));
+                            JTextField tf = new JTextField(25);
+                            fieldComponents.put(fieldName, tf);
+                            formPanel.add(tf);
+                        }
+                        formPanel.add(Box.createVerticalStrut(4));
+                    }
+                }
+
+                String title = schema != null && schema.title() != null
+                        ? schema.title() : Bundle.TTL_Elicitation();
+                Object[] options = {Bundle.BTN_Accept(), Bundle.BTN_Decline()};
+                DialogDescriptor dd = new DialogDescriptor(
+                        new JScrollPane(formPanel), title,
+                        true, options, Bundle.BTN_Accept(),
+                        DialogDescriptor.DEFAULT_ALIGN, null, null);
+                Object chosen = DialogDisplayer.getDefault().notify(dd);
+
+                if (Bundle.BTN_Accept().equals(chosen)) {
+                    Map<String, Object> content = new java.util.LinkedHashMap<>();
+                    for (Map.Entry<String, javax.swing.JComponent> fe : fieldComponents.entrySet()) {
+                        javax.swing.JComponent comp = fe.getValue();
+                        if (comp instanceof JTextField tf) {
+                            content.put(fe.getKey(), tf.getText());
+                        } else if (comp instanceof JComboBox<?> cb) {
+                            content.put(fe.getKey(), cb.getSelectedItem());
+                        } else if (comp instanceof JCheckBox chk) {
+                            content.put(fe.getKey(), chk.isSelected());
+                        }
+                    }
+                    result.set(com.agentclientprotocol.sdk.spec.AcpSchema
+                            .CreateElicitationResponse.accept(content));
+                } else {
+                    result.set(com.agentclientprotocol.sdk.spec.AcpSchema
+                            .CreateElicitationResponse.decline());
+                }
+            });
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "Elicitation dialog error", ex);
+            result.set(com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse.decline());
+        }
+        return result.get();
     }
 
     private static String getMainProjectDirectory() {

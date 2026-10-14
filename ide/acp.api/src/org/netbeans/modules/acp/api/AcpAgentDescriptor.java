@@ -47,6 +47,9 @@ public final class AcpAgentDescriptor {
         WEBSOCKET
     }
 
+    /** Default command prefix used when no agent-specific prefix is set. */
+    public static final String DEFAULT_COMMAND_PREFIX = "/"; // NOI18N
+
     private final String name;
     private final TransportType transportType;
     private final List<String> command;
@@ -54,10 +57,12 @@ public final class AcpAgentDescriptor {
     private final String workingDirectory;
     private final Map<String, String> environmentVariables;
     private final Set<String> enabledTools;
+    private final String commandPrefix;
 
     private AcpAgentDescriptor(String name, TransportType transportType,
             List<String> command, String url, String workingDirectory,
-            Map<String, String> environmentVariables, Set<String> enabledTools) {
+            Map<String, String> environmentVariables, Set<String> enabledTools,
+            String commandPrefix) {
         this.name = name;
         this.transportType = transportType;
         this.command = command;
@@ -65,6 +70,7 @@ public final class AcpAgentDescriptor {
         this.workingDirectory = workingDirectory;
         this.environmentVariables = environmentVariables;
         this.enabledTools = enabledTools;
+        this.commandPrefix = commandPrefix;
     }
 
     /**
@@ -138,6 +144,16 @@ public final class AcpAgentDescriptor {
         return enabledTools;
     }
 
+    /**
+     * Returns the command prefix character(s) used by this agent
+     * (e.g. {@code "/"} or {@code "$"}).
+     *
+     * @return the command prefix, never {@code null}
+     */
+    public String getCommandPrefix() {
+        return commandPrefix;
+    }
+
     @Override
     public String toString() {
         return "AcpAgentDescriptor{" + "name=" + name + ", transport=" + transportType + '}'; // NOI18N
@@ -171,6 +187,7 @@ public final class AcpAgentDescriptor {
         private String workingDirectory;
         private Map<String, String> environmentVariables = Map.of();
         private Set<String> enabledTools;
+        private String commandPrefix = DEFAULT_COMMAND_PREFIX;
 
         /**
          * Creates a new builder with the required name and transport type.
@@ -242,6 +259,19 @@ public final class AcpAgentDescriptor {
         }
 
         /**
+         * Sets the command prefix for this agent (e.g. {@code "/"} or
+         * {@code "$"}). Defaults to {@link #DEFAULT_COMMAND_PREFIX}.
+         *
+         * @param commandPrefix the prefix string
+         * @return this builder
+         */
+        public Builder commandPrefix(String commandPrefix) {
+            this.commandPrefix = Objects.requireNonNull(commandPrefix,
+                    "commandPrefix must not be null");
+            return this;
+        }
+
+        /**
          * Builds an immutable {@link AcpAgentDescriptor} from the current state.
          *
          * @return the new descriptor instance
@@ -255,7 +285,7 @@ public final class AcpAgentDescriptor {
             if (transportType == TransportType.WEBSOCKET && (url == null || url.isBlank())) {
                 throw new IllegalStateException("WEBSOCKET transport requires a URL");
             }
-            return new AcpAgentDescriptor(name, transportType, command, url, workingDirectory, environmentVariables, enabledTools);
+            return new AcpAgentDescriptor(name, transportType, command, url, workingDirectory, environmentVariables, enabledTools, commandPrefix);
         }
     }
 }

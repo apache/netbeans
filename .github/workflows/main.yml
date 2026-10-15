@@ -695,6 +695,9 @@ jobs:
       - name: ide/languages.env
         run: ant $OPTS -f ide/languages.env test
 
+      - name: ide/languages.go
+        run: ant $OPTS -f ide/languages.go test
+
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
 

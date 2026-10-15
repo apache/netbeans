@@ -41,8 +41,11 @@ public final class TomlLexer extends AbstractAntlrLexerBridge<TOMLAntlrLexer, To
     @Override
     protected Token<TomlTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
         switch (antlrToken.getType()) {
+            // EOF is only reported here while input is still pending when the
+            // text ended in something the lexer could not recognize, e.g. an
+            // unterminated multi-line string (#9654).
             case TOMLAntlrLexer.EOF:
-                return null;
+                return token(ERROR);
 
             // Strings
             case TOMLAntlrLexer.BASIC_STRING:

@@ -253,7 +253,7 @@ public class OpenProjectListSettings {
     }
     
     public boolean isOpenSubprojects() {        
-        return getPreferences().getBoolean( OPEN_SUBPROJECTS, false);
+        return getPreferences().getBoolean( OPEN_SUBPROJECTS, true);
     }
     
     public void setOpenSubprojects( boolean openSubprojects ) {
